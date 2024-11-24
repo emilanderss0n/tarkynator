@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <title>TARKYNATOR | Tarkov Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Search Tarkov database through Tarkov API" />
+    <meta property="og:image" content="assets/img/icon.png" />
+    <meta property="og:description" content="Search Tarkov database through Tarkov API" />
+    <meta property="og:title" content="TARKYNATOR" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/mbo.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css" />
+    <link rel="icon" href="assets/img/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="page-wrap">
+
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="./"><strong>TARKYNATOR</strong></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="templateNavLink" href="javascript:void(0);">Template</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="handbookNavLink" href="javascript:void(0);">Handbook</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                More
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" id="craftsNavLink" href="javascript:void(0);">Crafts</a></li>
+                                <li><a class="dropdown-item" id="commonIdNavLink" href="javascript:void(0);">Common IDs</a></li>
+                                <li><a class="dropdown-item" id="resourcesNavLink" href="javascript:void(0);">Resources</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <span class="navbar-text">
+                        <a href="javascript:void(0);" class="btn btn-outline-info d-none d-lg-block" data-bs-toggle="modal" data-bs-target="#exampleModal">ID Generator</a>
+                    </span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Generate New SPT ID</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Mongo ID: <span class="global-id" id="idGenOutput"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="bulkNavLink" class="btn" data-bs-dismiss="modal">Bulk</button>
+                    <button type="button" id="genID" class="btn">Generate</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid main-app">
+
+            <div id="mainSearch">
+                <section id="itemSearch">
+                    <form class="container-fluid search-container">
+                        <div class="input-control">
+                            <input id="itemSearchInput" class="form-control form-control-lg" type="text" placeholder="Search item id or name" aria-label="Item search" autofocus>
+                            <a href="javascript:void(0);" id="browseNavLink" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Browse"><i class="bi bi-ui-radios-grid"></i></a>
+                            <div class="input-search-icon">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <div id="activity"><span class="loader"></span></div>
+                        </div>
+                        <div class="searchResults">
+                            <ul class="list-group">
+                            </ul>
+                        </div>
+                    </form>
+                </section>
+                <nav id="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+                    <span>Search for an item</span>
+                </nav>
+                <div id="templateContainer" class="item-info-item">
+                    <div class="body" id="templateContent">
+                        <textarea id="jsoneditor" name="jsoneditor"></textarea>
+                    </div>
+                </div>
+                <div id="handbookContainer" class="item-info-item">
+                    <div class="body" id="handbookContent">
+                        <!--<div id="handbookLoad"><div class="loader"></div></div>-->
+                    </div>
+                </div>
+            </div>
+
+            <section id="itemInfo">
+
+                <div id="browseContainer" class="item-info-item">
+                    <div class="body" id="browseContent">
+                        <div class="browse-container">
+                            <div id="browseSidebar" class="sidebar">
+
+                            </div>
+                            <div id="browseItems" class="items">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="craftsContainer" class="item-info-item">
+                    <div class="head-nav">
+                        <nav class="btn-group filters">
+                            <a class="btn btn-info active" href="javascript:void(0);">Intelligence Center</a>
+                            <a class="btn btn-info" href="javascript:void(0);">Workbench</a>
+                            <a class="btn btn-info" href="javascript:void(0);">Lavatory</a>
+                            <a class="btn btn-info" href="javascript:void(0);">Medstation</a>
+                        </nav>
+                    </div>
+                    <div class="body" id="craftsContent">
+                    Loading...
+                    </div>
+                </div>
+
+                <div id="commonIdContainer" class="item-info-item">
+                    <div class="body" id="commonIdContent">
+                    Loading...
+                    </div>
+                </div>
+
+                <div id="resourcesContainer" class="item-info-item">
+                    <div class="body" id="resourcesContent">
+                        <h5 class="title">Modding Tools</h5>
+                        <div class="links" id="cardsMt">
+                            <a href="https://discord.gg/mS8dAtV98B" target="_blank" class="card-bfx">
+                                <div class="card-body discord">
+                                    <h5 class="card-title">WTT Discord Server</h5>
+                                    <p class="card-text">Welcome To Tarkov is a modding group working on a large overhaul mod for SPT. Everyone is welcome to join and learn from the talented people over there.</p>
+                                </div>
+                            </a>
+                            <a href="https://hub.sp-tarkov.com/" target="_blank" class="card-bfx">
+                                <div class="card-body web">
+                                    <h5 class="card-title">SPT Hub</h5>
+                                    <p class="card-text">The place where all SPT mods are officially available. Navigate a massive collection of community-made mods.</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/Perfare/AssetStudio" target="_blank" class="card-bfx">
+                                <div class="card-body github">
+                                    <h5 class="card-title">Asset Studio</h5>
+                                    <p class="card-text">AssetStudio is a tool for exploring, extracting and exporting assets and assetbundles. Mostly used to extract meshes, materials and textures.</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/sinai-dev/UnityExplorer" target="_blank" class="card-bfx"> 
+                                <div class="card-body github">
+                                    <h5 class="card-title">UnityExplorer</h5>
+                                    <p class="card-text">An in-game UI for exploring, debugging and modifying Unity games. Supports most Unity versions from 5.2 to 2021+ (IL2CPP and Mono). For SPT/Tarkov use BIE 5.X Mono.</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/S3RAPH-1M/EscapeFromTarkov-SDK" target="_blank" class="card-bfx">
+                                <div class="card-body github">
+                                    <h5 class="card-title">Escape From Tarkov SDK</h5>
+                                    <p class="card-text">This project is meant for the modders who want to work on custom assets for Escape From Tarkov inside Unity.</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/GrooveypenguinX/WeaponAIOTool" target="_blank" class="card-bfx">
+                                <div class="card-body github">
+                                    <h5 class="card-title">Weapon AIO Tool</h5>
+                                    <p class="card-text">The WTT Team proudly presents our all-in-one tool/tutorial for Escape From Tarkov advanced weapon modding! Follow our step-by-step instructions to effortlessly streamline your weapon creation workflow.</p>
+                                </div>
+                            </a>
+                            <a href="https://dev.sp-tarkov.com/chomp/ModExamples/" target="_blank" class="card-bfx">
+                                <div class="card-body web">
+                                    <h5 class="card-title">Server Mod Examples</h5>
+                                    <p class="card-text">A lot of mod examples for helping you make the server mod you want for SPT. Made by Chomp, the founder of SPT.</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/SeriousCache/UABE/releases" target="_blank" class="card-bfx">
+                                <div class="card-body github">
+                                    <h5 class="card-title">UABE (Unity Asset Bundle Extractor)</h5>
+                                    <p class="card-text">Simple GUI tool and similar to Asset Studio but with UABE you can replace files inside an asset bundle. Like textures, material values, etc.</p>
+                                </div>
+                            </a>
+                            <a href="https://hub.sp-tarkov.com/doc/entry/89-client-modding-quick-start-guide/" target="_blank" class="card-bfx">
+                                <div class="card-body web">
+                                    <h5 class="card-title">Client Modding For SPT</h5>
+                                    <p class="card-text">Use this as a starting point to create your own client mods for SPT.</p>
+                                </div>
+                            </a>
+                        </div>
+
+                        <h5 class="title">Tutorials</h5>
+                        <div class="links" id="cardsTut">
+                            <a href="https://www.youtube.com/watch?v=bZovDdXqcno" target="_blank" class="card-bfx">
+                                <div class="card-body video">
+                                    <h5 class="card-title">Weapon Container with AIO Tool</h5>
+                                    <p class="card-text">How to add a new weapon with animations to SPT. Software used: Blender, WeaponAIOTool, Unity with EFT SDK, AssetStudio.</p>
+                                </div>
+                            </a>
+                            <a href="https://www.youtube.com/watch?v=doq5ko2nC_c" target="_blank" class="card-bfx">
+                                <div class="card-body video">
+                                    <h5 class="card-title">Weapon Creation tutorial and Animation Retargeting</h5>
+                                    <p class="card-text">Weapon Creation Tutorial with Animation Retargeting from other games. This is only the workflow for Blender.</p>
+                                </div>
+                            </a>
+                            <a href="https://www.youtube.com/watch?v=nzGnW36_D5k" target="_blank" class="card-bfx">
+                                <div class="card-body video">
+                                    <h5 class="card-title">Load BSG Mesh and Textures into Unity with the SDK</h5>
+                                    <p class="card-text">In this video you will learn how to load asset bundles to compare Escape From Tarkov assets to your own textures and materials.</p>
+                                </div>
+                            </a>
+                            <a href="https://www.youtube.com/watch?v=nLMqqICNdm4" target="_blank" class="card-bfx">
+                                <div class="card-body video">
+                                    <h5 class="card-title">Install SPT</h5>
+                                    <p class="card-text">This is the only SPT Installation guide you need.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bulkContainer" class="item-info-item">
+                    <div class="body" id="bulkContent">
+                        <div class="header">
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="objectIds" placeholder="Number of MongoDB IDs (1-50)" name="objectIds" min="1" max="50" required />
+                                <input type="button" class="btn" id="bulkGen" value="Generate" />
+                            </div>
+                        </div>
+                        <div class="bulk-output"></div>
+                        <div class="bulk-output-tools"></div>
+                    </div>
+                </div>
+                
+            </section> <!-- /.itemInfo -->
+
+        </div> <!-- /.main-app -->
+
+        <div class="footer-container">
+
+            <section id="welcomeMessage">
+                <div class="body">
+                    <p>Search through Escape From Tarkov databases with Tarkov API. This tool is designed to help you find items and their information in the game. You can search for items by their name or by their ID. The search results will show you the item's name, ID, and other information. This tool is perfect for modders, developers, and players who want to learn more about the game's items and their properties.</p>
+                    This website takes advantage of localStorage. If you want to clear the data, you can do it in your browser settings. When a new SPT version is released and the website is not updated, you can clear the localStorage to get the latest data.
+                </div>
+            </section>
+
+            <footer>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6 copyright">
+                            <div>&copy; 2024 - Tarkynator - Made by <a href="https://moxopixel.com/" target="_blank">MoxoPixel</a> / <a href="https://emils.graphics" target="_blank">Emils Graphics</a></div>
+                        </div>
+                        <div class="col-md-6 donate">
+                            <div class="text-end">
+                                <a class="kofi" href="https://ko-fi.com/moxopixel" target="_blank"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+
+    </div> <!-- /.page-wrap -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("jsoneditor"), {
+            lineNumbers: true,
+            mode: "application/json",
+            theme: "mbo",
+            readOnly: true
+        });
+    </script>
+</body>
+</html>
