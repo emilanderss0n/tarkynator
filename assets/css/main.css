@@ -1170,6 +1170,14 @@ footer .text-end {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
+
+    .handbook-item .preset-available {
+        padding: 1.5rem;
+    }
+
+    .handbook-item .preset-available .preset-items {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 @media (min-width: 1300px) {
