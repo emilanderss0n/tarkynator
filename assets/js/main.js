@@ -275,20 +275,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 const itemDataHandbook = handbookData.Items.find(item => item.Id === itemId);
                 const parentId = itemDataHandbook ? itemDataHandbook.ParentId : 'N/A';
 
-                // Check if any category is "Weapon"
+                // Check if any category is "Weapon" or "Gear"
                 let masteringName = '';
-                if (categories.some(category => category.name === "Weapon")) {
+                let presetId = '';
+                let presetName = '';
+                let presetItemsHTML = '';
+                if (categories.some(category => category.name === "Weapon" || category.name === "Chest rig")) {
                     const globalsData = await fetchData(GLOBALS, { method: 'GET' });
                     const mastering = globalsData.config.Mastering.find(master => master.Templates.includes(itemId));
                     if (mastering) {
                         masteringName = mastering.Name;
+                    }
+
+                    // Check ItemPresets for the item
+                    const itemPreset = Object.values(globalsData.ItemPresets).find(preset => preset._encyclopedia === itemId);
+                    if (itemPreset) {
+                        presetId = itemPreset._id;
+
+                        presetItemsHTML = itemPreset._items.slice(1).map(item => { // Skip the first item
+                            const iconLink = `data/icons/${item._tpl}-icon.webp`; // Assuming the icon image is stored in this path
+                            const presetLink = item._tpl; // Use _tpl for the link
+                            return `
+                                <div class="preset-item">
+                                    <a href="javascript:void(0)" data-link="${presetLink}">
+                                        <img src="${iconLink}" alt="Preset item image" />
+                                        <span class="slot-id">${item.slotId}</span>
+                                    </a>
+                                </div>
+                            `;
+                        }).join('');
+                        presetName = itemPreset._name;
                     }
                 }
 
                 handbookContent.innerHTML = `
                     <div class="d-flex handbook-item">
                         <div class="left">
-
+    
                             <div class="handbook-image">
                                 <div class="stripes"></div>
                                 <img src="${image512pxLink}" alt="Handbook image" />
@@ -297,10 +320,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <a class="btn btn-info strong" href="${itemData.wikiLink}" target="_blank"><i class="bi bi-book"></i> Wiki</a>
                                 <div class="handbook-barters">${bartersHTML}</div>
                             </div>
-
+    
                         </div>
                         <div class="right">
-
+    
                             <div class="main card">
                                 <h3 class="title">${itemElement.textContent}</h3>
                                 <figure>
@@ -315,8 +338,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </figure>
                                 </div>
                                 ${slotsHTML ? `<h5>Attachment Slots</h5><div class="slots">${slotsHTML}</div>` : ''}
+                                ${presetId ? `<div class="preset-available"><h5>Default Preset: ${presetName}</h5><figure><figcaption class="blockquote-footer">Preset ID: <span class="global-id">${presetId}</span></figcaption></figure><div class="preset-items">${presetItemsHTML}</div></div>` : ''}
                             </div>
-
+    
                             <div class="double-column">
                             
                                 ${usedInTasksHTML}
@@ -327,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </figure>
                                     <ol class="list-group">${categoriesHTML}</ol>
                                 </div>
-
+    
                             </div>
                         </div>
                     </div>

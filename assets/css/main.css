@@ -743,6 +743,22 @@ span.global-id.copied::after {
     margin-top: 1rem;
 }
 
+.handbook-item .preset-available {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    background-color: var(--content-bg-light);
+    padding: 1rem;
+    flex-direction: column;
+    border-radius: var(--br-med);
+}
+
+.handbook-item .preset-available .preset-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
 #browseContainer {
     will-change: transform, opacity;
     animation: inAni 0.5s ease;
