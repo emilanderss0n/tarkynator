@@ -253,8 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateHandbookContent = async (itemElement, usedInTasksHTML) => {
         try {
-            const data = await fetchData(DATA_URL, { method: 'GET' });
             const itemId = itemElement.dataset.itemId;
+            const data = await fetchData(DATA_URL, { method: 'GET' });
             const itemData = data.items[itemId];
             const categories = itemData.categories;
             let slotsHTML = '';
@@ -275,7 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const itemDataHandbook = handbookData.Items.find(item => item.Id === itemId);
                 const parentId = itemDataHandbook ? itemDataHandbook.ParentId : 'N/A';
 
-                // Check if any category is "Weapon" or "Gear"
                 let masteringName = '';
                 let presetId = '';
                 let presetName = '';
@@ -287,17 +286,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         masteringName = mastering.Name;
                     }
 
-                    // Check ItemPresets for the item
                     const itemPreset = Object.values(globalsData.ItemPresets).find(preset => preset._encyclopedia === itemId);
                     if (itemPreset) {
                         presetId = itemPreset._id;
 
-                        presetItemsHTML = itemPreset._items.slice(1).map(item => { // Skip the first item
-                            const iconLink = `data/icons/${item._tpl}-icon.webp`; // Assuming the icon image is stored in this path
-                            const presetLink = item._tpl; // Use _tpl for the link
+                        presetItemsHTML = itemPreset._items.slice(1).map(item => {
+                            const iconLink = `data/icons/${item._tpl}-icon.webp`;
+                            const presetLink = item._tpl;
                             return `
                                 <div class="preset-item">
-                                    <a href="javascript:void(0)" data-link="${presetLink}">
+                                    <a href="javascript:void(0)" class="search-result-link" data-link="${presetLink}">
                                         <img src="${iconLink}" alt="Preset item image" />
                                         <span class="slot-id">${item.slotId}</span>
                                     </a>
@@ -311,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 handbookContent.innerHTML = `
                     <div class="d-flex handbook-item">
                         <div class="left">
-    
                             <div class="handbook-image">
                                 <div class="stripes"></div>
                                 <img src="${image512pxLink}" alt="Handbook image" />
@@ -320,10 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <a class="btn btn-info strong" href="${itemData.wikiLink}" target="_blank"><i class="bi bi-book"></i> Wiki</a>
                                 <div class="handbook-barters">${bartersHTML}</div>
                             </div>
-    
                         </div>
                         <div class="right">
-    
                             <div class="main card">
                                 <h3 class="title">${itemElement.textContent}</h3>
                                 <figure>
@@ -340,25 +335,32 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${slotsHTML ? `<h5>Attachment Slots</h5><div class="slots">${slotsHTML}</div>` : ''}
                                 ${presetId ? `<div class="preset-available"><h5>Default Preset: ${presetName}</h5><figure><figcaption class="blockquote-footer">Preset ID: <span class="global-id">${presetId}</span></figcaption></figure><div class="preset-items">${presetItemsHTML}</div></div>` : ''}
                             </div>
-    
                             <div class="double-column">
-                            
                                 ${usedInTasksHTML}
-        
                                 <div class="categories card">
                                     <figure>
                                         <figcaption class="blockquote-footer"> Parent Categories</figcaption>
                                     </figure>
                                     <ol class="list-group">${categoriesHTML}</ol>
                                 </div>
-    
                             </div>
                         </div>
                     </div>
                 `;
 
                 handbookNavLink.classList.remove('disabled');
-                handbookNavLink.ariaDisabled = false;
+
+                // Add event listener for search-result-link
+                document.addEventListener('click', function (event) {
+                    const link = event.target.closest('.search-result-link');
+                    if (link) {
+                        event.preventDefault();
+                        const dataLink = link.getAttribute('data-link');
+                        itemSearchInput.value = dataLink;
+                        fetchItemData(dataLink);
+                    }
+                });
+
             } catch (error) {
                 console.error('Error fetching handbook data:', error);
                 handbookContent.innerHTML = '<p>Error fetching handbook data.</p>';
