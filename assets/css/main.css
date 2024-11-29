@@ -853,10 +853,6 @@ span.global-id.copied::after {
     margin: 0;
 }
 
-#craftsContainer {
-    display: none;
-}
-
 #craftsContainer .head-nav {
     padding: 1.5rem;
     background: var(--toolbar-bg);
@@ -929,10 +925,6 @@ a.toggle-req-items {
     margin: 0;
 }
 
-#commonIdContainer {
-    display: none;
-}
-
 #commonIdContainer .body {
     padding: 2rem 1.5rem;
     display: grid;
@@ -945,10 +937,6 @@ a.toggle-req-items {
     background-color: var(--list-item);
     padding: 1rem 1.5rem;
     border-radius: 0.7rem;
-}
-
-#resourcesContainer {
-    display: none;
 }
 
 #resourcesContainer .body {
@@ -1017,10 +1005,6 @@ a.toggle-req-items {
     margin-left: 7rem;
 }
 
-#bulkContainer {
-    display: none;
-}
-
 #bulkContainer .body {
     padding: 2rem 1.5rem;
 }
@@ -1056,13 +1040,7 @@ a.toggle-req-items {
 
 .main-app {
     padding: 0;
-    padding-bottom: 18rem;
-}
-
-.footer-container {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    padding-bottom: 5rem;
 }
 
 #welcomeMessage {
