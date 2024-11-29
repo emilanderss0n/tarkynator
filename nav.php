@@ -10,20 +10,20 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" id="homeNavLink" href="<?= BASE_URL ?>">Items</a>
+                    <a class="nav-link <?php if ($activePage == 'template') { echo 'active'; } ?>" id="homeNavLink" href="<?= BASE_URL ?>">Items</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="craftsNavLink" href="<?= BASE_URL ?>/pages/crafts">Crafts</a>
+                    <a class="nav-link <?php if ($activePage == 'crafts') { echo 'active'; } ?>" id="craftsNavLink" href="<?= BASE_URL ?>/crafts">Crafts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="commonIdNavLink" href="<?= BASE_URL ?>/pages/common-id">Common IDs</a>
+                    <a class="nav-link <?php if ($activePage == 'common-id') { echo 'active'; } ?>" id="commonIdNavLink" href="<?= BASE_URL ?>/common-id">Common IDs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="resourcesNavLink" href="<?= BASE_URL ?>/pages/resources">Resources</a>
+                    <a class="nav-link <?php if ($activePage == 'resources') { echo 'active'; } ?>" id="resourcesNavLink" href="<?= BASE_URL ?>/resources">Resources</a>
                 </li>
             </ul>
             <span class="navbar-text">
-                <a href="<?= BASE_URL ?>/pages/mongo-gen" class="btn btn-outline-info d-none d-lg-block">ID Generator</a>
+                <a href="<?= BASE_URL ?>/mongo-gen" class="btn btn-outline-info d-none d-lg-block">ID Generator</a>
             </span>
         </div>
     </div>

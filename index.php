@@ -1,6 +1,6 @@
 <?php 
-include_once('header.php');
 $activePage = 'template';
+include_once('header.php');
 ?>
 
 <div class="container-fluid main-app">
