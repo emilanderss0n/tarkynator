@@ -10,22 +10,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" id="templateNavLink" href="javascript:void(0);">Template</a>
+                    <a class="nav-link active" id="homeNavLink" href="<?= BASE_URL ?>">Items</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="handbookNavLink" href="javascript:void(0);">Handbook</a>
+                    <a class="nav-link" id="craftsNavLink" href="<?= BASE_URL ?>/pages/crafts">Crafts</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        More
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" id="craftsNavLink" href="<?= BASE_URL ?>/pages/crafts">Crafts</a>
-                        </li>
-                        <li><a class="dropdown-item" id="commonIdNavLink" href="<?= BASE_URL ?>/pages/common-id">Common IDs</a></li>
-                        <li><a class="dropdown-item" id="resourcesNavLink" href="<?= BASE_URL ?>/pages/resources">Resources</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link" id="commonIdNavLink" href="<?= BASE_URL ?>/pages/common-id">Common IDs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="resourcesNavLink" href="<?= BASE_URL ?>/pages/resources">Resources</a>
                 </li>
             </ul>
             <span class="navbar-text">

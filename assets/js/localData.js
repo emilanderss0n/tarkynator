@@ -1,7 +1,3 @@
-export const templateNavLink = document.getElementById('templateNavLink');
-export const handbookNavLink = document.getElementById('handbookNavLink');
-export const browseNavLink = document.getElementById('browseNavLink');
-
 export const DATA_URL = 'data/tarkov_data.json';
 export const QUESTS_URL = 'data/quests.json';
 export const ITEMS_URL = 'data/items.json';

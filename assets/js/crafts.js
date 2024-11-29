@@ -3,14 +3,12 @@ import { fetchData } from './cache.js';
 document.addEventListener('DOMContentLoaded', () => {
 
     const craftsContainer = document.getElementById('craftsContainer');
-    const craftsNavLinks = document.querySelectorAll('#craftsContainer .btn');
+    const craftsCategoryToggles = document.querySelectorAll('#craftsContainer .btn');
     const craftsContent = document.getElementById('craftsContent');
 
-    const navLinksAll = document.querySelectorAll('.head-nav .btn');
-
     const getActiveCraftNavLink = () => {
-        const activeNavLink = document.querySelector('#craftsContainer .btn-group .btn.active');
-        return activeNavLink ? activeNavLink.textContent.trim() : null;
+        const activeCraftCategory = document.querySelector('#craftsContainer .btn-group .btn.active');
+        return activeCraftCategory ? activeCraftCategory.textContent.trim() : null;
     };
 
     const fetchCraftsData = () => {
@@ -116,10 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchCraftsData();
 
-    // Navlinks are matched by their text content, example: templateNavLink is connected to templateContainer
-    function setActiveNavLink(navLink) {
-        navLinksAll.forEach(link => link.classList.remove('active'));
-        navLink.classList.add('active');
+    function setActiveCraftCategory(craftCategory) {
+        craftsCategoryToggles.forEach(link => link.classList.remove('active'));
+        craftCategory.classList.add('active');
     }
 
     function debounce(func, wait) {
@@ -130,10 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    craftsNavLinks.forEach(navLink => {
-        navLink.addEventListener('click', debounce((event) => {
+    craftsCategoryToggles.forEach(craftCategory => {
+        craftCategory.addEventListener('click', debounce((event) => {
             event.preventDefault();
-            setActiveNavLink(navLink);
+            setActiveCraftCategory(craftCategory);
             fetchCraftsData();
         }, 100));
     });

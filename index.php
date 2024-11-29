@@ -9,8 +9,12 @@ $activePage = 'template';
         <section id="itemSearch">
             <form class="container-fluid search-container">
                 <div class="input-control">
-                    <input id="itemSearchInput" class="form-control form-control-lg" type="text"
-                        placeholder="Search item id or name" aria-label="Item search" autofocus>
+                    <input id="itemSearchInput" class="form-control form-control-lg" type="text" placeholder="Search item id or name" aria-label="Item search" autofocus>
+                    <nav id="toggleNav" class="btn-group inactive">
+                        <i class="bi bi-filter icon"></i>
+                        <a class="nav-link btn sm" id="templateNavLink" href="javascript:void(0);">Template</a>
+                        <a class="nav-link btn sm " id="handbookNavLink" href="javascript:void(0);">Handbook</a>
+                    </nav>
                     <a href="javascript:void(0);" id="browseNavLink" data-bs-toggle="tooltip"
                         data-bs-placement="top" data-bs-title="Browse"><i class="bi bi-ui-radios-grid"></i></a>
                     <div class="input-search-icon">

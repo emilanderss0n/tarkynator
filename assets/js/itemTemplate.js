@@ -1,6 +1,6 @@
 import { checkJsonEditor, checkJsonEditorSimple } from './checkJsonEditor.js';
 import { fetchData } from './cache.js';
-import { templateNavLink, handbookNavLink, browseNavLink, DATA_URL, QUESTS_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS, SUITS, FLEAPRICES, DEPENDENCIES } from './localData.js';
+import { DATA_URL, QUESTS_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS, SUITS, FLEAPRICES, DEPENDENCIES } from './localData.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinner = document.querySelector('#activity');
     const breadcrumb = document.getElementById('breadcrumb');
 
+    const templateNavLink = document.getElementById('templateNavLink');
+    const handbookNavLink = document.getElementById('handbookNavLink');
+    const browseNavLink = document.getElementById('browseNavLink');
+
+    const toggleNav = document.getElementById('toggleNav');
     const templateContainer = document.getElementById('templateContainer');
     const handbookContainer = document.getElementById('handbookContainer');
 
@@ -179,6 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         templateNavLink.classList.add('active');
         toggleContainers(templateContainer, templateContainer, handbookContainer, browseContainer);
+
+        toggleNav.classList.remove('inactive');
 
         const breadcrumbHTML = itemTypes.split(',')
             .reverse()
@@ -612,6 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
     browseNavLink.addEventListener('click', (event) => {
         event.preventDefault();
         toggleContainers(browseContainer, templateContainer, handbookContainer, browseContainer);
+        toggleNav.classList.add('inactive');
         fetchBrowseData('Ammo packs');
         breadcrumb.style.display = 'none';
     });

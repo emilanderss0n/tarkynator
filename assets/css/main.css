@@ -122,20 +122,20 @@ textarea::placeholder {
     opacity: 0.5;
 }
 
-.btn,
-.btn:focus {
+.btn:not(.btn-group .btn.sm),
+.btn:not(.btn-group .btn.sm):focus {
     background-color: var(--main-color) !important;
     color: var(--background-color) !important;
     border: none !important;
 }
 
-.btn:hover {
+.btn:not(.btn-group .btn.sm):hover {
     background-color: var(--main-color-hover) !important;
     color: var(--background-color) !important;
     border: none !important;
 }
 
-.btn:active {
+.btn:not(.btn-group .btn.sm):active {
     background-color: var(--main-color-bg-active) !important;
     color: var(--background-color) !important;
     border: none !important;
@@ -176,6 +176,55 @@ textarea::placeholder {
 ul li,
 ol li {
     margin-bottom: 0.4rem;
+}
+
+.btn-group {
+    display: flex;
+    align-items: center;
+    background-color: var(--header-bg);
+    color: var(--bright-color);
+    padding: 4px;
+    border-radius: 0.3rem;
+    gap: 0.4rem;
+}
+
+.btn-group.inactive {
+    opacity: 0.2;
+}
+
+.btn-group.inactive>a {
+    cursor: default;
+    pointer-events: none;
+}
+
+.btn-group>i {
+    padding: 4px 8px 4px 4px;
+    background-color: transparent;
+    color: var(--bright-color);
+    margin: 0;
+    position: relative;
+}
+
+.btn-group>i::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background-color: var(--background-color);
+}
+
+.btn-group>a {
+    padding: 4px 7px;
+    background-color: transparent;
+    color: var(--bright-color);
+    margin: 0;
+    border-radius: 0.15rem;
+}
+
+.btn-group .btn.active {
+    color: var(--white);
 }
 
 .pagination {
@@ -583,6 +632,17 @@ span.global-id.copied::after {
     display: inline-block;
     box-sizing: border-box;
     animation: loader 1s linear infinite;
+}
+
+#mainSearch {
+    position: relative;
+}
+
+#toggleNav {
+    position: absolute;
+    right: 4rem;
+    top: 0.2rem;
+    z-index: 2;
 }
 
 #breadcrumb {
