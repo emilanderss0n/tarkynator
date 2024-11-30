@@ -443,6 +443,39 @@ span.global-id.copied::after {
     user-select: none;
 }
 
+.json-edit-btn {
+    opacity: 0.5;
+    transition: .2s all linear;
+    margin-left: 5px;
+    position: relative;
+}
+
+.json-edit-btn:hover {
+    opacity: 1;
+}
+
+.json-edit-btn .bi {
+    position: relative;
+}
+
+.json-edit-btn .bi.copied::after {
+    content: '\F26D';
+    font-family: 'Bootstrap-icons';
+    position: absolute;
+    width: 30px;
+    color: transparent;
+    height: 24px;
+    background-size: contain;
+    border-radius: 0;
+    right: -30px;
+    top: -3px;
+    background-image: url(../img/blue_check.png);
+    animation-name: inAniLeft;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
 .CodeMirror-code>div:hover {
     background-color: var(--subtle-bg);
 }
@@ -1217,6 +1250,18 @@ footer .text-end {
 
     100% {
         transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes inAniLeft {
+    0% {
+        transform: translateX(-5px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
         opacity: 1;
     }
 }

@@ -1,4 +1,4 @@
-    <div class="footer-container">
+<div class="footer-container">
 
         <section id="welcomeMessage">
             <div class="body">
@@ -38,11 +38,55 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <script>
-        var editor = CodeMirror.fromTextArea(document.getElementById("jsoneditor"), {
-            lineNumbers: true,
-            mode: "application/json",
-            theme: "mbo",
-            readOnly: true
+        var editor; // Declare editor variable in the global scope
+        document.addEventListener("DOMContentLoaded", function() {
+            var jsonEditorElement = document.getElementById("jsoneditor");
+                editor = CodeMirror.fromTextArea(jsonEditorElement, {
+                    lineNumbers: true,
+                    mode: "application/json",
+                    theme: "mbo",
+                    readOnly: true
+                });
+                editor.on("renderLine", function(cm, line, element) {
+                    const lineText = line.text.trim();
+                    if (lineText.endsWith("{") || lineText.includes(":")) {
+                        const copyLink = document.createElement("a");
+                        copyLink.href = "#";
+                        copyLink.className = "json-edit-btn";
+                        copyLink.innerHTML = "<i class='bi bi-copy'></i>"; // Clipboard icon
+                        copyLink.onclick = function(event) {
+                            event.preventDefault();
+                            let jsonText;
+                            if (lineText.endsWith("{")) {
+                                const startLine = line.lineNo();
+                                let endLine = startLine;
+                                let openBraces = 1;
+                                while (openBraces > 0 && endLine < cm.lineCount()) {
+                                    endLine++;
+                                    const lineContent = cm.getLine(endLine).trim();
+                                    if (lineContent.includes("{")) openBraces++;
+                                    if (lineContent.includes("}")) openBraces--;
+                                }
+                                jsonText = cm.getRange(
+                                    { line: startLine, ch: line.text.indexOf("{") },
+                                    { line: endLine, ch: cm.getLine(endLine).length }
+                                ).trim();
+                            } else {
+                                const valueMatch = lineText.match(/:\s*(.*),?$/);
+                                jsonText = valueMatch ? valueMatch[1].replace(/,$/, '') : lineText;
+                            }
+                            navigator.clipboard.writeText(jsonText).then(() => {
+                                event.target.classList.add('copied');
+                                setTimeout(() => {
+                                    event.target.classList.remove('copied');
+                                }, 1400);
+                            }).catch(err => {
+                                console.error("Failed to copy text: ", err);
+                            });
+                        };
+                        element.appendChild(copyLink);
+                    }
+                });
         });
     </script>
     <?php endif; ?>
