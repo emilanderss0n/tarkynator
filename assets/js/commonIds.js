@@ -101,7 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="bosses card">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
-                                        <caption>Bosses</caption>
+                                        <div class="page-top-title">
+                                            <img src="assets/img/handbook/icon_gear_facecovers.png" height="38" width="29" />
+                                            <h4>Bosses</h4>
+                                        </div>
                                         <thead>
                                             <tr>
                                                 <th scope="col">Name</th>
@@ -118,7 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="hideout-stations card">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
-                                        <caption>Hideout Stations</caption>
+                                        <div class="page-top-title">
+                                            <img src="assets/img/handbook/icon_gear_secured.png" height="34" width="32" />
+                                            <h4>Hideout Stations</h4>
+                                        </div>
                                         <thead>
                                             <tr>
                                                 <th scope="col">Name</th>
@@ -135,7 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="traders card">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
-                                        <caption>Traders</caption>
+                                        <div class="page-top-title">
+                                            <img src="assets/img/handbook/icon_barter.png" height="24" width="25" />
+                                            <h4>Traders</h4>
+                                        </div>
                                         <thead>
                                             <tr>
                                                 <th scope="col">Name</th>
@@ -152,7 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="handbook-categories card">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
-                                        <caption>Handbook Categories</caption>
+                                        <div class="page-top-title">
+                                            <img src="assets/img/handbook/icon_info.png" height="27" width="29" />
+                                            <h4>Handbook Categories</h4>
+                                        </div>
                                         <thead>
                                             <tr>
                                                 <th scope="col">Name</th>

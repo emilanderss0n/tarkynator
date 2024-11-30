@@ -23,6 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const browseSidebar = document.getElementById('browseSidebar');
     const browseItems = document.getElementById('browseItems');
 
+    // Add search filter input element
+    const searchFilter = document.createElement('div');
+    searchFilter.className = 'search-filter';
+    searchFilter.innerHTML = `
+        <input type="text" id="browseSearchInput" class="form-control" placeholder="Search items by name...">
+    `;
+    browseItems.insertAdjacentElement('afterbegin', searchFilter);
 
     checkJsonEditor();
 
@@ -443,51 +450,73 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPages = Math.ceil(totalItems / perPage);
 
         let paginationHTML = '<div id="browsePagination">';
-        paginationHTML += `
-            <div class="search-filter">
-                <input type="text" id="browseSearchInput" placeholder="Filter by name" />
-            </div>
-        `;
-
         if (totalPages > 1) {
             paginationHTML += '<nav aria-label="Page navigation"><ul class="pagination pagination-sm">';
             for (let i = 1; i <= totalPages; i++) {
                 paginationHTML += `
                     <li class="page-item ${i === currentPage ? 'active' : ''}">
-                        <a href="javascript:void(0);" class="page-link">${i}</a>
+                        <a href="javascript:void(0);" class="page-link" data-page="${i}">${i}</a>
                     </li>`;
             }
             paginationHTML += '</ul></nav>';
         }
-
         paginationHTML += '</div>';
         return paginationHTML;
+    };
+
+    const createItemElement = (item) => {
+        const itemIconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
+        const itemElement = document.createElement('a');
+        itemElement.href = "javascript:void(0);";
+        itemElement.className = "browse-item card-bfx";
+        itemElement.dataset.itemId = item.id;
+        itemElement.innerHTML = `
+            <div class="card-body">
+                <img class="small-glow" src="${itemIconLink}" alt="${item.name}" width="46" height="46" />
+                <div class="item-title">
+                    <h4>${item.name}</h4>
+                </div>
+            </div>
+        `;
+        return itemElement;
     };
 
     const renderBrowseItems = () => {
         const itemsToDisplay = filteredItemsData.length > 0 ? filteredItemsData : browseItemsData;
         const paginatedItems = paginate(itemsToDisplay, currentPage, itemsPerPage);
-        let browseHTML = '';
+        const fragment = document.createDocumentFragment();
 
         paginatedItems.forEach(item => {
-            const itemIconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
-            browseHTML += `
-                <a href="javascript:void(0);" class="browse-item card-bfx" data-item-id="${item.id}">
-                    <div class="card-body">
-                        <img class="small-glow" width="46" height="46" src="${itemIconLink}" alt="${item.name}" />
-                        <div class="item-title">
-                            <h4>${item.name}</h4>
-                        </div>
-                    </div>
-                </a>
-            `;
+            const itemElement = createItemElement(item);
+            fragment.appendChild(itemElement);
         });
 
-        browseHTML += renderPaginationControls(itemsToDisplay.length, itemsPerPage);
-        browseItems.innerHTML = browseHTML;
+        browseItems.innerHTML = ''; // Clear existing items
+        browseItems.appendChild(searchFilter); // Ensure search filter is at the top
+        browseItems.appendChild(fragment);
+        browseItems.insertAdjacentHTML('beforeend', renderPaginationControls(itemsToDisplay.length, itemsPerPage));
 
-        attachEventListeners();
+        requestIdleCallback(attachEventListeners); // Defer attaching event listeners
     };
+
+    const debounce = (func, delay) => {
+        let debounceTimer;
+        return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        };
+    };
+
+    const handleSearch = debounce((event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        if (searchTerm.length > 2) {
+            filteredItemsData = browseItemsData.filter(item => item.name.toLowerCase().includes(searchTerm));
+            currentPage = 1; // Reset to the first page on search
+            renderBrowseItems();
+        }
+    }, 2000); // 2 seconds debounce delay
 
     const attachEventListeners = () => {
         document.querySelectorAll('#browseItems .browse-item').forEach(itemElement => {
@@ -502,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#browsePagination .page-link').forEach(pageLink => {
             pageLink.addEventListener('click', (event) => {
                 event.preventDefault();
-                currentPage = parseInt(event.target.textContent, 10);
+                currentPage = parseInt(event.target.dataset.page, 10);
                 renderBrowseItems();
                 window.scrollTo({ top: 0, behavior: "smooth" });
             });
@@ -510,8 +539,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const browseSearchInput = document.getElementById('browseSearchInput');
         if (browseSearchInput) {
-            browseSearchInput.removeEventListener('change', handleSearch); // Prevent duplicate listeners
-            browseSearchInput.addEventListener('change', handleSearch);
+            browseSearchInput.removeEventListener('input', handleSearch); // Prevent duplicate listeners
+            browseSearchInput.addEventListener('input', handleSearch);
         }
 
         document.querySelectorAll('.browse-category').forEach(categoryElement => {
@@ -524,18 +553,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-
-    const handleSearch = (event) => {
-        const searchTerm = event.target.value.toLowerCase();
-        filteredItemsData = browseItemsData.filter(item => item.name.toLowerCase().includes(searchTerm));
-        currentPage = 1; // Reset to the first page on search
-        renderBrowseItems();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+    const categoryCache = {};
 
     const fetchBrowseData = (itemType) => {
         browseItems.innerHTML = '<div id="activityContent"><span class="loader"></span></div>';
         currentPage = 1;
+
+        if (categoryCache[itemType]) {
+            browseItemsData = categoryCache[itemType];
+            filteredItemsData = [];
+            requestIdleCallback(renderBrowseItems);
+            return;
+        }
 
         fetchData(DATA_URL, { method: 'GET' })
             .then(data => {
@@ -545,8 +574,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
                 browseItemsData.sort((a, b) => a.name.localeCompare(b.name));
 
+                categoryCache[itemType] = browseItemsData; // Cache the filtered items
                 filteredItemsData = []; // Reset filtered data
-                renderBrowseItems();
+                requestIdleCallback(renderBrowseItems);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);

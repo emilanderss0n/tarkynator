@@ -69,6 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <img src="${reward.item.iconLink}" alt="${reward.item.name}" />
                                     <div class="item-title">
                                         <h4><span class="global-id title">${reward.item.name}</span></h4>
+                                        <p class="level">
+                                            <i class="bi bi-lightning-charge-fill"></i> Level ${craft.level}
+                                        </p>
                                     </div>
                                 `).join(', ')}
                             </div>
@@ -82,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </ul>
                                 </div>
                             ` : ''}
-                            ${Array.isArray(craft.taskUnlock) && craft.taskUnlock.length > 0 ? `
-                                <p class="quest"><i class="bi bi-check-circle"></i> <strong>${craft.taskUnlock.name}</strong> (Level ${craft.taskUnlock.minPlayerLevel})</p>
+                            ${craft.taskUnlock ? `
+                                <p class="quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /><strong>${craft.taskUnlock.name}</strong> (Player lvl ${craft.taskUnlock.minPlayerLevel})</p>
                             ` : ''}
                             <div class="craft-id">Craft ID: <span class="global-id">${craft.id}</span></div>
                         </div>

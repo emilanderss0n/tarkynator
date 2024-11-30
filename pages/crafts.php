@@ -6,10 +6,10 @@ include_once('../header.php');
     <div id="craftsContainer" class="item-info-item">
         <div class="head-nav">
             <nav class="btn-group filters">
-                <a class="btn sm btn-info active" href="javascript:void(0);">Intelligence Center</a>
-                <a class="btn sm btn-info" href="javascript:void(0);">Workbench</a>
-                <a class="btn sm btn-info" href="javascript:void(0);">Lavatory</a>
-                <a class="btn sm btn-info" href="javascript:void(0);">Medstation</a>
+                <a class="btn sm active" href="javascript:void(0);">Intelligence Center</a>
+                <a class="btn sm" href="javascript:void(0);">Workbench</a>
+                <a class="btn sm" href="javascript:void(0);">Lavatory</a>
+                <a class="btn sm" href="javascript:void(0);">Medstation</a>
             </nav>
         </div>
         <div class="body" id="craftsContent">

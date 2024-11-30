@@ -37,7 +37,7 @@
     --bright-color: #abaa9f;
     --brighter-color: #efedda;
     --box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 5px 10px -3px rgb(0 0 0 / 75%);
-    --list-item: #181818;
+    --list-item: #1b1b1b;
     --header-bg: #000;
     --br-sm: 0.3rem;
     --br-med: 0.5rem;
@@ -171,17 +171,6 @@ textarea::placeholder {
     background-color: var(--main-color-bg-active);
 }
 
-.btn-group.filters .btn {
-    background-color: var(--background-color);
-    border-color: var(--border-color);
-    color: var(--brighter-color);
-}
-
-.btn-group.filters .btn.active {
-    background-color: var(--main-color-bg-active) !important;
-    color: var(--brighter-color) !important;
-}
-
 .list-group {
     border-color: var(--border-color);
 }
@@ -211,7 +200,8 @@ ol li {
 }
 
 .btn-group>i {
-    padding: 4px 8px 4px 4px;
+    padding: 4px 12px 4px 4px;
+    font-size: 1.2rem;
     background-color: transparent;
     color: var(--bright-color);
     margin: 0;
@@ -237,7 +227,9 @@ ol li {
 }
 
 .btn-group .btn.active {
-    color: var(--white);
+    color: var(--background-color);
+    background-color: var(--main-color);
+    border-radius: 3px !important;
 }
 
 .pagination {
@@ -262,10 +254,28 @@ ol li {
     border-color: var(--border-color);
 }
 
+.page-top-title {
+    margin-bottom: 0.5rem;
+}
+
+.page-top-title h4 {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--bright-color);
+    margin: 0;
+}
+
+.page-top-title:has(img) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .card {
     background-color: var(--list-item);
     border-radius: var(--br-lg);
     border: none;
+    background-image: url(../img/news_li_bg.png);
 }
 
 #cardsMt:hover>.card-bfx::after,
@@ -755,7 +765,7 @@ span.global-id.copied::after {
 .handbook-item .main,
 .handbook-item .categories:has(figure) {
     padding: 1rem;
-    background-color: var(--background-color);
+    background-color: var(--list-item);
     background-image: url(../img/news_li_bg.png);
     border-radius: var(--br-lg);
     margin-bottom: 1.2rem;
@@ -890,6 +900,20 @@ span.global-id.copied::after {
     grid-auto-rows: max-content;
 }
 
+
+#browseItems .search-filter {
+    grid-column: 1 / 4;
+    display: inline-flex;
+    justify-content: flex-end;
+}
+
+#browseSearchInput {
+    height: 100%;
+    border-radius: var(--br-sm);
+    padding: 0.5rem 0.8rem;
+    border: 2px solid var(--border-color);
+}
+
 #browseItems .card-body {
     flex-direction: row;
     gap: 0.7rem;
@@ -908,14 +932,6 @@ span.global-id.copied::after {
     justify-content: flex-end;
     align-items: center;
     gap: 2rem;
-}
-
-#browsePagination #browseSearchInput {
-    height: 100%;
-    border-radius: var(--br-sm);
-    padding: 0.5rem 0.8rem;
-    background-color: var(--cool-bg);
-    border: 2px solid var(--border-color);
 }
 
 #browsePagination .pagination {
@@ -1003,9 +1019,7 @@ a.toggle-req-items {
 }
 
 #commonIdContainer .table-responsive {
-    background-color: var(--list-item);
     padding: 1rem 1.5rem;
-    border-radius: 0.7rem;
 }
 
 #resourcesContainer .body {
