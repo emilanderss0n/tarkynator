@@ -98,6 +98,9 @@
     <?php if ($activePage === 'crafts') : ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/crafts.js"></script>
     <?php endif; ?>
+    <?php if ($activePage === 'achievements') : ?>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/achievements.js"></script>
+    <?php endif; ?>
     <?php if ($activePage === 'mongo-gen') : ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/mongoGen.js"></script>
     <?php endif; ?>
