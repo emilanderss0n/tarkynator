@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Use the function for all containers
+    setupCardMouseMove("recentSearches");
     setupCardMouseMove("browseItems");
     setupCardMouseMove("cardsMt");
     setupCardMouseMove("cardsTut");
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isAnimationFrameRequested = false;
     }
 
-    ["browseItems", "cardsMt", "cardsTut"].forEach(id => {
+    ["recentSearches", "browseItems", "cardsMt", "cardsTut"].forEach(id => {
         const element = document.getElementById(id);
         if (element) {
             element.onmousemove = e => {

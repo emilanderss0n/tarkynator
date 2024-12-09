@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchResults = document.querySelector('.searchResults .list-group');
     const spinner = document.querySelector('#activity');
     const breadcrumb = document.getElementById('breadcrumb');
+    const recentSearchesElement = document.getElementById('recentSearches');
 
     const templateNavLink = document.getElementById('templateNavLink');
     const handbookNavLink = document.getElementById('handbookNavLink');
@@ -185,9 +186,15 @@ document.addEventListener('DOMContentLoaded', () => {
         searchResults.innerHTML = `<li class="list-group-item">${message}</li>`;
     };
 
+    const toggleRecentSearchesVisibility = (isVisible) => {
+        recentSearchesElement.style.display = isVisible ? 'grid' : 'none';
+    };
+
     const displayItemDetails = async (itemElement) => {
         const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
 
+        // Store the search in localStorage
+        storeRecentSearch(itemElement);
 
         templateNavLink.classList.add('active');
         toggleContainers(templateContainer, templateContainer, handbookContainer, browseContainer);
@@ -199,6 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(type => `${type}`)
             .join(' <i class="bi bi-caret-right-fill"></i> ') + ' <i class="bi bi-caret-right-fill"></i> ' + itemElement.textContent;
         breadcrumb.innerHTML = "<div class='breadcrumb-container'>" + breadcrumbHTML + "</div>";
+        breadcrumb.style.display = 'block'; // Ensure breadcrumb is displayed
 
         let usedInTasksHTML = '';
         if (usedInTasks) {
@@ -233,7 +241,78 @@ document.addEventListener('DOMContentLoaded', () => {
             editor.refresh();
             checkJsonEditorSimple();
         }
+
+        // Hide recent searches
+        toggleRecentSearchesVisibility(false);
     };
+
+    const storeRecentSearch = (itemElement) => {
+        const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+        const itemData = {
+            id: itemElement.dataset.itemId,
+            name: itemElement.textContent,
+            iconLink: itemElement.querySelector('img').src,
+            itemTypes: itemElement.dataset.itemTypes,
+            usedInTasks: itemElement.dataset.usedInTasks
+        };
+
+        // Remove duplicate entries
+        const existingIndex = recentSearches.findIndex(item => item.id === itemData.id);
+        if (existingIndex !== -1) {
+            recentSearches.splice(existingIndex, 1);
+        }
+
+        // Add the new search to the beginning of the array
+        recentSearches.unshift(itemData);
+
+        // Keep only the last 8 searches
+        if (recentSearches.length > 8) {
+            recentSearches.pop();
+        }
+
+        localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+        updateRecentSearches();
+    };
+
+    const updateRecentSearches = () => {
+        const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+        const fragment = document.createDocumentFragment();
+
+        recentSearches.forEach(item => {
+            const listItem = document.createElement('a');
+            listItem.className = 'last-search-item card-bfx';
+            listItem.href = 'javascript:void(0);';
+            listItem.innerHTML = `
+                <div class="card-body">
+                    <img src="${item.iconLink}" alt="${item.name.trim()}" style="width: 50px; height: 50px; margin-right: 10px;">
+                    ${item.name.trim()}
+                </div>
+            `;
+            listItem.dataset.itemId = item.id;
+            listItem.dataset.itemTypes = item.itemTypes;
+            listItem.dataset.usedInTasks = item.usedInTasks;
+
+            listItem.addEventListener('click', () => {
+                displayItemDetails(listItem);
+                breadcrumb.style.display = 'block'; // Ensure breadcrumb is displayed
+            });
+            fragment.appendChild(listItem);
+        });
+
+        recentSearchesElement.innerHTML = '';
+        recentSearchesElement.appendChild(fragment);
+    };
+
+    // Call updateRecentSearches on page load to populate recent searches
+    updateRecentSearches();
+
+    // Hide recent searches when browseContainer is visible
+    const observer = new MutationObserver(() => {
+        const isBrowseContainerVisible = browseContainer.style.display !== 'none';
+        toggleRecentSearchesVisibility(!isBrowseContainerVisible);
+    });
+
+    observer.observe(browseContainer, { attributes: true, attributeFilter: ['style'] });
 
     const updateHandbookContent = async (itemElement, usedInTasksHTML) => {
         try {

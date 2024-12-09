@@ -871,6 +871,23 @@ span.global-id.copied::after {
     gap: 1rem;
 }
 
+#recentSearches {
+    padding: 1rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    animation-name: inAni;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    opacity: 0;
+    animation-delay: 250ms;
+}
+
+#recentSearches .last-search-item .card-body {
+    flex-direction: row;
+}
+
 #browseContainer {
     will-change: transform, opacity;
     animation: inAni 0.5s ease;
@@ -932,7 +949,6 @@ span.global-id.copied::after {
     align-items: start;
     grid-auto-rows: max-content;
 }
-
 
 #browseItems .search-filter {
     grid-column: 1 / 4;
@@ -1119,6 +1135,41 @@ a.toggle-req-items {
     color: var(--brighter-color);
     font-size: .9rem;
     margin-left: 7rem;
+}
+
+#achievementsContainer .body {
+    padding: 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+}
+
+#achievementsContainer .card {
+    padding: 1rem;
+    position: relative;
+    text-shadow: 1px 1px 1px black;
+}
+
+#achievementsContainer .card.ach-hidden::before {
+    content: "\F340";
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-family: 'Bootstrap-icons';
+    font-size: 1.4rem;
+}
+
+#achievementsContainer .card.common {
+    background-color: #303b48;
+}
+
+#achievementsContainer .card.rare {
+    background-color: #402453;
+}
+
+#achievementsContainer .card.legendary {
+    background-color: #813c26;
 }
 
 .generate-single .single-body {
@@ -1308,9 +1359,14 @@ footer .text-end {
     #resourcesContainer .body,
     #mapContent,
     #bulkContainer .body,
-    #browseContainer .body {
+    #browseContainer .body,
+    #achievementsContainer .body {
         padding-left: 3rem;
         padding-right: 3rem;
+    }
+
+    #recentSearches {
+        padding: 1rem 3rem;
     }
 
     #itemSearch {
