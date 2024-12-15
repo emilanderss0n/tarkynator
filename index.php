@@ -34,21 +34,20 @@ include_once('header.php');
             <span>Search for an item</span>
         </nav>
         <div id="recentSearches"></div>
-        <div id="templateContainer" class="item-info-item">
+        <div id="templateContainer" class="component-container item-info-item">
             <div class="body" id="templateContent">
                 <textarea id="jsoneditor" name="jsoneditor"></textarea>
             </div>
         </div>
-        <div id="handbookContainer" class="item-info-item">
+        <div id="handbookContainer" class="component-container item-info-item">
             <div class="body" id="handbookContent">
-                <!--<div id="handbookLoad"><div class="loader"></div></div>-->
             </div>
         </div>
     </div>
 
     <section id="itemInfo">
 
-        <div id="browseContainer" class="item-info-item">
+        <div id="browseContainer" class="component-container item-info-item">
             <div class="body" id="browseContent">
                 <div class="browse-container">
                     <div id="browseSidebar" class="sidebar">

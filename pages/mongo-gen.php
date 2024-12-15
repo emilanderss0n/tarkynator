@@ -10,7 +10,7 @@ include_once('../header.php');
         </div>
     </div>
 
-    <div id="bulkContainer" class="item-info-item">
+    <div id="bulkContainer" class="component-container item-info-item">
         <div class="body" id="bulkContent">
             <div class="header">
                 <div class="input-group">

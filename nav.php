@@ -22,6 +22,9 @@
                     <a class="nav-link <?php if ($activePage == 'crafts') { echo 'active'; } ?>" id="craftsNavLink" href="<?= BASE_URL ?>/crafts">Crafts</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?php if ($activePage == 'quests') { echo 'active'; } ?>" id="questsNavLink" href="<?= BASE_URL ?>/quests">Quests</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?php if ($activePage == 'resources') { echo 'active'; } ?>" id="resourcesNavLink" href="<?= BASE_URL ?>/resources">Resources</a>
                 </li>
             </ul>

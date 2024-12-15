@@ -1,4 +1,5 @@
-const cacheTTL = 90000000; // 25 hours
+// Set cacheTTL to a high value to cache data for a long time
+const cacheTTL = 1000 * 60 * 60 * 24 * 2; // 2 days
 
 function getFromCache(key) {
     const entry = JSON.parse(localStorage.getItem(key));

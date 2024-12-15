@@ -1,6 +1,6 @@
 <div class="footer-container">
 
-        <section id="welcomeMessage">
+        <section id="welcomeMessage" class="component-container">
             <div class="body">
                 <p>Search through Escape From Tarkov databases with Tarkov API. This tool is designed to help you
                     find items and their information in the game. You can search for items by their name or by their
@@ -34,7 +34,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         
-    <?php if ($activePage === 'template') : ?>
+    <?php if ($activePage === 'template' || $activePage === 'quests' ) : ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <script>
@@ -100,6 +100,9 @@
     <?php endif; ?>
     <?php if ($activePage === 'achievements') : ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/achievements.js"></script>
+    <?php endif; ?>
+    <?php if ($activePage === 'quests') : ?>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/quests.js"></script>
     <?php endif; ?>
     <?php if ($activePage === 'mongo-gen') : ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/mongoGen.js"></script>

@@ -3,7 +3,7 @@ $activePage = 'resources';
 include_once('../header.php');
 ?>
 <div class="container-fluid main-app">
-    <div id="resourcesContainer" class="item-info-item">
+    <div id="resourcesContainer" class="component-container item-info-item">
         <div class="body" id="resourcesContent">
             <h5 class="title">Modding Tools</h5>
             <div class="links" id="cardsMt">

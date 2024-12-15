@@ -143,6 +143,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const itemId = urlParams.get('item');
+    if (itemId) {
+        fetchData(DATA_URL, { method: 'GET' })
+            .then(data => {
+                const item = data.items[itemId];
+                if (item) {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item';
+                    const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
+
+                    listItem.innerHTML = `
+                        <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
+                        ${item.name}
+                    `;
+
+                    const handbookCategoriesNames = item.handbookCategories.map(category => category.name).join(', ');
+
+                    // Convert usedInTasks array to just the task IDs
+                    const taskIds = item.usedInTasks ? item.usedInTasks.map(task => task.id).join(',') : '';
+
+                    Object.assign(listItem.dataset, {
+                        itemId: item.id,
+                        itemTypes: handbookCategoriesNames,
+                        usedInTasks: taskIds
+                    });
+                    displayItemDetails(listItem);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching item data:', error);
+            });
+    }
+
     const updateSearchResults = (items) => {
         searchResults.innerHTML = '';
         searchResultsCont.style.display = "inline-block";
@@ -192,6 +226,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const displayItemDetails = async (itemElement) => {
         const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
+
+        const url = new URL(window.location);
+        url.searchParams.set('item', itemId);
+        window.history.pushState({}, '', url);
 
         // Store the search in localStorage
         storeRecentSearch(itemElement);
@@ -487,7 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
         Headsets: "Headsets",
         InfoItems: "Info items",
         Keys: "Keys",
-        Launchers: "Launchers",
         LightLaserDevices: "Light/laser devices",
         MachineGuns: "Machine guns",
         Magazines: "Magazines",
@@ -500,7 +537,6 @@ document.addEventListener('DOMContentLoaded', () => {
         PistolGrips: "Pistol grips",
         Pistols: "Pistols",
         ReceiversSlides: "Receivers & slides",
-        Rounds: "Rounds",
         SMGs: "SMGs",
         SecureContainers: "Secure containers",
         Shotguns: "Shotguns",
@@ -515,15 +551,32 @@ document.addEventListener('DOMContentLoaded', () => {
         Valuables: "Valuables"
     });
 
+    const typesToGroup = new Set([
+        typesEnum.AmmoPacks,
+        typesEnum.Barrels,
+        typesEnum.ChargingHandles,
+        typesEnum.FlashhidersBrakes,
+        typesEnum.GasBlocks,
+        typesEnum.Handguards,
+        typesEnum.Magazines,
+        typesEnum.PistolGrips,
+        typesEnum.ReceiversSlides,
+        typesEnum.Sights,
+        typesEnum.StocksChassis,
+        typesEnum.Suppressors
+    ]);
+
+    let currentPage = 1;
+    let browseItemsData = [];
+    let filteredItemsData = []; // New variable for filtered data
+    const itemsPerPageDefault = 63;
+    let itemsPerPage = itemsPerPageDefault;
+
     const paginate = (items, currentPage, itemsPerPage) => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         return items.slice(startIndex, endIndex);
     };
-    let currentPage = 1;
-    let browseItemsData = [];
-    let filteredItemsData = []; // New variable for filtered data
-    const itemsPerPage = 50;
 
     const renderPaginationControls = (totalItems, perPage) => {
         const totalPages = Math.ceil(totalItems / perPage);
@@ -560,22 +613,68 @@ document.addEventListener('DOMContentLoaded', () => {
         return itemElement;
     };
 
+    let isRendering = false; // Add a flag to prevent multiple calls
+    let isAttachingListeners = false; // Add a flag to prevent multiple calls to attachEventListeners
+
     const renderBrowseItems = () => {
+        if (isRendering) return; // If already rendering, exit the function
+        isRendering = true; // Set the flag to true
+
         const itemsToDisplay = filteredItemsData.length > 0 ? filteredItemsData : browseItemsData;
+        const currentItemType = document.querySelector('.browse-category.active').dataset.itemType.replace(/-/g, ' ');
+        const shouldGroupItems = typesToGroup.has(currentItemType);
+
+        // Adjust itemsPerPage based on grouping
+        itemsPerPage = shouldGroupItems ? 30 : itemsPerPageDefault;
+
         const paginatedItems = paginate(itemsToDisplay, currentPage, itemsPerPage);
         const fragment = document.createDocumentFragment();
 
-        paginatedItems.forEach(item => {
-            const itemElement = createItemElement(item);
-            fragment.appendChild(itemElement);
-        });
+        if (shouldGroupItems) {
+            // Group items by the first word in their name
+            const groupedItems = paginatedItems.reduce((groups, item) => {
+                const firstWord = item.name.split(' ')[0];
+                if (!groups[firstWord]) {
+                    groups[firstWord] = [];
+                }
+                groups[firstWord].push(item);
+                return groups;
+            }, {});
+
+            // Render grouped items
+            Object.keys(groupedItems).forEach(group => {
+                const groupTitle = document.createElement('div');
+                groupTitle.className = 'break group-title';
+                groupTitle.innerHTML = `<h4>${group}</h4>`;
+                fragment.appendChild(groupTitle);
+
+                groupedItems[group].forEach(item => {
+                    const itemElement = createItemElement(item);
+                    fragment.appendChild(itemElement);
+                });
+            });
+        } else {
+            // Render items without grouping
+            paginatedItems.forEach(item => {
+                const itemElement = createItemElement(item);
+                fragment.appendChild(itemElement);
+            });
+        }
 
         browseItems.innerHTML = ''; // Clear existing items
         browseItems.appendChild(searchFilter); // Ensure search filter is at the top
         browseItems.appendChild(fragment);
         browseItems.insertAdjacentHTML('beforeend', renderPaginationControls(itemsToDisplay.length, itemsPerPage));
 
-        requestIdleCallback(attachEventListeners); // Defer attaching event listeners
+        if (!isAttachingListeners) {
+            isAttachingListeners = true;
+            requestIdleCallback(() => {
+                attachEventListeners();
+                isAttachingListeners = false;
+            }); // Defer attaching event listeners
+        }
+
+        isRendering = false; // Reset the flag after rendering is complete
     };
 
     const debounce = (func, delay) => {
@@ -587,6 +686,8 @@ document.addEventListener('DOMContentLoaded', () => {
             debounceTimer = setTimeout(() => func.apply(context, args), delay);
         };
     };
+
+    const debouncedRenderBrowseItems = debounce(renderBrowseItems, 200);
 
     const handleSearch = debounce((event) => {
         const searchTerm = event.target.value.toLowerCase();
@@ -628,6 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 categoryElement.classList.add('active');
                 const itemType = categoryElement.dataset.itemType.replace(/-/g, ' ');
                 fetchBrowseData(itemType);
+                window.scrollTo({ top: 0, behavior: "smooth" });
             });
         });
     };
@@ -641,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (categoryCache[itemType]) {
             browseItemsData = categoryCache[itemType];
             filteredItemsData = [];
-            requestIdleCallback(renderBrowseItems);
+            requestIdleCallback(debouncedRenderBrowseItems);
             return;
         }
 
@@ -655,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 categoryCache[itemType] = browseItemsData; // Cache the filtered items
                 filteredItemsData = []; // Reset filtered data
-                requestIdleCallback(renderBrowseItems);
+                requestIdleCallback(debouncedRenderBrowseItems);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);

@@ -3,7 +3,7 @@ $activePage = 'crafts';
 include_once('../header.php');
 ?>
 <div class="container-fluid main-app">
-    <div id="craftsContainer" class="item-info-item">
+    <div id="craftsContainer" class="component-container item-info-item">
         <div class="head-nav">
             <nav class="btn-group filters">
                 <a class="btn sm active" href="javascript:void(0);">Intelligence Center</a>
@@ -13,7 +13,7 @@ include_once('../header.php');
             </nav>
         </div>
         <div class="body" id="craftsContent">
-            Loading...
+            <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>
 </div>
