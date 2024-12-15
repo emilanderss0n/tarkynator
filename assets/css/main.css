@@ -191,7 +191,7 @@ ol li {
 .btn-group {
     display: flex;
     align-items: center;
-    background-color: var(--header-bg);
+    background-color: var(--content-bg);
     color: var(--bright-color);
     padding: 4px;
     border-radius: 0.3rem;
@@ -901,10 +901,6 @@ span.global-id.copied::after {
     animation-delay: 250ms;
 }
 
-#recentSearches .last-search-item .card-body {
-    flex-direction: row;
-}
-
 #browseContainer {
     will-change: transform, opacity;
     animation: inAni 0.5s ease;
@@ -985,13 +981,22 @@ span.global-id.copied::after {
     border: 2px solid var(--border-color);
 }
 
-#browseItems .card-body {
+#browseItems .card-body,
+#recentSearches .last-search-item .card-body {
     flex-direction: row;
     gap: 0.7rem;
     color: var(--brighter-color);
+    align-items: center;
 }
 
-#browseItems .browse-item h4 {
+
+#browseItems .browse-item .item-title,
+#recentSearches .last-search-item .title {
+    transform: translateY(-2px);
+}
+
+#browseItems .browse-item h4,
+#recentSearches .last-search-item h4 {
     font-size: 1.2rem;
     margin: 0;
 }
@@ -1601,6 +1606,7 @@ footer .text-end {
 
     .footer-container {
         position: relative;
+        margin-top: 2rem;
     }
 
     footer {
@@ -1618,9 +1624,21 @@ footer .text-end {
 }
 
 @media (max-width: 680px) {
+
     .input-control .input-search-icon {
         top: 0.7rem;
         height: auto;
+    }
+
+    .btn-group {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+    }
+
+    .btn-group>.btn {
+        height: 34px;
+        overflow: hidden;
     }
 
     #toggleNav {

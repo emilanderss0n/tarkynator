@@ -323,7 +323,9 @@ document.addEventListener('DOMContentLoaded', () => {
             listItem.innerHTML = `
                 <div class="card-body">
                     <img src="${item.iconLink}" alt="${item.name.trim()}" style="width: 50px; height: 50px; margin-right: 10px;">
-                    ${item.name.trim()}
+                    <div class="title">
+                        <h4>${item.name.trim()}</h4>
+                    </div>
                 </div>
             `;
             listItem.dataset.itemId = item.id;
