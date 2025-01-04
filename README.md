@@ -1,1 +1,1 @@
-https://moxopixel.com/tarkynator
+Modding web tool for Singleplayer Tarkov: https://moxopixel.com/tarkynator
