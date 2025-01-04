@@ -47,7 +47,7 @@
     --input-bg: #000;
     --card-shadow: 0 0 0 1px #282c33;
     --card-shadow-hover: 0 10px 30px 0 rgb(0 0 0 / 15%), 0 30px 30px rgb(0 0 0 / 12%), 0 15px 15px rgb(0 0 0 / 4%), 0 10px 8px rgb(0 0 0 / 14%), 0 4px 4px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 8%);
-    --glow-box-shadow: 0 0 100px #413d34, 0 0 6px rgba(232, 190, 107, .8);
+    --glow-box-shadow: 0 0 100px #5d513782, 0 0 6px rgb(255 227 173 / 44%);
     --small-glow-box-shadow: 0 0 30px rgba(65, 61, 52, .53), 0 0 4px rgba(232, 190, 107, .24);
     --cm-number: #d5b644;
     --cm-boolean: #ffa884;
@@ -1165,6 +1165,13 @@ a.toggle-req-items {
     padding: 1rem;
     position: relative;
     text-shadow: 1px 1px 1px black;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+#achievementsContainer .card>img {
+    height: 100px;
 }
 
 #achievementsContainer .card.ach-hidden::before {
@@ -1449,7 +1456,9 @@ footer .text-end {
 
     #templateContent,
     .component-container .body,
+    #browseContent,
     .search-container,
+    #handbookContainer .body,
     #questMaps,
     .head-nav,
     #breadcrumb {

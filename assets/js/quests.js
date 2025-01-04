@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 trader {
                     id
                     name
+                    imageLink
                 }
                 taskImageLink
                 map {
@@ -62,6 +63,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 wikiLink
                 objectives {
                     description
+                    id
+                }
+                taskRequirements {
+                    status
+                    task {
+                        name
+                        id
+                    }
+                }
+                traderRequirements {
+                    value
+                    trader {
+                        name
+                    }
+                }
+                failConditions {
+                    id
+                    description
+                }
+                finishRewards {
+                    items {
+                        item {
+                            id
+                            name
+                            iconLink
+                        }
+                        count
+                    }
+                    offerUnlock {
+                        id
+                        item {
+                            name
+                            id
+                            iconLink
+                        }
+                    }
                 }
             }
         }
