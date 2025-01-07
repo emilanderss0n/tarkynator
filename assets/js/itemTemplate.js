@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleNav = document.getElementById('toggleNav');
     const templateContainer = document.getElementById('templateContainer');
     const handbookContainer = document.getElementById('handbookContainer');
+    const templateLoader = document.querySelector('.template-load');
 
     const browseContainer = document.getElementById('browseContainer');
     const browseSidebar = document.getElementById('browseSidebar');
@@ -377,6 +378,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const handbookData = await fetchData(HANDBOOK_URL, { method: 'GET' });
                 const itemDataHandbook = handbookData.Items.find(item => item.Id === itemId);
                 const parentId = itemDataHandbook ? itemDataHandbook.ParentId : 'N/A';
+                const template = await fetchData(ITEMS_URL, { method: 'GET' });
+                const itemTemplate = template[itemId];
 
                 let masteringName = '';
                 let presetId = '';
@@ -409,6 +412,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
+                let armorClassHTML = '';
+                if (itemTemplate._props && itemTemplate._props.armorClass > 0) {
+                    armorClassHTML = `armor-exist armor-class-${itemTemplate._props.armorClass}`;
+                }
+
                 handbookContent.innerHTML = `
                     <div class="d-flex handbook-item">
                         <div class="left">
@@ -422,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                         <div class="right">
-                            <div class="main card">
+                            <div class="main card ${armorClassHTML}">
                                 <h3 class="title">${itemElement.textContent}</h3>
                                 <figure>
                                     <figcaption class="blockquote-footer">
@@ -478,6 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const data = await fetchData(ITEMS_URL, { method: 'GET' });
             if (data && typeof data === 'object') {
+                templateLoader.style.display = 'none';
                 const itemTemplate = data[itemId];
                 editor.setValue(itemTemplate ? JSON.stringify(itemTemplate, null, 2) : 'No JSON template found for this item.');
             } else {
@@ -783,7 +792,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     attachEventListeners();
-
 
     function toggleContainers(activeContainer, ...containers) {
         const isActive = activeContainer.style.display === 'block';

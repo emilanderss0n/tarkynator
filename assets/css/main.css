@@ -37,7 +37,7 @@
     --bright-color: #abaa9f;
     --brighter-color: #efedda;
     --box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 5px 10px -3px rgb(0 0 0 / 75%);
-    --list-item: #111110;
+    --list-item: #161616;
     --header-bg: #000;
     --br-sm: 0.3rem;
     --br-med: 0.5rem;
@@ -47,7 +47,7 @@
     --input-bg: #000;
     --card-shadow: 0 0 0 1px #282c33;
     --card-shadow-hover: 0 10px 30px 0 rgb(0 0 0 / 15%), 0 30px 30px rgb(0 0 0 / 12%), 0 15px 15px rgb(0 0 0 / 4%), 0 10px 8px rgb(0 0 0 / 14%), 0 4px 4px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 8%);
-    --glow-box-shadow: 0 0 100px #5d513782, 0 0 6px rgb(255 227 173 / 44%);
+    --glow-box-shadow: 0 0 100px #5d513763, 0 0 6px rgb(255 227 173 / 30%);
     --small-glow-box-shadow: 0 0 30px rgba(65, 61, 52, .53), 0 0 4px rgba(232, 190, 107, .24);
     --cm-number: #d5b644;
     --cm-boolean: #ffa884;
@@ -820,6 +820,41 @@ span.global-id.copied::after {
     background-image: url(../img/news_li_bg.png);
     border-radius: var(--br-lg);
     margin-bottom: 1.2rem;
+}
+
+.handbook-item .main.armor-exist::before {
+    content: "";
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 20px;
+    height: 19px;
+    background-size: cover;
+    background-position: center;
+}
+
+.handbook-item .main.armor-exist.armor-class-1::before {
+    background: url(../img/armor-class-1.png);
+}
+
+.handbook-item .main.armor-exist.armor-class-2::before {
+    background: url(../img/armor-class-2.png);
+}
+
+.handbook-item .main.armor-exist.armor-class-3::before {
+    background: url(../img/armor-class-3.png);
+}
+
+.handbook-item .main.armor-exist.armor-class-4::before {
+    background: url(../img/armor-class-4.png);
+}
+
+.handbook-item .main.armor-exist.armor-class-5::before {
+    background: url(../img/armor-class-5.png);
+}
+
+.handbook-item .main.armor-exist.armor-class-6::before {
+    background: url(../img/armor-class-6.png);
 }
 
 .handbook-image {
