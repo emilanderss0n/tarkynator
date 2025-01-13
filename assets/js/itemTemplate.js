@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const taskIds = usedInTasks.split(',');
                 const tasks = taskIds.map(taskId => {
                     const taskInfo = data.items[itemId].usedInTasks.find(task => task.id === taskId);
-                    return taskInfo ? `<li class="list-group-item"><strong>${taskInfo.name}</strong> - <span class="global-id">${taskId}</span></li>` : null;
+                    return taskInfo ? `<li class="list-group-item"><strong>${taskInfo.name}</strong><span class="global-id">${taskId}</span></li>` : null;
                 }).filter(task => task !== null).join('');
 
                 if (tasks) {
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 slotsHTML = properties.slots.map(slot => `<span class="global-id">${slot.nameId}</span>`).join('');
             }
 
-            const categoriesHTML = categories.map(category => `<li class="list-group-item"><strong>${category.name}</strong> - <span class="global-id">${category.id}</span></li>`).join('');
+            const categoriesHTML = categories.map(category => `<li class="list-group-item"><strong>${category.name}</strong><span class="global-id">${category.id}</span></li>`).join('');
             const barters = itemData.buyFor;
             const bartersHTML = barters.map(barter => barter.vendor.name === "Flea Market" ? '' : `<div class="barter"><strong>${barter.vendor.name}</strong> - ${barter.price} ${barter.currency}</div>`).join('');
 
@@ -419,41 +419,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 handbookContent.innerHTML = `
                     <div class="d-flex handbook-item">
-                        <div class="left">
-                            <div class="handbook-image">
-                                <div class="stripes"></div>
-                                <img src="${image512pxLink}" alt="Handbook image" />
-                            </div>
-                            <div class="links">
-                                <a class="btn btn-info strong" href="${itemData.wikiLink}" target="_blank"><i class="bi bi-book"></i> Wiki</a>
-                                <div class="handbook-barters">${bartersHTML}</div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="main card ${armorClassHTML}">
-                                <h3 class="title">${itemElement.textContent}</h3>
-                                <figure>
-                                    <figcaption class="blockquote-footer">
-                                      ${masteringName ? `Mastering Name: ${masteringName} /` : ''} Short Name: ${itemData.shortName} / Weight: ${itemData.weight} / Base Price: <span class="global-id">${itemData.basePrice}</span>
-                                    </figcaption>
-                                </figure>
-                                <p class="desc">${itemData.description}</p>
-                                <div class="hb-parent-id">
-                                    <figure>
-                                        <figcaption class="blockquote-footer">Handbook Parent ID: <span class="global-id">${parentId}</span></figcaption>
-                                    </figure>
+                        <div class="main card ${armorClassHTML}">
+                            <div class="top">
+                                <div class="left">
+                                    <div class="handbook-image">
+                                        <div class="stripes"></div>
+                                        <img src="${image512pxLink}" alt="Handbook image" />
+                                    </div>
                                 </div>
+                                <div class="right">
+                                    <h3 class="title">${itemElement.textContent}</h3>
+                                    <figure>
+                                        <figcaption class="blockquote-footer">
+                                            ${masteringName ? `Mastering Name: ${masteringName} /` : ''} Short Name: ${itemData.shortName} / Weight: ${itemData.weight} / Base Price: <span class="global-id">${itemData.basePrice}</span>
+                                        </figcaption>
+                                    </figure>
+                                    <p class="desc">${itemData.description}</p>
+                                    <div class="hb-parent-id">
+                                        <figure>
+                                            <figcaption class="blockquote-footer">Handbook Parent ID: <span class="global-id">${parentId}</span></figcaption>
+                                        </figure>
+                                    </div>
+                                    <div class="links">
+                                        <a class="btn btn-info strong" href="${itemData.wikiLink}" target="_blank"><i class="bi bi-book"></i> Wiki</a>
+                                        <div class="handbook-barters">${bartersHTML}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="other">
                                 ${slotsHTML ? `<h5>Attachment Slots</h5><div class="slots">${slotsHTML}</div>` : ''}
                                 ${presetId ? `<div class="preset-available"><h5>Default Preset: ${presetName}</h5><figure><figcaption class="blockquote-footer">Preset ID: <span class="global-id">${presetId}</span></figcaption></figure><div class="preset-items">${presetItemsHTML}</div></div>` : ''}
                             </div>
-                            <div class="double-column">
-                                ${usedInTasksHTML}
-                                <div class="categories card">
-                                    <figure>
-                                        <figcaption class="blockquote-footer"> Parent Categories</figcaption>
-                                    </figure>
-                                    <ol class="list-group">${categoriesHTML}</ol>
-                                </div>
+                        </div>
+                        <div class="handbook-side double-column">
+                            ${usedInTasksHTML}
+                            <div class="categories card">
+                                <figure>
+                                    <figcaption class="blockquote-footer"> Parent Categories</figcaption>
+                                </figure>
+                                <ol class="list-group">${categoriesHTML}</ol>
                             </div>
                         </div>
                     </div>

@@ -91,6 +91,10 @@ a:hover {
     font-weight: bold;
 }
 
+figure {
+    margin: 0;
+}
+
 img.small-glow {
     box-shadow: var(--small-glow-box-shadow);
 }
@@ -436,6 +440,8 @@ span.global-id.copied::after {
     border-color: var(--border-color);
     background-color: var(--content-bg);
     margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .table>:not(caption)>*>* {
@@ -801,15 +807,16 @@ span.global-id.copied::after {
 
 #handbookContainer .handbook-item {
     gap: 2rem;
+    flex-direction: row-reverse;
 }
 
-.handbook-item .left,
-.handbook-item .right {
-    position: relative;
+.handbook-item .top {
+    display: flex;
+    gap: 2rem;
 }
 
-.handbook-item .right {
-    flex: 1;
+.handbook-side {
+    max-width: 400px;
 }
 
 .handbook-item .used-in:has(figure),
@@ -820,6 +827,14 @@ span.global-id.copied::after {
     background-image: url(../img/news_li_bg.png);
     border-radius: var(--br-lg);
     margin-bottom: 1.2rem;
+}
+
+.handbook-item .main {
+    flex: 1;
+}
+
+.handbook-item .main .other:has(>div) {
+    margin-top: 2rem;
 }
 
 .handbook-item .main.armor-exist::before {
@@ -1465,12 +1480,6 @@ footer .text-end {
 
 
 @media (min-width: 1800px) {
-    .double-column:has(.used-in + .categories) {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-
     .handbook-item .preset-available {
         padding: 1.5rem;
     }
@@ -1517,10 +1526,14 @@ footer .text-end {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    .handbook-item .used-in:has(figure),
-    .handbook-item .main,
-    .handbook-item .categories:has(figure) {
+    .handbook-item .main {
         padding: 2rem;
+    }
+}
+
+@media (max-width: 1340px) {
+    .handbook-item .top {
+        flex-direction: column;
     }
 }
 
@@ -1543,6 +1556,10 @@ footer .text-end {
 
     #achievementsContainer .body {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .handbook-image {
+        min-width: 300px;
     }
 }
 
@@ -1588,6 +1605,16 @@ footer .text-end {
         display: flex;
         justify-content: center;
         min-width: 100%;
+    }
+
+    .handbook-side {
+        max-width: 100%;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .handbook-side>div {
+        width: 100%;
     }
 
     #browseItems {
@@ -1696,6 +1723,14 @@ footer .text-end {
 
     #recentSearches {
         grid-template-columns: repeat(1, 1fr);
+    }
+
+    .handbook-item .preset-available .preset-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .handbook-side {
+        flex-direction: column;
     }
 
     #achievementsContainer .body {
