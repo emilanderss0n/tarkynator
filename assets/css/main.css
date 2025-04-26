@@ -51,6 +51,9 @@
     --small-glow-box-shadow: 0 0 30px rgba(65, 61, 52, .53), 0 0 4px rgba(232, 190, 107, .24);
     --cm-number: #d5b644;
     --cm-boolean: #ffa884;
+    --border-color-weak: hsl(0deg 0% 100% / 10%);
+    --border-color-strong: hsl(0deg 0% 100% / 20%);
+    --border-color-stronger: hsl(0deg 0% 100% / 30%);
 }
 
 html,
@@ -185,8 +188,12 @@ a[data-tooltip] {
     transform: translateY(0);
 }
 
+.form-control {
+    border: 1px solid var(--border-color-weak) !important;
+}
+
 .form-control:focus {
-    box-shadow: inset 0 0 0 2px var(--bright-color) !important;
+    border: 1px solid var(--border-color-strong) !important;
 }
 
 .input-control {
@@ -213,11 +220,12 @@ a[data-tooltip] {
 }
 
 .btn:not(.btn-group .btn.sm),
-.btn:not(.btn-group .btn.sm):focus {
+.btn:not(.btn-group .btn.sm):focus,
+#browseSidebar .browse-category.active {
     background-color: #796f5d;
     background-image: url(../img/news_li_bg.png);
     color: var(--brighter-color);
-    background-size: 15%;
+    background-size: 20px 20px;
     border-radius: var(--br-sm);
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -282,7 +290,7 @@ ol li {
     padding: 4px 12px 4px 4px;
     font-size: 1.2rem;
     background-color: transparent;
-    color: var(--bright-color);
+    color: var(--border-color-stronger);
     margin: 0;
     position: relative;
 }
@@ -306,9 +314,15 @@ ol li {
 }
 
 .btn-group .btn.active {
-    color: var(--background-color);
-    background-color: var(--main-color);
-    border-radius: 3px !important;
+    background-color: #796f5d;
+    background-image: url(../img/news_li_bg.png);
+    color: var(--brighter-color);
+    background-size: 20px 20px;
+    border-radius: var(--br-sm) !important;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgb(244 234 179 / 18%);
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 11%);
 }
 
 .flex-box {
@@ -381,7 +395,7 @@ ol li {
 .card {
     background-color: var(--list-item);
     border-radius: var(--br-lg);
-    border: none;
+    border: 1px solid var(--border-color-weak);
     background-image: url(../img/news_li_bg.png);
 }
 
@@ -718,35 +732,10 @@ span.global-id.copied::after {
 }
 
 #browseNavLink.active {
-    border: none;
-    color: var(--main-color);
-    background-color: var(--input-bg);
-}
-
-#browseNavLink.active:before,
-#browseNavLink.active:after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-}
-
-#browseNavLink.active:before {
-    animation: rainbow-border 3s linear infinite;
-    border-radius: 50%;
-    background: linear-gradient(70deg, #fff20e, #000000, #e4d963, #ffde95, #eeff0e, #000000, #ddff60, #FFEB3B);
-    width: 100%;
-    height: 100%;
-    background-size: 200% 200%;
-    filter: blur(5px);
-    opacity: 0.5;
-}
-
-#browseNavLink.active:after {
-    border-radius: 3px;
-    margin: 3px;
-    background: inherit;
-    filter: blur(5px);
+    color: #fff;
+    border-radius: var(--br-sm);
+    font-weight: bold;
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 11%);
 }
 
 .searchResults {
@@ -878,6 +867,8 @@ span.global-id.copied::after {
 
 #templateContent .CodeMirror {
     height: auto;
+    border-radius: var(--br-lg);
+    overflow: hidden;
 }
 
 #templateContent .cm-s-moxer.CodeMirror {
@@ -1119,6 +1110,11 @@ span.global-id.copied::after {
     min-width: 200px;
     overflow: hidden;
     border-radius: var(--br-sm);
+    will-change: transform, opacity;
+}
+
+#browseSidebar:not(:hover) .browse-category:not(:hover) {
+    opacity: 1;
 }
 
 #browseSidebar .browse-category {
@@ -1129,22 +1125,23 @@ span.global-id.copied::after {
     font-weight: bold;
     position: relative;
     color: var(--brighter-color);
-    border-top: 1px solid var(--list-item);
+    border: 1px solid transparent;
+    border-top: 1px solid var(--border-color-weak);
     background-color: var(--header-bg);
     transition: .2s all linear;
+    user-select: none;
+}
+
+#browseSidebar:hover .browse-category:not(:hover) {
+    opacity: 0.65;
 }
 
 #browseSidebar .browse-category:first-child {
-    border: none;
-}
-
-#browseSidebar .browse-category:hover {
-    background-color: var(--content-bg-light);
+    border-top: none;
 }
 
 #browseSidebar .browse-category.active {
-    background-color: var(--main-color-bg);
-    color: var(--darkest-bg);
+    border-radius: 0;
 }
 
 #browseItems {
@@ -1157,6 +1154,7 @@ span.global-id.copied::after {
     gap: 0.7rem;
     align-items: start;
     grid-auto-rows: max-content;
+    will-change: transform, opacity;
 }
 
 #browseItems .search-filter {
@@ -1173,8 +1171,8 @@ span.global-id.copied::after {
 #browseSearchInput {
     height: 100%;
     border-radius: var(--br-sm);
-    padding: 0.5rem 0.8rem;
-    border: 2px solid var(--border-color);
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border-color-weak);
 }
 
 #browseItems .card-body,
