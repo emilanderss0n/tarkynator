@@ -1,4 +1,5 @@
 fetch_tarkov_data.php
 fetch_tarkov_tasks.php
+data/cacert.pem
 converter/
 assets/css/main.min.css

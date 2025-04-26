@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="quest-item card" data-quest-id="${quest.id}" data-quest-map="${quest.map ? quest.map.name : 'Any'}">
                             <div class="card-body">
                                 <a href="javascript:void(0);" class="image">
-                                    <img src="data/quest-images/${quest.id}.webp" alt="${quest.name}">
+                                    <img src="data/quest-images/${quest.id}.webp" alt="${quest.name}" onerror="this.onerror=null; this.src='assets/img/missing-quest.jpg';">
                                 </a>
                                 <div class="details">
                                     <a href="javascript:void(0);" class="titleLink"><h4>${quest.name}</h4></a>
