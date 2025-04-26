@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('genID').addEventListener('click', function (event) {
         const idGenOutput = document.getElementById('idGenOutput');
         idGenOutput.innerHTML = `${genObjectId()}`;
+        idGenOutput.classList.remove('disabled');
     });
 
     document.getElementById('bulkGen').addEventListener('click', function (event) {

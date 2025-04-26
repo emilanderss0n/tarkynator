@@ -124,11 +124,11 @@ textarea::placeholder {
     position: relative;
     z-index: 99999;
 }
-  
+
 a[data-tooltip] {
     cursor: pointer;
 }
-  
+
 [data-tooltip]:before,
 [data-tooltip]:after {
     visibility: hidden;
@@ -177,7 +177,7 @@ a[data-tooltip] {
     font-size: 0;
     line-height: 0;
 }
-  
+
 [data-tooltip]:hover:before,
 [data-tooltip]:hover:after {
     visibility: visible;
@@ -272,12 +272,12 @@ ol li {
     opacity: 0.2;
 }
 
-.btn-group.inactive>a {
+.btn-group.inactive > a {
     cursor: default;
     pointer-events: none;
 }
 
-.btn-group>i {
+.btn-group > i {
     padding: 4px 12px 4px 4px;
     font-size: 1.2rem;
     background-color: transparent;
@@ -286,7 +286,7 @@ ol li {
     position: relative;
 }
 
-.btn-group>i::after {
+.btn-group > i::after {
     content: "";
     position: absolute;
     right: 0;
@@ -296,7 +296,7 @@ ol li {
     background-color: var(--background-color);
 }
 
-.btn-group>a {
+.btn-group > a {
     padding: 4px 7px;
     background-color: transparent;
     color: var(--bright-color);
@@ -384,10 +384,10 @@ ol li {
     background-image: url(../img/news_li_bg.png);
 }
 
-#cardsMt:hover>.card-bfx::after,
-#cardsTut:hover>.card-bfx::after,
-#browseItems:hover>.card-bfx::after,
-#recentSearches:hover>.card-bfx::after {
+#cardsMt:hover > .card-bfx::after,
+#cardsTut:hover > .card-bfx::after,
+#browseItems:hover > .card-bfx::after,
+#recentSearches:hover > .card-bfx::after {
     opacity: 1;
 }
 
@@ -432,7 +432,7 @@ ol li {
     z-index: 1;
 }
 
-.card-bfx>.card-body {
+.card-bfx > .card-body {
     background-color: var(--list-item);
     border-radius: inherit;
     display: flex;
@@ -479,6 +479,12 @@ span.global-id {
     color: var(--bright-color);
     cursor: pointer;
     transition: 0.2s all linear;
+}
+
+span.global-id.disabled {
+    cursor: default;
+    pointer-events: none;
+    background: var(--dark-bg);
 }
 
 span.global-id.title {
@@ -541,13 +547,13 @@ span.global-id.copied::after {
     flex-direction: column;
 }
 
-.table>:not(caption)>*>* {
+.table > :not(caption) > * > * {
     color: var(--text-color);
     background-color: transparent;
     border-color: var(--border-color);
 }
 
-.table>tbody {
+.table > tbody {
     border-color: var(--bright-color);
 }
 
@@ -588,7 +594,7 @@ span.global-id.copied::after {
     animation-fill-mode: forwards;
 }
 
-.CodeMirror-code>div:hover {
+.CodeMirror-code > div:hover {
     background-color: var(--subtle-bg);
 }
 
@@ -608,7 +614,7 @@ span.global-id.copied::after {
     box-shadow: var(--glow-box-shadow);
 }
 
-.navbar>.container-fluid {
+.navbar > .container-fluid {
     z-index: 1;
 }
 
@@ -660,7 +666,7 @@ span.global-id.copied::after {
     color: var(--darkest-bg);
 }
 
-.active>.page-link,
+.active > .page-link,
 .page-link.active {
     background-color: var(--main-color-bg);
     border-color: var(--main-color);
@@ -1026,7 +1032,7 @@ span.global-id.copied::after {
     z-index: 4;
 }
 
-.handbook-image>img {
+.handbook-image > img {
     position: relative;
     z-index: 3;
     max-width: 100%;
@@ -1210,7 +1216,7 @@ span.global-id.copied::after {
     grid-row-gap: 20px;
 }
 
-#craftsContainer .body>div {
+#craftsContainer .body > div {
     margin: 0;
     display: inline-block;
 }
@@ -1358,7 +1364,7 @@ a.toggle-req-items {
     gap: 1rem;
 }
 
-#achievementsContainer .card>img {
+#achievementsContainer .card > img {
     height: 100px;
 }
 
@@ -1463,6 +1469,14 @@ a.toggle-req-items {
     gap: 1rem;
 }
 
+.generate-single {
+    will-change: transform, opacity;
+    animation: inAni 0.5s ease;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    opacity: 0;
+}
+
 .generate-single .single-body {
     padding: 2rem 1.5rem;
     background: var(--toolbar-bg);
@@ -1511,11 +1525,14 @@ a.toggle-req-items {
     position: relative;
     transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
     box-shadow: 0 2px 25px rgba(0, 255, 221, 0.2);
-  }
-  .bubbly-button:focus {
+}
+
+.bubbly-button:focus {
     outline: 0;
-  }
-  .bubbly-button:before, .bubbly-button:after {
+}
+
+.bubbly-button:before,
+.bubbly-button:after {
     position: absolute;
     content: "";
     display: block;
@@ -1525,62 +1542,73 @@ a.toggle-req-items {
     z-index: -1000;
     transition: all ease-in-out 0.5s;
     background-repeat: no-repeat;
-  }
-  .bubbly-button:before {
+}
+
+.bubbly-button:before {
     display: none;
     top: -75%;
     background-image: radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, transparent 20%, #1b8b73 20%, transparent 30%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, transparent 10%, #1b8b73 15%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%);
     background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
-  }
-  .bubbly-button:after {
+}
+
+.bubbly-button:after {
     display: none;
     bottom: -75%;
     background-image: radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, transparent 10%, #1b8b73 15%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%);
     background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
-  }
-  .bubbly-button:active {
+}
+
+.bubbly-button:active {
     transform: scale(0.95);
     background-color: #156d5a;
     box-shadow: 0 2px 25px rgba(0, 255, 221, 0);
-  }
-  .bubbly-button.animate:before {
+}
+
+.bubbly-button.animate:before {
     display: block;
     animation: topBubbles ease-in-out 0.75s forwards;
-  }
-  .bubbly-button.animate:after {
+}
+
+.bubbly-button.animate:after {
     display: block;
     animation: bottomBubbles ease-in-out 0.75s forwards;
-  }
-  
-  @keyframes topBubbles {
+}
+
+@keyframes topBubbles {
     0% {
-      background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+        background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
     }
+
     50% {
-      background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+        background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
     }
+
     100% {
-      background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
-      background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+        background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
     }
-  }
-  @keyframes bottomBubbles {
+}
+
+@keyframes bottomBubbles {
     0% {
-      background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
+        background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
     }
+
     50% {
-      background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+        background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
     }
+
     100% {
-      background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
-      background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
     }
-  }
+}
 
 #bulkContainer .header .input-group {
     margin-bottom: 2rem;
     will-change: transform, opacity;
     animation: inAni 0.5s ease;
+    animation-delay: 400ms;
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
     opacity: 0;
@@ -1731,6 +1759,7 @@ footer .text-end {
 }
 
 @media (min-width: 1300px) {
+
     #templateContent,
     .component-container .body,
     #browseContent,
@@ -1838,7 +1867,7 @@ footer .text-end {
         flex-direction: column;
     }
 
-    #handbookContainer .body>div {
+    #handbookContainer .body > div {
         flex-direction: column;
     }
 
@@ -1855,7 +1884,7 @@ footer .text-end {
         gap: 1rem;
     }
 
-    .handbook-side>div {
+    .handbook-side > div {
         width: 100%;
     }
 
@@ -1949,7 +1978,7 @@ footer .text-end {
         border-radius: 0;
     }
 
-    .btn-group>.btn {
+    .btn-group > .btn {
         height: 34px;
         overflow: hidden;
     }

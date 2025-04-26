@@ -1,5 +1,6 @@
 <?php 
-include 'path.php'; 
+include_once 'path.php'; 
+include_once 'includes/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +21,7 @@ include 'path.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/mbo.min.css">
     <?php endif; ?>
-    <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>/assets/css/main.css" />
+    <?= css_tag(BASE_URL . '/assets/css/main.css') ?>
     <link rel="icon" href="<?= BASE_URL ?>/assets/img/favicon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

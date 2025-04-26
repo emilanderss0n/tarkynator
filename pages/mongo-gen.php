@@ -6,8 +6,8 @@ include_once('../header.php');
     <div class="generate-single">
         <div class="single-body">
             <h3>Mongo ID:</h3>
-            <div class="cont"><span class="global-id" id="idGenOutput"></span></div>
-            <button type="button" id="genID" class="bubbly-button">Generate</button>
+            <div class="cont"><span class="global-id disabled" id="idGenOutput"></span></div>
+            <button type="button" id="genID" class="bubbly-button"><i class="bi bi-stars"></i> Generate</button>
         </div>
     </div>
 
@@ -18,7 +18,7 @@ include_once('../header.php');
                     <input type="number" class="form-control" id="objectIds"
                         placeholder="Number of MongoDB IDs (1-50)" name="objectIds" min="1" max="50"
                         required />
-                    <input type="button" class="btn" id="bulkGen" value="Generate" />
+                    <button type="button" class="btn" id="bulkGen">Generate <i class="bi bi-arrow-right"></i></button>
                 </div>
             </div>
             <div class="bulk-output"></div>
