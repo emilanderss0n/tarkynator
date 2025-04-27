@@ -18,8 +18,8 @@
                 <div class="row">
                     <div class="col-md-6 copyright">
                         <div>&copy; 2024 - <a href="https://github.com/emilanderss0n/tarkynator" target="_blank" data-tooltip="Github Repo">Tarkynator</a> - Made by <a href="https://moxopixel.com/"
-                                target="_blank">MoxoPixel</a> / <a href="https://emils.graphics"
-                                target="_blank">Emils Graphics</a></div>
+                                target="_blank">MoxoPixel</a> / <a href="https://emilandersson.com"
+                                target="_blank">Emil Andersson</a></div>
                     </div>
                     <div class="col-md-6 donate">
                         <div class="text-end">
