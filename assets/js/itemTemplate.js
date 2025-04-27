@@ -1,6 +1,6 @@
 import { checkJsonEditor, checkJsonEditorSimple } from './checkJsonEditor.js';
 import { fetchData } from './cache.js';
-import { DATA_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS } from './localData.js';
+import { DATA_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS, DEPENDENCIES } from './localData.js';
 
 // Add lastActiveCategory variable at the top level
 let lastActiveCategory = '';
@@ -8,9 +8,41 @@ let lastActiveCategory = '';
 // Add category name mapping at the top level
 const categoryNameMapping = {
     'Light & laser devices': 'LightLaserDevices',
-    'Light/laser devices': 'LightLaserDevices'  // Add alternative format for compatibility
-    // Add more mappings here if needed
+    'Light/laser devices': 'LightLaserDevices'
 };
+
+// Add this at the beginning of the file, after imports
+// Global click handler for copy buttons
+document.body.addEventListener('click', function(e) {
+    const copyButton = e.target.closest('.copy-deps');
+    if (copyButton) {
+        const depItem = copyButton.closest('.dep-item');
+        const assetPath = depItem.querySelector('p:nth-of-type(1) .global-id').textContent;
+        const dependencyKeys = Array.from(
+            depItem.querySelectorAll('.list-group .global-id')
+        ).map(el => el.textContent);
+
+        const jsonOutput = {
+            key: assetPath,
+            dependencyKeys: dependencyKeys
+        };
+
+        navigator.clipboard.writeText(JSON.stringify(jsonOutput, null, 3))
+            .then(() => {
+                copyButton.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                setTimeout(() => {
+                    copyButton.innerHTML = '<i class="bi bi-clipboard"></i> Copy';
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Failed to copy:', err);
+                copyButton.innerHTML = '<i class="bi bi-x"></i> Failed';
+                setTimeout(() => {
+                    copyButton.innerHTML = '<i class="bi bi-clipboard"></i> Copy';
+                }, 2000);
+            });
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -435,12 +467,56 @@ document.addEventListener('DOMContentLoaded', () => {
             const categories = itemData.categories;
             let slotsHTML = '';
 
-            const itemsData = await fetchData(ITEMS_URL, { method: 'GET' });
+            // Fetch dependencies data and item template data
+            const [dependenciesData, itemsData] = await Promise.all([
+                fetchData(DEPENDENCIES, { method: 'GET' }),
+                fetchData(ITEMS_URL, { method: 'GET' })
+            ]);
+            let dependenciesHTML = '';
+            
             const itemTemplate = itemsData[itemId];
             const properties = itemTemplate._props;
 
+            // Create JSON for copying dependencies
+            let prefabPath = properties?.Prefab?.path || '';
+            let dependencyData = {
+                key: prefabPath,
+                dependencyKeys: []
+            };
+
+            // Find dependencies related to this item using Prefab path
+            const itemDependencies = Object.entries(dependenciesData).filter(([key]) => {
+                if (!prefabPath) return false;
+                const normalizedPrefabPath = prefabPath.toLowerCase();
+                return key.toLowerCase().includes(normalizedPrefabPath);
+            });
+
+            if (itemDependencies.length > 0) {
+                const path = itemDependencies[0][0];
+                const deps = itemDependencies[0][1].Dependencies;
+                
+                dependenciesHTML = `
+                    <div class="dependencies card">
+                        <div class="dep-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h3>Dependency</h3>
+                                <button class="btn btn-sm btn-info copy-deps">
+                                    <i class="bi bi-clipboard"></i> Copy
+                                </button>
+                            </div>
+                            <p>Asset Path: <span class="global-id">${path}</span></p>
+                            <p>CRC: <span class="global-id">${itemDependencies[0][1].Crc}</span></p>
+                            <div class="list-group">
+                                ${deps.map(dep => 
+                                    `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
+                                ).join(' ')}
+                            </div>
+                        </div>
+                    </div>`;
+            }
+
             // Check if item is banned on flea market
-            const isFleaBanned = !itemTemplate._props.CanSellOnRagfair;
+            const isFleaBanned = !properties.CanSellOnRagfair;
             const fleaBanHTML = isFleaBanned ? '<div class="flea-ban flex-box"><div class="icon warning-red"></div><div>Flea Ban</div></div>' : '';
 
             if (properties && properties.Slots) {
@@ -538,6 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="slots-filter">
                                 ${slotsHTML}
                             </div>
+                            ${dependenciesHTML}
                         </div>
                         <div class="handbook-side double-column">
                             ${usedInTasksHTML}

@@ -958,6 +958,11 @@ span.global-id.copied::after {
     cursor: pointer;
 }
 
+.handbook-item .dependencies {
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
 .handbook-item .main.armor-exist::before {
     content: "";
     position: absolute;
