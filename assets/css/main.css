@@ -153,18 +153,19 @@ a[data-tooltip] {
     position: absolute;
     bottom: 110%;
     left: 50%;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     margin-left: -100px;
     padding: 7px;
     width: 200px;
     border-radius: 3px;
-    background-color: var(--darkest-bg);
-    color: var(--text-color);
+    background-color: var(--bright-color);
+    color: var(--background-color);
     content: attr(data-tooltip);
     text-align: center;
     font-weight: 500;
     font-size: 0.9rem;
     line-height: 1.4;
+    box-shadow: var(--box-shadow);
 }
 
 [data-tooltip]:after {
@@ -172,8 +173,9 @@ a[data-tooltip] {
     bottom: 110%;
     left: 50%;
     margin-left: -5px;
+    margin-bottom: 5px;
     width: 0;
-    border-top: 5px solid var(--darkest-bg);
+    border-top: 5px solid var(--bright-color);
     border-right: 5px solid transparent;
     border-left: 5px solid transparent;
     content: " ";
