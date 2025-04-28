@@ -66,7 +66,7 @@ body {
 
 body {
     background-color: var(--background-color);
-    line-height: 1.6rem;
+    line-height: 1.6;
     color: var(--text-color);
     font-family: "Bender", sans-serif;
     -webkit-font-smoothing: antialiased !important;
@@ -399,6 +399,12 @@ ol li {
     border-radius: var(--br-lg);
     border: 1px solid var(--border-color-weak);
     background-image: url(../img/news_li_bg.png);
+    padding: 1rem;
+    will-change: opacity, transform;
+}
+
+.handbook-side .card {
+    margin-bottom: 1.2rem;
 }
 
 #cardsMt:hover > .card-bfx::after,
@@ -491,7 +497,7 @@ span.global-id {
     background: var(--darkest-bg);
     padding: 0 0.3rem;
     width: fit-content;
-    border-radius: 0.2rem;
+    border-radius: var(--br-sm);
     position: relative;
     color: var(--bright-color);
     cursor: pointer;
@@ -811,8 +817,8 @@ span.global-id.copied::after {
 
 #toggleNav {
     position: absolute;
-    right: 4rem;
-    top: 0.2rem;
+    right: 60px;
+    top: 1px;
     z-index: 2;
 }
 
@@ -916,53 +922,49 @@ span.global-id.copied::after {
     width: 400px;
 }
 
-.handbook-item .used-in:has(figure),
-.handbook-item .main,
-.handbook-item .categories:has(figure) {
-    padding: 1rem;
-    background-color: var(--list-item);
-    background-image: url(../img/news_li_bg.png);
-    border-radius: var(--br-lg);
-    margin-bottom: 1.2rem;
-}
-
 .handbook-item .main {
     flex: 1;
 }
 
-.handbook-item .main .slots-filter:has(>div) {
+.handbook-item .slots-filter:has(>div) {
     margin-top: 3rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
 }
 
-.handbook-item .main .slots-filter .slot {
+.handbook-item .slots-filter .slot {
     background-color: var(--content-bg-light);
     padding: 1rem;
     border-radius: var(--br-med);
 }
 
-.handbook-item .main .slots-filter .slot .break {
+.handbook-item .slots-filter .slot .break {
     text-transform: uppercase;
     font-size: 1rem;
     margin: 0 0 0.5rem;
 }
 
-.handbook-item .main .slots-filter .slot .items {
+.handbook-item .slots-filter .slot .items {
     display: grid;
     column-gap: 0.7rem;
     row-gap: 1rem;
     grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
 }
 
-.handbook-item .main .slots-filter .slot .items img {
+.handbook-item .slots-filter .slot .items img {
     cursor: pointer;
 }
 
 .handbook-item .dependencies {
     margin-top: 2rem;
     padding: 1rem;
+}
+
+.allowed-ammo .ammo-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 1rem;
 }
 
 .handbook-item .main.armor-exist::before {
@@ -1753,9 +1755,6 @@ footer .text-end {
         transform: rotate(360deg);
     }
 }
-
-
-@media (min-width: 1800px) {}
 
 @media (min-width: 1800px) {
     #questsContent {

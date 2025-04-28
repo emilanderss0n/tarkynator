@@ -462,19 +462,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateHandbookContent = async (itemElement, usedInTasksHTML) => {
         try {
             const itemId = itemElement.dataset.itemId;
-            const data = await fetchData(DATA_URL, { method: 'GET' });
+            const [data, itemsData] = await Promise.all([
+                fetchData(DATA_URL, { method: 'GET' }),
+                fetchData(ITEMS_URL, { method: 'GET' })
+            ]);
+            
             const itemData = data.items[itemId];
+            const itemTemplate = itemsData[itemId];
+
+            // Check if item is banned on flea market based on template data
+            const isFleaBanned = itemTemplate && itemTemplate._props && !itemTemplate._props.CanSellOnRagfair;
+            const fleaBanHTML = isFleaBanned ? '<div class="flea-ban flex-box"><div class="icon warning-red"></div><div>Flea Ban</div></div>' : '';
+
             const categories = itemData.categories;
             let slotsHTML = '';
 
             // Fetch dependencies data and item template data
-            const [dependenciesData, itemsData] = await Promise.all([
-                fetchData(DEPENDENCIES, { method: 'GET' }),
-                fetchData(ITEMS_URL, { method: 'GET' })
-            ]);
+            const dependenciesData = await fetchData(DEPENDENCIES, { method: 'GET' });
             let dependenciesHTML = '';
             
-            const itemTemplate = itemsData[itemId];
             const properties = itemTemplate._props;
 
             // Create JSON for copying dependencies
@@ -504,6 +510,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <i class="bi bi-clipboard"></i> Copy
                                 </button>
                             </div>
+                            <figure>
+                                <figcaption class="blockquote-footer">
+                                    Location: EscapeFromTarkov_Data/StreamingAssets/Windows/Windows.json
+                                </figcaption>
+                            </figure>
                             <p>Asset Path: <span class="global-id">${path}</span></p>
                             <p>CRC: <span class="global-id">${itemDependencies[0][1].Crc}</span></p>
                             <div class="list-group">
@@ -515,9 +526,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
             }
 
-            // Check if item is banned on flea market
-            const isFleaBanned = !properties.CanSellOnRagfair;
-            const fleaBanHTML = isFleaBanned ? '<div class="flea-ban flex-box"><div class="icon warning-red"></div><div>Flea Ban</div></div>' : '';
+            // Generate allowed ammo HTML if it exists
+            let allowedAmmoHTML = '';
+            if (itemData.properties && itemData.properties.allowedAmmo && itemData.properties.allowedAmmo.length > 0) {
+                const ammoItems = itemData.properties.allowedAmmo.map(ammo => 
+                    `<a href="?item=${ammo.id}" class="ammo-item" data-tooltip="${ammo.name}">
+                        <img src="data/icons/${ammo.id}-icon.webp" alt="${ammo.name}" class="ammo-icon" />
+                    </a>`
+                ).join('');
+                allowedAmmoHTML = `<div class="allowed-ammo card">
+                    <figure>
+                        <figcaption class="blockquote-footer">Compatible Ammunition</figcaption>
+                    </figure>
+                    <div class="ammo-list">${ammoItems}</div>
+                </div>`;
+            }
 
             if (properties && properties.Slots) {
                 slotsHTML = properties.Slots.map(slot => {
@@ -617,6 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${dependenciesHTML}
                         </div>
                         <div class="handbook-side double-column">
+                            ${allowedAmmoHTML}
                             ${usedInTasksHTML}
                             <div class="categories card">
                                 <figure>
