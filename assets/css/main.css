@@ -17,7 +17,7 @@
 
 :root {
     --main-color: #998766;
-    --main-color-hover: #b6a689;
+    --main-color-hover: #a08e6e;
     --main-color-bg: #998766;
     --main-color-bg-active: #685a40;
     --switch-main-color: #fff;
@@ -631,34 +631,57 @@ span.global-id.copied::after {
     min-height: 100vh;
 }
 
+.navbar-expand-lg .navbar-collapse {
+    justify-content: flex-end;
+    gap: 3rem;
+    align-items: center;
+}
+
 .navbar {
     position: relative;
     background-color: var(--header-bg);
     box-shadow: var(--glow-box-shadow);
+    padding: 0;
 }
 
 .navbar > .container-fluid {
     z-index: 1;
 }
 
+.navbar-expand-lg .navbar-nav {
+    --bs-nav-link-padding-y: 1rem;
+}
+
 .navbar-nav .nav-item {
     margin-bottom: 0;
+    border-right: 1px solid var(--border-color-weak);
+}
+
+.navbar-nav .nav-item:last-child {
+    border-right: none;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding: 1rem 1.5rem;
 }
 
 .navbar-nav .nav-link,
 .navbar-nav .nav-link.show,
 .dropdown-item {
     color: var(--main-color);
-    text-transform: uppercase;
+    transition: all 0.2s linear;
+    font-weight: 600;
 }
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.show:hover {
-    color: var(--main-color-hover)
+    color: var(--main-color-hover);
+    background-color: var(--background-color);
 }
 
 .navbar-nav .nav-link.active {
-    color: var(--white)
+    color: var(--white);
+    background-color: var(--list-item);
 }
 
 .navbar-nav .dropdown-menu {
@@ -687,6 +710,10 @@ span.global-id.copied::after {
 .dropdown-item:active {
     background-color: var(--main-color-bg);
     color: var(--darkest-bg);
+}
+
+.navbar-toggler {
+    padding: 0.2rem 0.3rem;
 }
 
 .active > .page-link,
@@ -1288,6 +1315,7 @@ a.toggle-req-items {
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 20px;
     grid-row-gap: 20px;
+    margin-top: 1rem;
 }
 
 #commonIdContainer .table-responsive {
@@ -1320,9 +1348,9 @@ a.toggle-req-items {
     width: 100px;
     height: 100px;
     text-align: center;
-    margin-top: 1.6rem;
     margin-left: -0.4rem;
     transition: all 0.2s linear;
+    line-height: 1;
 }
 
 #resourcesContainer .links .card-body.github::before {
@@ -1361,6 +1389,7 @@ a.toggle-req-items {
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 20px;
     grid-row-gap: 20px;
+    margin-top: 1rem;
 }
 
 #achievementsContainer .card {
@@ -1802,9 +1831,17 @@ footer .text-end {
     .handbook-item .top {
         flex-direction: column;
     }
+
+    .navbar-expand-lg .navbar-collapse {
+        gap: 2rem;
+    }
 }
 
 @media (max-width: 1200px) {
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding: 0.8rem 1rem;
+    }
+
     #recentSearches {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1834,9 +1871,23 @@ footer .text-end {
     }
 }
 
+@media (max-width: 1150px) {
+    .navbar-nav .nav-item {
+        border-right: none;
+    }
+
+    .navbar-expand-lg .navbar-collapse {
+        gap: 1rem;
+    }
+}
+
 @media (max-width: 1000px) {
     .main-app {
         padding: 0;
+    }
+
+    .navbar {
+        padding: 0.3rem 0;
     }
 
     #breadcrumb {
