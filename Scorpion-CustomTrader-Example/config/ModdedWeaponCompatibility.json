@@ -1,0 +1,19 @@
+{
+    "ThisIsAnExample": [
+        "Replace_This_With_Modded_Weapon_TPL_ID",
+        "Comma_Separate_Each_Weapon__TPL_ID",
+        "MODDED_WEAPON_ID_EXAMPLE_TPL",
+        "MODDED_WEAPON_ID_EXAMPLE_TPL2"
+    ],
+    "AssaultRifles" : [],
+    "SubmachineGuns" : [],
+    "Snipers" : [],
+    "Marksman" : [],
+    "Shotguns" : [],
+    "Pistols" : [],
+    "LargeMachineGuns" : [],
+    "Carbines" : [],
+    "Melee" : [],
+    "Explosives" : []
+
+}

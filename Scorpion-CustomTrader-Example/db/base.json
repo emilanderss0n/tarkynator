@@ -1,0 +1,143 @@
+{
+    "_id": "6688d464bc40c867f60e7d7e",
+    "working": true,
+    "availableInRaid": false,
+    "items_buy": {
+        "category": [      
+        "5422acb9af1c889c16000029",
+        "5485a8684bdc2da71d8b4567",
+        "543be6564bdc2df4348b4568",
+        "543be5664bdc2dd4348b4569",
+        "5448e54d4bdc2dcc718b4568",
+        "5448fe124bdc2da5018b4567",
+        "5448e5284bdc2dcb718b4567",
+        "5448e53e4bdc2d60728b4567",
+        "543be5f84bdc2dd4348b456a",
+        "543be6674bdc2df1348b4569",
+        "5448e8d04bdc2ddf718b4569",
+        "5448e8d64bdc2dce718b4568"
+        ],
+        "id_list": []
+    },
+    "items_buy_prohibited": {
+        "category": [],
+        "id_list": [
+        "62e910aaf957f2915e0a5e36",
+        "64d0b40fbe2eed70e254e2d4"
+        ]
+    },
+    "customization_seller": false,
+    "name": "Scorpion",
+    "surname": "",
+    "nickname": "Scorpion",
+    "location": "Federal State Reserve Agency Base",
+    "avatar": "/files/trader/avatar/6688d464bc40c867f60e7d7e.jpg",
+    "balance_rub": 5000000,
+    "balance_dol": 23000,
+    "balance_eur": 20000,
+    "unlockedByDefault": true,
+    "discount": 0,
+    "discount_end": 0,
+    "buyer_up": true,
+    "currency": "RUB",
+    "nextResupply": 1615141448,
+    "repair": {
+        "availability": true,
+        "quality": "0.35",
+        "excluded_id_list": [],
+        "excluded_category": [
+            "5448e54d4bdc2dcc718b4568",
+            "57bef4c42459772e8d35a53b",
+            "543be5f84bdc2dd4348b456a"
+        ],
+        "currency": "5449016a4bdc2d6f028b456f",
+        "currency_coefficient": 1,
+        "price_rate": 0
+    },
+    "insurance": {
+        "availability": false,
+        "min_payment": 0,
+        "min_return_hour": 0,
+        "max_return_hour": 0,
+        "max_storage_time": 99,
+        "excluded_category": []
+    },
+    "gridHeight": 150,
+    "loyaltyLevels": [{
+            "minLevel": 1,
+            "minSalesSum": 0,
+            "minStanding": 0.00,
+            "buy_price_coef": 54,
+            "repair_price_coef": 500,
+            "insurance_price_coef": 1,
+            "exchange_price_coef": 0,
+            "heal_price_coef": 0
+        },
+        {
+            "minLevel": 15,
+            "minSalesSum": 500000,
+            "minStanding": 0.30,
+            "buy_price_coef": 50,
+            "repair_price_coef": 480,
+            "insurance_price_coef": 1,
+            "exchange_price_coef": 0,
+            "heal_price_coef": 0
+        },
+        {
+            "minLevel": 27,
+            "minSalesSum": 1500000,
+            "minStanding": 0.50,
+            "buy_price_coef": 45,
+            "repair_price_coef": 430,
+            "insurance_price_coef": 1,
+            "exchange_price_coef": 0,
+            "heal_price_coef": 0
+        },
+        {
+            "minLevel": 40,
+            "minSalesSum": 3000000,
+            "minStanding": 0.90,
+            "buy_price_coef": 39,
+            "repair_price_coef": 400,
+            "insurance_price_coef": 1,
+            "exchange_price_coef": 0,
+            "heal_price_coef": 0
+        }
+    ],
+    "sell_category": [
+        "82e7fac0b7495d72d4083356",
+        "ac705d3440c1407645e33579",
+        "dc97aee367144dc03389405d",
+        "7ffcc96aa06c7e90940330c5",
+        "e8f46e3ad74b9d862121f9dc",
+        "5b47574386f77428ca22b33e",
+        "5b47574386f77428ca22b33f",
+        "5b5f78dc86f77409407a7f8e",
+        "5b47574386f77428ca22b346",
+        "5b47574386f77428ca22b340",
+        "5b47574386f77428ca22b344",
+        "5b47574386f77428ca22b342",
+        "5b47574386f77428ca22b341",
+        "5b47574386f77428ca22b345",
+        "5b47574386f77428ca22b343",
+        "5b5f71b386f774093f2ecf11",
+        "5b5f71c186f77409407a7ec0",
+        "5b5f71de86f774093f2ecf13",
+        "5b5f724186f77447ed5636ad",
+        "5b5f736886f774094242f193",
+        "5b5f73ec86f774093e6cb4fd",
+        "5b5f74cc86f77447ec5d770a",
+        "5b5f750686f774093e6cb503",
+        "5b5f751486f77447ec5d770c",
+        "5b5f752e86f774093e6cb505",
+        "5b5f754a86f774094242f19b",
+        "5b5f755f86f77447ec5d770e",
+        "5b5f757486f774093e6cb507",
+        "5b5f75b986f77447ec5d7710",
+        "5b5f75c686f774094242f19f",
+        "5b5f75e486f77447ec5d7712",
+        "5b5f760586f774093e6cb509",
+        "5b5f761f86f774094242f1a1",
+        "5b5f764186f77447ec5d7714"
+    ]
+}

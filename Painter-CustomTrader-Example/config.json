@@ -1,0 +1,5 @@
+{
+  "enableRepeatableQuests": true,
+  "//": "DO NOT TURN OFF LOOT BOXES IF YOU HAVE ONE OF PAINTERS LOOT BOXES IN YOUR STASH",
+  "enableLootBoxes": true
+}

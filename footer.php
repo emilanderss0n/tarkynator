@@ -109,6 +109,11 @@
     <?php endif; ?>
     <?php if ($activePage === 'common-id') : ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/commonIds.js"></script>
+    <?php endif; ?>    
+    <?php if ($activePage === 'custom-trader') : ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/customTraderEdit.js"></script>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/customTrader.js"></script>
     <?php endif; ?>
 </body>
 

@@ -16,6 +16,7 @@
 }
 
 :root {
+    interpolate-size: allow-keywords;
     --main-color: #998766;
     --main-color-hover: #a08e6e;
     --main-color-bg: #998766;
@@ -192,6 +193,7 @@ a[data-tooltip] {
 
 .form-control {
     border: 1px solid var(--border-color-weak) !important;
+    background-color: var(--cool-bg);
 }
 
 .form-control:focus {
@@ -200,6 +202,15 @@ a[data-tooltip] {
 
 .input-control {
     position: relative;
+}
+
+.tag {
+    display: inline-block;
+    background-color: var(--main-bg-color-dark);
+    color: var(--bright-color);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--br-sm);
+    font-size: 0.9rem;
 }
 
 .animate-in {
@@ -327,6 +338,53 @@ ol li {
     box-shadow: inset 0 0 0 2px rgb(255 255 255 / 11%);
 }
 
+select {
+    --arrow-icon: url(../img/marker_loot.png);
+    --option-bg: white;
+    --select-bg: var(--input-bg);
+
+    appearance: none;
+    border: 1px solid var(--border-color-weak);
+    outline: 0;
+    width: auto;
+    min-width: 14rem;
+    min-height: 38px;
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 4rem 0 1rem;
+    background: var(--arrow-icon) no-repeat right 0.5rem center / 2.3ch,
+        var(--input-bg);
+    color: var(--text-color);
+    border-radius: var(--br-sm);
+    cursor: pointer;
+
+    /* Remove IE arrow */
+    &::-ms-expand {
+        display: none;
+    }
+
+    /* Remove focus outline */
+    &:focus {
+        outline: none;
+        color: var(--option-bg);
+        border: 1px solid var(--border-color-strong);
+    }
+
+    /* <option> colors */
+    option {
+        color: var(--option-bg);
+        background-color: var(--background-color);
+    }
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
 .flex-box {
     display: flex;
     align-items: center;
@@ -353,6 +411,13 @@ ol li {
     background-image: url(../img/notification_icon_alert_red.png);
     width: 30px;
     height: 29px;
+}
+
+.highlight-search {
+    background-color: rgba(255, 255, 0, 0.3);
+    font-weight: bold;
+    padding: 0 2px;
+    border-radius: 2px;
 }
 
 .pagination {
@@ -399,7 +464,7 @@ ol li {
     border-radius: var(--br-lg);
     border: 1px solid var(--border-color-weak);
     background-image: url(../img/news_li_bg.png);
-    padding: 1rem;
+    padding: clamp(1.5rem, 2vw, 2rem);
     will-change: opacity, transform;
 }
 
@@ -817,10 +882,21 @@ span.global-id.copied::after {
     height: 2.8rem;
 }
 
+#questsContent:has(.loading-container) {
+    display: flex !important;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .loader {
     will-change: transform;
-    width: 100%;
-    height: 100%;
+    width: 50px;
+    height: 50px;
     border: 5px solid var(--darkest-bg);
     border-bottom-color: #fff;
     border-radius: 50%;
@@ -1431,8 +1507,17 @@ a.toggle-req-items {
     text-align: right;
 }
 
-#selectMap {
+#questFilters {
+    padding: 1.5rem 1.5rem 0;
     animation-delay: 250ms;
+}
+
+.search-container-quests {
+    width: 100%;
+}
+
+.search-filter-container:has(.search-container-quests) {
+    gap: 2rem;
 }
 
 .json-quests {
@@ -1465,12 +1550,18 @@ a.toggle-req-items {
 #questsContent .card {
     overflow: hidden;
     justify-content: space-between;
+    padding: 0;
+}
+
+#customTraderContent .card {
+    overflow: visible;
 }
 
 #questsContent .card-body {
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     flex: 0;
+    padding: 1.5rem;
 }
 
 #questsContent .card-body .map {
@@ -1494,9 +1585,67 @@ a.toggle-req-items {
     max-width: 200px;
 }
 
-#questsContent .objectives {
-    padding-left: 3rem;
+#questsContent .quest-tasks {
+    padding: 0 1.5rem;
     flex: auto;
+
+    & summary {
+        width: 100%;
+        background-color: transparent;
+        color: var(--text-color);
+    }
+
+    &[open] summary {
+        background-color: #796f5d;
+        color: var(--brighter-color);
+    }
+
+    &::details-content {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        transition: opacity .5s ease-in-out, scale .5s ease-in-out, height .5s ease-in-out 500ms;
+
+        opacity: 0;
+        scale: .9;
+        height: 0;
+
+        @starting-style {
+            opacity: 0;
+            scale: .9;
+            height: 0;
+        }
+    }
+
+    &[open]::details-content {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        opacity: 1;
+        scale: 1;
+        height: auto;
+        transition: opacity .5s ease-in-out 500ms, scale .5s ease-in-out 500ms, height .5s ease-in-out;
+    }
+}
+
+.quest-item .objectives {
+    list-style: none;
+    padding: 0;
+}
+
+.quest-item .objectives li {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.quest-item .objectives li:before {
+    content: "";
+    background-image: url(../img/notification_icon_quest.png);
+    width: 32px;
+    height: 32px;
+    margin-right: 1rem;
+    min-width: 32px;
+    background-size: cover;
 }
 
 #questsContent .card-footer {
@@ -1504,6 +1653,12 @@ a.toggle-req-items {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    padding: 1rem 1.5rem;
+}
+
+.quest-buttons {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .generate-single {
@@ -1670,7 +1825,6 @@ a.toggle-req-items {
     margin-top: 2rem;
 }
 
-
 .main-app {
     padding: 0;
     padding-bottom: 5rem;
@@ -1683,6 +1837,369 @@ a.toggle-req-items {
 
 #welcomeMessage .blockquote-footer {
     margin: 0;
+}
+
+.reward-item-display {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.multi-item-popover {
+    display: none;
+    position: absolute;
+    background: var(--background-color);
+    border: 1px solid var(--border-color-weak);
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 24px;
+    padding: 10px;
+    min-width: 250px;
+    z-index: 10000;
+    max-height: 300px;
+    overflow-y: auto;
+    top: 100%;
+    left: 0;
+    margin-top: 5px;
+}
+
+.custom-trader-header {
+    padding: 2rem 1.5rem;
+    background: var(--toolbar-bg);
+    display: flex;
+    gap: 2rem;
+}
+
+.custom-trader-header h3 {
+    font-weight: bold;
+}
+
+.trader-select-container {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+#traderUploadForm {
+    padding: clamp(1rem, 2.5vw, 2rem);
+    border-radius: var(--br-med);
+    border: 1px solid var(--border-color-weak);
+    background-color: var(--list-item);
+    background-image: url(../img/news_li_bg.png);
+    width: 500px;
+}
+
+#customTraderContent .quest-list {
+    margin-top: 2rem;
+}
+
+#customTraderContent .card-header {
+    margin-bottom: 1rem;
+}
+
+#customTraderContent .quest-item {
+    padding: clamp(1.5rem, 2vw, 2rem);
+}
+
+#customTraderContent .quest-header {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+#customTraderContent .quest-header .quest-type {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#customTraderContent .quest-title-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+#customTraderContent .quest-title-section > div {
+    width: 100%;
+}
+
+#customTraderContent .quest-title-section input, #customTraderContent .quest-title-section textarea {
+    width: 100%;
+}
+
+#customTraderContent .quest-image {
+    border-radius: var(--br-med);
+    max-width: 400px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#customTraderContent .quest-image.loaded {
+    opacity: 1;
+}
+
+/* Image loading containers */
+#customTraderContent .image-loading-container {
+    position: relative;
+    display: inline-block;
+}
+
+#customTraderContent .image-loading-container .loading-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--content-bg);
+    border-radius: inherit;
+}
+
+/* Trader avatar specific loading */
+#customTraderContent .trader-avatar {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: 2px solid var(--border-color-weak);
+    border-radius: var(--br-lg);
+    background-color: #1a1a1a;
+}
+
+#customTraderContent .trader-avatar.loaded {
+    opacity: 1;
+}
+
+#customTraderContent .trader-avatar-container {
+    width: 120px;
+    height: 120px;
+    margin-right: 20px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+#customTraderContent .trader-avatar-container .image-loading-container {
+    width: 100%;
+    height: 100%;
+}
+
+#customTraderContent .trader-avatar-container .loading-container {
+    border-radius: var(--br-lg);
+    background-color: var(--content-bg);
+}
+
+/* Quest image specific loading */
+#customTraderContent .quest-image-container {
+    position: relative;
+    display: inline-block;
+    max-width: max-content;
+    width: 100%;
+    border-radius: var(--br-med);
+}
+
+#customTraderContent .quest-image-container .loading-container {
+    border-radius: var(--br-med);
+}
+
+#customTraderContent .quest-image-container .quest-image {
+    object-fit: cover;
+}
+
+#customTraderContent .quest-name {
+    color: var(--brighter-color);
+    font-size: 1.5rem;
+}
+
+#customTraderContent .assort-unlock-display {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+#customTraderContent .assort-unlock-header {
+    display: flex;
+    align-items: center;
+}
+
+#customTraderContent .assort-unlock-header .assort-unlock-icon {
+    width: 30px;
+    height: 36px;
+    margin-right: 8px;
+}
+
+#customTraderContent .assort-item-display {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+}
+
+#customTraderContent .assort-item-display img {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+}
+
+#customTraderContent .quest-conditions,
+#customTraderContent .quest-rewards,
+#customTraderContent .quest-dependencies {
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    background-image: none;
+}
+
+#customTraderContent .quest-conditions h5,
+#customTraderContent .quest-rewards h5,
+#customTraderContent .quest-dependencies h5 {
+    color: var(--bright-color);
+    border-bottom: 1px solid var(--border-color-weak);
+    padding-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#customTraderContent .condition-items-list,
+#customTraderContent .reward-items-list,
+#customTraderContent .dependency-items-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#customTraderContent .reward-item,
+#customTraderContent .condition-item,
+#customTraderContent .dependency-item {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.7rem 1rem;
+    border-radius: var(--br-sm);
+    display: flex;
+    align-items: center;
+}
+
+#customTraderContent .reward-item-display,
+#customTraderContent .condition-item-details,
+#customTraderContent .find-item-details,
+#customTraderContent .place-item-details {
+    display: flex;
+    align-items: center;
+}
+
+#customTraderContent .condition-item-details,
+#customTraderContent .reward-item-display {
+    width: 100%;
+    justify-content: flex-start;
+}
+
+#customTraderContent .find-item-entry,
+#customTraderContent .reward-item-entry {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 3px;
+    margin: 2px 0;
+}
+
+#customTraderContent .multiple-reward-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#customTraderContent .dependency-items-list {
+    flex-direction: column;
+    gap: 8px;
+}
+
+#customTraderContent .dependency-item {
+    gap: 0.5rem;
+}
+
+#customTraderContent .dependency-item i {
+    color: #ffc107;
+    font-size: 1.1rem;
+    min-width: 20px;
+}
+
+#customTraderContent .dependency-quest-name {
+    color: var(--brighter-color);
+    flex: 1;
+}
+
+#customTraderContent .dependency-quest-name small {
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+#customTraderContent .dependency-status {
+    font-size: 0.85rem;
+    color: #ffc107;
+    font-style: italic;
+    white-space: nowrap;
+}
+
+#customTraderContent .dependency-id {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-left: 8px;
+}
+
+#uploadStatus {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#customTraderContent .trader-name {
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color-weak);
+}
+
+#customTraderContent .trader-info-box {
+    background-color: var(--dark-bg);
+}
+
+#customTraderContent .trader-profile {
+    display: flex;
+    align-items: flex-start;
+}
+
+#customTraderContent .trader-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #2c2e32;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #333;
+}
+
+#customTraderContent .trader-avatar-placeholder span {
+    font-size: 48px;
+    font-weight: bold;
+    color: #666;
+}
+
+#customTraderContent .trader-details {
+    flex-grow: 1;
+}
+
+#customTraderContent .trader-details-inner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+#customTraderContent .trader-description {
+    margin-top: 15px;
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 600px;
+    padding-left: 10px;
+    border-left: 3px solid var(--border-color-weak);
+}
+
+#loaderContainer {
+    padding: 40px 0;
 }
 
 footer {
@@ -1785,289 +2302,77 @@ footer .text-end {
     }
 }
 
-@media (min-width: 1800px) {
-    #questsContent {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-    }
+/* Custom Trader Edit Styles */
+.edit-controls {
+    background: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--br-med);
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
-@media (min-width: 1300px) {
-
-    #templateContent,
-    .component-container .body,
-    #browseContent,
-    .search-container,
-    #handbookContainer .body,
-    #questMaps,
-    .head-nav,
-    #breadcrumb {
-        padding-left: 3rem;
-        padding-right: 3rem;
-    }
-
-    #recentSearches {
-        padding: 3rem 3rem;
-    }
-
-    #itemSearch {
-        padding: 3rem 0 1rem;
-    }
-
-    #bulkContainer .bulk-output:has(div) {
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    #resourcesContainer .links {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .handbook-item .main {
-        padding: 2rem;
-    }
+.edit-indicator {
+    font-size: 0.75rem;
+    animation: pulse 2s infinite;
 }
 
-@media (max-width: 1340px) {
-    .handbook-item .top {
-        flex-direction: column;
-    }
-
-    .navbar-expand-lg .navbar-collapse {
-        gap: 2rem;
-    }
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
-@media (max-width: 1200px) {
-    .navbar-expand-lg .navbar-nav .nav-link {
-        padding: 0.8rem 1rem;
-    }
-
-    #recentSearches {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    #browseItems {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    #browseItems .break {
-        grid-column: 1 / 3;
-    }
-
-    #browseItems .search-filter {
-        grid-column: 1 / 3;
-    }
-
-    #achievementsContainer .body {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .handbook-image {
-        min-width: 300px;
-    }
-
-    .handbook-side {
-        width: 300px;
-    }
+.quest-item.editing {
+    border: 2px solid var(--main-color);
+    background: var(--content-bg-light);
 }
 
-@media (max-width: 1150px) {
-    .navbar-nav .nav-item {
-        border-right: none;
-    }
-
-    .navbar-expand-lg .navbar-collapse {
-        gap: 1rem;
-    }
+.quest-item input.form-control,
+.quest-item textarea.form-control {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: var(--br-sm);
 }
 
-@media (max-width: 1000px) {
-    .main-app {
-        padding: 0;
-    }
-
-    .navbar {
-        padding: 0.3rem 0;
-    }
-
-    #breadcrumb {
-        display: none !important;
-    }
-
-    #browseSidebar {
-        min-width: auto;
-        display: flex;
-        flex-wrap: wrap;
-        border-radius: 0;
-        max-width: 100%;
-        gap: 0.5rem;
-    }
-
-    #browseSidebar .browse-category {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.8rem;
-        border-radius: var(--br-sm);
-        border: none;
-    }
-
-    #browseItems .break {
-        grid-column: auto;
-    }
-
-    #browseItems .search-filter {
-        grid-column: auto;
-    }
-
-    .browse-container {
-        gap: 1rem;
-        flex-direction: column;
-    }
-
-    #handbookContainer .body > div {
-        flex-direction: column;
-    }
-
-    .handbook-image {
-        display: flex;
-        justify-content: center;
-        min-width: 100%;
-    }
-
-    .handbook-side {
-        max-width: 100%;
-        width: 100%;
-        display: flex;
-        gap: 1rem;
-    }
-
-    .handbook-side > div {
-        width: 100%;
-    }
-
-    #browseItems {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    #craftsContainer .body {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    #craftsContainer .head-nav {
-        padding: 1rem;
-    }
-
-    #craftsContainer .head-nav .btn-primary {
-        font-size: 84%;
-        display: flex;
-        align-items: center;
-    }
-
-    #craftsContainer .craft-item {
-        padding: 1.2rem;
-    }
-
-    #commonIdContainer .body {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    #commonIdContainer .table-responsive {
-        padding: 0.5rem 1rem;
-    }
-
-    #resourcesContainer .links {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    #bulkContainer .bulk-output:has(div) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    #questsContent {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    #traderQuests .filters {
-        flex-wrap: wrap;
-    }
-
-    #questsContent .card-body {
-        flex-direction: column;
-    }
-
-    #questsContent .card-body img {
-        max-width: 100%;
-    }
-
-    #questsContent .card-footer {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .footer-container {
-        position: relative;
-        margin-top: 2rem;
-    }
-
-    footer {
-        padding: 2rem 0 2.4rem;
-    }
-
-    footer .row {
-        text-align: center;
-        gap: 1rem;
-    }
-
-    footer .text-end {
-        justify-content: center;
-    }
+.quest-item input.form-control:focus,
+.quest-item textarea.form-control:focus {
+    border-color: var(--main-color);
+    box-shadow: 0 0 0 0.2rem rgba(153, 135, 102, 0.25);
 }
 
-@media (max-width: 680px) {
-    .input-control .input-search-icon {
-        top: 0.7rem;
-        height: auto;
-    }
+.locale-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 
-    .btn-group {
-        background-color: transparent;
-        padding: 0;
-        border-radius: 0;
-    }
+.locale-selector .form-label {
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
 
-    .btn-group > .btn {
-        height: 34px;
-        overflow: hidden;
-    }
+.locale-selector .form-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    min-width: 80px;
+}
 
-    #toggleNav {
-        position: relative;
-        top: 0;
-        left: 0;
-        border-radius: var(--br-sm);
-        margin-top: 1rem;
-    }
+.quest-meta {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
 
-    #recentSearches {
-        grid-template-columns: repeat(1, 1fr);
-    }
+.quest-id {
+    color: var(--text-color);
+}
 
-    .handbook-item .preset-available .preset-items {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .handbook-side {
-        flex-direction: column;
-    }
-
-    #achievementsContainer .body {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    #craftsContainer .body {
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    #bulkContainer .bulk-output:has(div) {
-        grid-template-columns: repeat(1, 1fr);
-    }
+.global-id {
+    font-family: monospace;
+    background: var(--content-bg);
+    padding: 0.1rem 0.3rem;
+    border-radius: var(--br-sm);
+    font-size: 0.75rem;
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 $activePage = 'template';
 include_once('header.php');
 ?>
@@ -10,14 +10,15 @@ include_once('header.php');
         <section id="itemSearch">
             <form class="container-fluid search-container">
                 <div class="input-control">
-                    <input id="itemSearchInput" class="form-control form-control-lg" type="text" placeholder="Search item id or name" aria-label="Item search" autofocus>
+                    <input id="itemSearchInput" class="form-control form-control-lg" type="text"
+                        placeholder="Search item id or name" aria-label="Item search" autofocus>
                     <nav id="toggleNav" class="btn-group inactive">
                         <i class="bi bi-filter icon"></i>
                         <a class="nav-link btn sm" id="templateNavLink" href="javascript:void(0);">Template</a>
                         <a class="nav-link btn sm " id="handbookNavLink" href="javascript:void(0);">Handbook</a>
                     </nav>
-                    <a href="javascript:void(0);" id="browseNavLink" data-bs-toggle="tooltip"
-                        data-bs-placement="top" data-bs-title="Browse"><i class="bi bi-ui-radios-grid"></i></a>
+                    <a href="javascript:void(0);" id="browseNavLink" data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Browse"><i class="bi bi-ui-radios-grid"></i></a>
                     <div class="input-search-icon">
                         <i class="bi bi-search"></i>
                     </div>
@@ -39,8 +40,6 @@ include_once('header.php');
     </div>
 
     <section id="itemInfo">
-
-        <div id="recentSearches"></div>
 
         <div id="templateContainer" class="component-container item-info-item">
             <div class="body" id="templateContent">
@@ -67,9 +66,10 @@ include_once('header.php');
             </div>
         </div>
 
+        <div id="recentSearches"></div>
+
     </section> <!-- /.itemInfo -->
 
 </div> <!-- /.main-app -->
 
 <?php include_once('footer.php') ?>
-        

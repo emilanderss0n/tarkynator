@@ -1,9 +1,16 @@
 import { checkJsonEditor, checkJsonEditorSimple } from './checkJsonEditor.js';
 import { fetchData } from './cache.js';
+import { searchOptimizer } from './searchOptimizer.js';
 import { DATA_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS, DEPENDENCIES } from './localData.js';
 
 // Add lastActiveCategory variable at the top level
 let lastActiveCategory = '';
+
+// Cache for storing frequently accessed data
+let gameDataCache = null;
+let itemsArrayCache = null;
+let searchIndex = null;
+let categoryFilterMap = null;
 
 // Add category name mapping at the top level
 const categoryNameMapping = {
@@ -13,7 +20,7 @@ const categoryNameMapping = {
 
 // Add this at the beginning of the file, after imports
 // Global click handler for copy buttons
-document.body.addEventListener('click', function(e) {
+document.body.addEventListener('click', function (e) {
     const copyButton = e.target.closest('.copy-deps');
     if (copyButton) {
         const depItem = copyButton.closest('.dep-item');
@@ -75,11 +82,32 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     browseItems.insertAdjacentElement('afterbegin', searchFilter);
 
-    checkJsonEditor();
+    checkJsonEditor(); let localItems = {};    // Preload and cache game data
+    const preloadGameData = async () => {
+        if (!gameDataCache) {
+            try {
+                gameDataCache = await fetchData(DATA_URL, { method: 'GET' });
+                // Create items array cache for faster searching
+                itemsArrayCache = Object.values(gameDataCache.items);
+                // Create optimized search index
+                searchIndex = searchOptimizer.createSearchIndex(itemsArrayCache);
+                // Create category filter map
+                categoryFilterMap = searchOptimizer.createCategoryFilter(itemsArrayCache);
+            } catch (error) {
+                console.error('Error preloading game data:', error);
+            }
+        }
+        return gameDataCache;
+    };
 
-    let localItems = {};
+    // Fast search using search optimizer
+    const fastItemSearch = (query) => {
+        if (!itemsArrayCache || !searchIndex) return [];
+        return searchOptimizer.fastSearch(query, searchIndex, itemsArrayCache);
+    }; spinner.style.display = 'none';
 
-    spinner.style.display = 'none';
+    // Preload game data immediately
+    preloadGameData();
 
     fetch(ITEMS_URL)
         .then(response => {
@@ -87,92 +115,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => { localItems = data; })
-        .catch(error => console.error('Error loading local items:', error));
-
-    itemSearchInput.addEventListener('input', () => {
-        const query = itemSearchInput.value.trim();
-        if (query.length > 2) {
-            fetchItemData(query);
-        } else {
-            handbookContent.innerHTML = '';
-            searchResults.innerHTML = '';
-        }
-        checkJsonEditorSimple();
-    });
-
-    const inMemoryCache = {};
-
-    const fetchData = async (url, options) => {
-        const cacheKey = url.split('/').pop(); // Use the filename as the cache key
-
-        if (url.includes('graphql')) {
-            const queryHash = JSON.stringify(options.body); // Use the query as part of the cache key
-            const graphqlCacheKey = `graphql-${queryHash}`;
-
-            if (inMemoryCache[graphqlCacheKey]) {
-                return inMemoryCache[graphqlCacheKey];
-            }
-
-            try {
-                const response = await fetch(url, options);
-                const data = await response.json();
-                inMemoryCache[graphqlCacheKey] = data;
-                return data;
-            } catch (error) {
-                console.error(`Error fetching GraphQL data:`, error);
-                throw error;
-            }
-        }
-
-        if (url === DATA_URL) {
-            const cachedData = localStorage.getItem(cacheKey);
-            if (cachedData) {
-                return JSON.parse(cachedData);
-            }
-        } else {
-            if (inMemoryCache[cacheKey]) {
-                return inMemoryCache[cacheKey];
-            }
-        }
-
-        try {
-            const response = await fetch(url, options);
-            const data = await response.json();
-
-            if (url === DATA_URL) {
-                try {
-                    localStorage.setItem(cacheKey, JSON.stringify(data));
-                } catch (e) {
-                    if (e.name === 'QuotaExceededError') {
-                        console.warn('Local storage quota exceeded. Clearing local storage.');
-                        localStorage.clear();
-                        localStorage.setItem(cacheKey, JSON.stringify(data));
-                    } else {
-                        throw e;
-                    }
-                }
+        .catch(error => console.error('Error loading local items:', error)); itemSearchInput.addEventListener('input', searchOptimizer.debounce(() => {
+            const query = itemSearchInput.value.trim();
+            if (query.length > 2) {
+                fetchItemData(query);
             } else {
-                inMemoryCache[cacheKey] = data;
+                handbookContent.innerHTML = '';
+                searchResults.innerHTML = '';
             }
+            checkJsonEditorSimple();
+        }, 150)); // Reduced debounce time for better responsiveness
 
-            return data;
-        } catch (error) {
-            console.error(`Error fetching data from ${url}:`, error);
-            throw error;
-        }
-    };
-
+    // Remove the duplicate fetchData function since we import it from cache.js
     const fetchItemData = async (query) => {
         const isId = /^[0-9a-fA-F]{24}$/.test(query);
         spinner.style.display = 'inline-block';
 
         try {
-            const data = await fetchData(DATA_URL, { method: 'GET' });
+            // Use cached data if available, otherwise fetch
+            let data = gameDataCache;
+            if (!data) {
+                data = await preloadGameData();
+            }
+
             spinner.style.display = 'none';
-            const itemsArray = Object.values(data.items);
-            const filteredItems = isId
-                ? itemsArray.filter(item => item.id === query)
-                : itemsArray.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
+
+            // Use fast search with index
+            const filteredItems = fastItemSearch(query);
 
             if (filteredItems.length > 0) {
                 updateSearchResults(filteredItems);
@@ -184,40 +153,44 @@ document.addEventListener('DOMContentLoaded', () => {
             spinner.style.display = 'none';
             displayNoResults('Error loading local items');
         }
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
+    }; const urlParams = new URLSearchParams(window.location.search);
     const itemId = urlParams.get('item');
     if (itemId) {
-        fetchData(DATA_URL, { method: 'GET' })
-            .then(data => {
-                const item = data.items[itemId];
-                if (item) {
-                    const listItem = document.createElement('li');
-                    listItem.className = 'list-group-item';
-                    const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
+        // Use cached data if available
+        const loadItemFromUrl = async () => {
+            let data = gameDataCache;
+            if (!data) {
+                data = await preloadGameData();
+            }
 
-                    listItem.innerHTML = `
-                        <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
-                        ${item.name}
-                    `;
+            const item = data.items[itemId];
+            if (item) {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
 
-                    const handbookCategoriesNames = item.handbookCategories.map(category => category.name).join(', ');
+                listItem.innerHTML = `
+                    <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
+                    ${item.name}
+                `;
 
-                    // Convert usedInTasks array to just the task IDs
-                    const taskIds = item.usedInTasks ? item.usedInTasks.map(task => task.id).join(',') : '';
+                const handbookCategoriesNames = item.handbookCategories.map(category => category.name).join(', ');
 
-                    Object.assign(listItem.dataset, {
-                        itemId: item.id,
-                        itemTypes: handbookCategoriesNames,
-                        usedInTasks: taskIds
-                    });
-                    displayItemDetails(listItem);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching item data:', error);
-            });
+                // Convert usedInTasks array to just the task IDs
+                const taskIds = item.usedInTasks ? item.usedInTasks.map(task => task.id).join(',') : '';
+
+                Object.assign(listItem.dataset, {
+                    itemId: item.id,
+                    itemTypes: handbookCategoriesNames,
+                    usedInTasks: taskIds
+                });
+                displayItemDetails(listItem);
+            }
+        };
+
+        loadItemFromUrl().catch(error => {
+            console.error('Error fetching item data:', error);
+        });
     }
 
     const updateSearchResults = (items) => {
@@ -268,9 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const displayItemDetails = async (itemElement) => {
-        const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
-
-        const url = new URL(window.location);
+        const { itemId, itemTypes, usedInTasks } = itemElement.dataset; const url = new URL(window.location);
         url.searchParams.set('item', itemId);
         window.history.pushState({}, '', url);
 
@@ -283,11 +254,13 @@ document.addEventListener('DOMContentLoaded', () => {
             lastActiveCategory = activeCategoryElement.dataset.itemType;
         }
 
+        // Always enable handbook view
         handbookNavLink.classList.add('active');
+        handbookNavLink.classList.remove('disabled');
         toggleContainers(handbookContainer, browseContainer, templateContainer, handbookContainer);
 
         toggleNav.classList.remove('inactive');
-        templateNavLink.classList.remove('disabled');
+        // Don't enable template view yet - we'll check if the template exists first
 
         // Enhanced breadcrumb generation with clickable navigation
         const types = itemTypes.split(',').reverse();
@@ -296,9 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .map((type, index) => {
                 // Check if this category exists in our valid categories or has a mapping
                 const normalizedType = type.trim();
-                const isValidCategory = validCategories.has(normalizedType) || 
-                                     Object.keys(categoryNameMapping).includes(normalizedType);
-                
+                const isValidCategory = validCategories.has(normalizedType) ||
+                    Object.keys(categoryNameMapping).includes(normalizedType);
+
                 if (index === types.length - 1 && isValidCategory) {
                     // First (root) category - make it a link only if it's a valid category
                     return `<a href="javascript:void(0);" class="breadcrumb-link" data-view="browse" data-category="${Object.entries(typesEnum).find(([key, value]) => value === normalizedType)?.[0] || normalizedType}">${type}</a>`;
@@ -313,8 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     return `<span class="breadcrumb-text">${type}</span>`;
                 }
             })
-            .join(' <i class="bi bi-caret-right-fill"></i> ') + 
-            ' <i class="bi bi-caret-right-fill"></i> ' + 
+            .join(' <i class="bi bi-caret-right-fill"></i> ') +
+            ' <i class="bi bi-caret-right-fill"></i> ' +
             `<span class="breadcrumb-current">${itemElement.textContent}</span>`;
 
         breadcrumb.innerHTML = "<div class='breadcrumb-container'>" + breadcrumbHTML + "</div>";
@@ -325,14 +298,14 @@ document.addEventListener('DOMContentLoaded', () => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 browseNavLink.click();
-                
+
                 // Get the category from the data attribute
                 let categoryName = link.dataset.category;
-                
+
                 // If we have a direct mapping, use it
                 const mappedName = Object.entries(categoryNameMapping)
                     .find(([key, value]) => value === categoryName)?.[0];
-                
+
                 if (mappedName) {
                     // Use the mapped display name
                     categoryName = mappedName.replace(/\s+/g, '-');
@@ -343,18 +316,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Otherwise, normalize it
                     categoryName = categoryName.replace(/\s+/g, '-');
                 }
-                
+
                 const categoryElement = document.querySelector(`#browseSidebar .browse-category[data-item-type="${categoryName}"]`);
                 if (categoryElement) {
                     categoryElement.click();
                 }
             });
-        });
-
-        let usedInTasksHTML = '';
+        }); let usedInTasksHTML = '';
         if (usedInTasks) {
             try {
-                const data = await fetchData(DATA_URL, { method: 'GET' });
+                // Use cached data if available
+                let data = gameDataCache;
+                if (!data) {
+                    data = await fetchData(DATA_URL, { method: 'GET' });
+                }
+
                 const taskIds = usedInTasks.split(',');
                 const tasks = taskIds.map(taskId => {
                     const taskInfo = data.items[itemId].usedInTasks.find(task => task.id === taskId);
@@ -457,117 +433,188 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleRecentSearchesVisibility(!isBrowseContainerVisible);
     });
 
-    observer.observe(browseContainer, { attributes: true, attributeFilter: ['style'] });
-
-    const updateHandbookContent = async (itemElement, usedInTasksHTML) => {
+    observer.observe(browseContainer, { attributes: true, attributeFilter: ['style'] }); const updateHandbookContent = async (itemElement, usedInTasksHTML) => {
         try {
             const itemId = itemElement.dataset.itemId;
-            const [data, itemsData] = await Promise.all([
-                fetchData(DATA_URL, { method: 'GET' }),
-                fetchData(ITEMS_URL, { method: 'GET' })
-            ]);
-            
+
+            // Use cached data if available, otherwise fetch
+            let data = gameDataCache;
+            if (!data) {
+                data = await fetchData(DATA_URL, { method: 'GET' });
+            }
+
             const itemData = data.items[itemId];
-            const itemTemplate = itemsData[itemId];
 
-            // Check if item is banned on flea market based on template data
-            const isFleaBanned = itemTemplate && itemTemplate._props && !itemTemplate._props.CanSellOnRagfair;
-            const fleaBanHTML = isFleaBanned ? '<div class="flea-ban flex-box"><div class="icon warning-red"></div><div>Flea Ban</div></div>' : '';
-
-            const categories = itemData.categories;
-            let slotsHTML = '';
-
-            // Fetch dependencies data and item template data
-            const dependenciesData = await fetchData(DEPENDENCIES, { method: 'GET' });
+            if (!itemData) {
+                handbookContent.innerHTML = '<p>Item not found in tarkov_data.json</p>';
+                return;
+            }            // Then try to get the template data, but don't fail if it's not available
+            let itemTemplate = null;
+            let properties = null;
+            let fleaBanHTML = '';
             let dependenciesHTML = '';
-            
-            const properties = itemTemplate._props;
+            let slotsHTML = '';
+            let dependenciesData = null;
+            let itemsData = null;
 
-            // Create JSON for copying dependencies
-            let prefabPath = properties?.Prefab?.path || '';
+            try {
+                itemsData = await fetchData(ITEMS_URL, { method: 'GET' });
+                if (itemsData && itemsData[itemId]) {
+                    itemTemplate = itemsData[itemId];
+                }
+
+                if (itemTemplate) {
+                    // Check if item is banned on flea market based on template data
+                    const isFleaBanned = itemTemplate._props && !itemTemplate._props.CanSellOnRagfair;
+                    fleaBanHTML = isFleaBanned ? '<div class="flea-ban flex-box"><div class="icon warning-red"></div><div>Flea Ban</div></div>' : '';
+
+                    properties = itemTemplate._props;
+
+                    // Generate slots HTML if template exists
+                    if (properties && properties.Slots) {
+                        slotsHTML = properties.Slots.map(slot => {
+                            if (slot._props.filters) {
+                                const slotItems = slot._props.filters.flatMap(filter =>
+                                    filter.Filter ? filter.Filter.map(filterId => {
+                                        const slotItem = data.items[filterId];
+                                        const itemId = itemsData && itemsData[filterId] ? itemsData[filterId]._id : null;
+                                        return slotItem && itemId ? { ...slotItem, _id: itemId } : null;
+                                    }).filter(Boolean) : []
+                                );
+
+                                if (slotItems.length > 0) {
+                                    const slotItemsHTML = slotItems
+                                        .map(slotItem => {
+                                            let iconLink = slotItem.iconLink ? slotItem.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/') : '';
+                                            if (!iconLink) {
+                                                iconLink = `assets/img/slots/${slot._name.toLowerCase()}.png`;
+                                            }
+                                            return `<div data-tooltip="${slotItem.name}"><img src="${iconLink}" alt="${slot._name}" class="slot-item-thumbnail" data-item-id="${slotItem._id}" /></div>`;
+                                        })
+                                        .join('');
+                                    return `<div class="slot"><div class="break">${slot._name}</div><div class="items">${slotItemsHTML}</div></div>`;
+                                }
+                            }
+                            return '';
+                        }).join('');
+                    }
+                    // Only try to fetch dependencies if we have a template with a Prefab path
+                    if (properties && properties.Prefab && properties.Prefab.path) {
+                        dependenciesData = await fetchData(DEPENDENCIES, { method: 'GET' });
+                        const prefabPath = properties.Prefab.path;
+
+                        // Find dependencies related to this item using Prefab path
+                        if (dependenciesData) {
+                            const itemDependencies = Object.entries(dependenciesData).filter(([key]) => {
+                                if (!prefabPath) return false;
+                                const normalizedPrefabPath = prefabPath.toLowerCase();
+                                return key.toLowerCase().includes(normalizedPrefabPath);
+                            });
+
+                            if (itemDependencies.length > 0) {
+                                const path = itemDependencies[0][0];
+                                const deps = itemDependencies[0][1].Dependencies;
+
+                                dependenciesHTML = `
+                                    <div class="dependencies card">
+                                        <div class="dep-item">
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <h3>Dependency</h3>
+                                                <button class="btn btn-sm btn-info copy-deps">
+                                                    <i class="bi bi-clipboard"></i> Copy
+                                                </button>
+                                            </div>
+                                            <figure>
+                                                <figcaption class="blockquote-footer">
+                                                    Location: EscapeFromTarkov_Data/StreamingAssets/Windows/Windows.json
+                                                </figcaption>
+                                            </figure>
+                                            <p>Asset Path: <span class="global-id">${path}</span></p>
+                                            <p>CRC: <span class="global-id">${itemDependencies[0][1].Crc}</span></p>
+                                            <div class="list-group">
+                                                ${deps.map(dep =>
+                                    `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
+                                ).join(' ')}
+                                            </div>
+                                        </div>
+                                    </div>`;
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not load items.json template data:', error.message);
+                // Continue without template data - this is not critical for basic item display
+            } const categories = itemData.categories;
+
+            // Create JSON for copying dependencies only if we have the necessary data
+            let prefabPath = '';
+            if (properties && properties.Prefab && properties.Prefab.path) {
+                prefabPath = properties.Prefab.path;
+            }
             let dependencyData = {
                 key: prefabPath,
                 dependencyKeys: []
             };
 
-            // Find dependencies related to this item using Prefab path
-            const itemDependencies = Object.entries(dependenciesData).filter(([key]) => {
-                if (!prefabPath) return false;
-                const normalizedPrefabPath = prefabPath.toLowerCase();
-                return key.toLowerCase().includes(normalizedPrefabPath);
-            });
+            // Only process dependencies if we have both a prefab path and dependency data
+            if (prefabPath && dependenciesData) {
+                // Find dependencies related to this item using Prefab path
+                const itemDependencies = Object.entries(dependenciesData).filter(([key]) => {
+                    const normalizedPrefabPath = prefabPath.toLowerCase();
+                    return key.toLowerCase().includes(normalizedPrefabPath);
+                });
 
-            if (itemDependencies.length > 0) {
-                const path = itemDependencies[0][0];
-                const deps = itemDependencies[0][1].Dependencies;
-                
-                dependenciesHTML = `
-                    <div class="dependencies card">
-                        <div class="dep-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <h3>Dependency</h3>
-                                <button class="btn btn-sm btn-info copy-deps">
-                                    <i class="bi bi-clipboard"></i> Copy
-                                </button>
-                            </div>
-                            <figure>
-                                <figcaption class="blockquote-footer">
-                                    Location: EscapeFromTarkov_Data/StreamingAssets/Windows/Windows.json
-                                </figcaption>
-                            </figure>
-                            <p>Asset Path: <span class="global-id">${path}</span></p>
-                            <p>CRC: <span class="global-id">${itemDependencies[0][1].Crc}</span></p>
-                            <div class="list-group">
-                                ${deps.map(dep => 
-                                    `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
-                                ).join(' ')}
-                            </div>
-                        </div>
-                    </div>`;
-            }
+                if (itemDependencies.length > 0) {
+                    const path = itemDependencies[0][0];
+                    const deps = itemDependencies[0][1].Dependencies;
 
-            // Generate allowed ammo HTML if it exists
+                    dependenciesHTML = `
+                        <div class="dependencies card">
+                            <div class="dep-item">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h3>Dependency</h3>
+                                    <button class="btn btn-sm btn-info copy-deps">
+                                        <i class="bi bi-clipboard"></i> Copy
+                                    </button>
+                                </div>
+                                <figure>
+                                    <figcaption class="blockquote-footer">
+                                        Location: EscapeFromTarkov_Data/StreamingAssets/Windows/Windows.json
+                                    </figcaption>
+                                </figure>
+                                <p>Asset Path: <span class="global-id">${path}</span></p>
+                                <p>CRC: <span class="global-id">${itemDependencies[0][1].Crc}</span></p>
+                                <div class="list-group">
+                                    ${deps.map(dep =>
+                        `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
+                    ).join(' ')}
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            }// Generate allowed ammo HTML if it exists in item data
             let allowedAmmoHTML = '';
             if (itemData.properties && itemData.properties.allowedAmmo && itemData.properties.allowedAmmo.length > 0) {
-                const ammoItems = itemData.properties.allowedAmmo.map(ammo => 
-                    `<a href="?item=${ammo.id}" class="ammo-item" data-tooltip="${ammo.name}">
-                        <img src="data/icons/${ammo.id}-icon.webp" alt="${ammo.name}" class="ammo-icon" />
-                    </a>`
-                ).join('');
-                allowedAmmoHTML = `<div class="allowed-ammo card">
-                    <figure>
-                        <figcaption class="blockquote-footer">Compatible Ammunition</figcaption>
-                    </figure>
-                    <div class="ammo-list">${ammoItems}</div>
-                </div>`;
-            }
+                try {
+                    const ammoItems = itemData.properties.allowedAmmo.map(ammo =>
+                        `<a href="?item=${ammo.id}" class="ammo-item" data-tooltip="${ammo.name}">
+                            <img src="data/icons/${ammo.id}-icon.webp" alt="${ammo.name}" class="ammo-icon" />
+                        </a>`
+                    ).join('');
 
-            if (properties && properties.Slots) {
-                slotsHTML = properties.Slots.map(slot => {
-                    if (slot._props.filters) {
-                        const slotItems = slot._props.filters.flatMap(filter =>
-                            filter.Filter ? filter.Filter.map(filterId => {
-                                const slotItem = data.items[filterId]; // Use data from DATA_URL for name and iconLink
-                                const itemId = itemsData[filterId]._id; // Use data from ITEMS_URL for _id
-                                return { ...slotItem, _id: itemId };
-                            }).filter(Boolean) : []
-                        );
-
-                        if (slotItems.length > 0) {
-                            const slotItemsHTML = slotItems
-                                .map(slotItem => {
-                                    let iconLink = slotItem.iconLink ? slotItem.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/') : '';
-                                    if (!iconLink) {
-                                        iconLink = `assets/img/slots/${slot._name.toLowerCase()}.png`;
-                                    }
-                                    return `<div data-tooltip="${slotItem.name}"><img src="${iconLink}" alt="${slot._name}" class="slot-item-thumbnail" data-item-id="${slotItem._id}" /></div>`;
-                                })
-                                .join('');
-                            return `<div class="slot"><div class="break">${slot._name}</div><div class="items">${slotItemsHTML}</div></div>`;
-                        }
+                    if (ammoItems) {
+                        allowedAmmoHTML = `<div class="allowed-ammo card">
+                            <figure>
+                                <figcaption class="blockquote-footer">Compatible Ammunition</figcaption>
+                            </figure>
+                            <div class="ammo-list">${ammoItems}</div>
+                        </div>`;
                     }
-                }).join('');
-            }
+                } catch (error) {
+                    console.error('Error generating allowed ammo HTML:', error);
+                }
+            }// Slots HTML is now generated earlier if the template exists
 
             const categoriesHTML = categories.map(category => `<li class="list-group-item"><strong>${category.name}</strong><span class="global-id">${category.id}</span></li>`).join('');
             const barters = itemData.buyFor;
@@ -582,25 +629,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let masteringName = '';
                 let presetId = '';
-                let presetName = '';
-                let presetItemsHTML = '';
-                if (categories.some(category => category.name === "Weapon" || category.name === "Chest rig" || category.name === "Headwear" || category.name === "Armor")) {
-                    const globalsData = await fetchData(GLOBALS, { method: 'GET' });
-                    const mastering = globalsData.config.Mastering.find(master => master.Templates.includes(itemId));
-                    if (mastering) {
-                        masteringName = mastering.Name;
-                    }
+                let presetName = ''; let presetItemsHTML = '';
 
-                    const itemPreset = Object.values(globalsData.ItemPresets).find(preset => preset._encyclopedia === itemId);
-                    if (itemPreset) {
-                        presetId = itemPreset._id;
-                        presetName = itemPreset._name;
-                    }
-                }
+                // Get mastering and preset data if the item is a weapon or armor
+                if (categories.some(category =>
+                    category.name === "Weapon" ||
+                    category.name === "Chest rig" ||
+                    category.name === "Headwear" ||
+                    category.name === "Armor")
+                ) {
+                    try {
+                        const globalsData = await fetchData(GLOBALS, { method: 'GET' });
 
-                let armorClassHTML = '';
-                if (itemTemplate._props && itemTemplate._props.armorClass > 0) {
-                    armorClassHTML = `armor-exist armor-class-${itemTemplate._props.armorClass}`;
+                        // Look for mastering info
+                        if (globalsData.Mastering) {
+                            const mastering = globalsData.Mastering.find(master =>
+                                master.Templates.includes(itemId)
+                            );
+                            if (mastering) {
+                                masteringName = mastering.Name;
+                            }
+                        }
+
+                        // Look for preset info
+                        if (globalsData.ItemPresets) {
+                            const itemPreset = Object.values(globalsData.ItemPresets).find(preset =>
+                                preset._encyclopedia === itemId
+                            );
+                            if (itemPreset) {
+                                presetId = itemPreset._id;
+                                presetName = itemPreset._name;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error fetching globals data:', error);
+                        // Continue without globals data
+                    }
+                } let armorClassHTML = '';
+                if (properties && properties.armorClass > 0) {
+                    armorClassHTML = `armor-exist armor-class-${properties.armorClass}`;
                 }
 
                 handbookContent.innerHTML = `
@@ -683,21 +750,37 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching item data:', error);
             handbookContent.innerHTML = '<p>Error fetching item data.</p>';
         }
-    };
-
-    const fetchItemJsonTemplate = async (itemId) => {
+    }; const fetchItemJsonTemplate = async (itemId) => {
         try {
             const data = await fetchData(ITEMS_URL, { method: 'GET' });
+            templateLoader.style.display = 'none';
+
             if (data && typeof data === 'object') {
-                templateLoader.style.display = 'none';
                 const itemTemplate = data[itemId];
-                editor.setValue(itemTemplate ? JSON.stringify(itemTemplate, null, 2) : 'No JSON template found for this item.');
+                if (itemTemplate) {
+                    if (typeof editor !== 'undefined' && editor) {
+                        editor.setValue(JSON.stringify(itemTemplate, null, 2));
+                    }
+                    templateNavLink.classList.remove('disabled');
+                } else {
+                    if (typeof editor !== 'undefined' && editor) {
+                        editor.setValue('No JSON template found for this item.');
+                    }
+                    templateNavLink.classList.add('disabled');
+                }
             } else {
-                editor.setValue('Invalid data format.');
+                if (typeof editor !== 'undefined' && editor) {
+                    editor.setValue('Invalid data format.');
+                }
+                templateNavLink.classList.add('disabled');
             }
         } catch (error) {
-            console.error('Error fetching item JSON template:', error);
-            editor.setValue('Error fetching item JSON template.');
+            console.warn('Could not load JSON template:', error.message);
+            templateLoader.style.display = 'none';
+            if (typeof editor !== 'undefined' && editor) {
+                editor.setValue('JSON template unavailable (this is normal if items.json cannot be cached).');
+            }
+            templateNavLink.classList.add('disabled');
         }
     };
 
@@ -899,18 +982,20 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => func.apply(context, args), delay);
         };
-    };
+    }; const debouncedRenderBrowseItems = searchOptimizer.debounce(renderBrowseItems, 200);
 
-    const debouncedRenderBrowseItems = debounce(renderBrowseItems, 200);
-
-    const handleSearch = debounce((event) => {
+    const handleSearch = searchOptimizer.debounce((event) => {
         const searchTerm = event.target.value.toLowerCase();
         if (searchTerm.length > 2) {
-            filteredItemsData = browseItemsData.filter(item => item.name.toLowerCase().includes(searchTerm));
+            // Use optimized search for browse filtering
+            filteredItemsData = searchOptimizer.fastSearch(searchTerm, searchIndex, browseItemsData);
             currentPage = 1; // Reset to the first page on search
             renderBrowseItems();
+        } else if (searchTerm.length === 0) {
+            filteredItemsData = [];
+            renderBrowseItems();
         }
-    }, 2000); // 2 seconds debounce delay
+    }, 300); // Slightly longer debounce for browse search
 
     const attachEventListeners = () => {
         document.querySelectorAll('#browseItems .browse-item').forEach(itemElement => {
@@ -960,32 +1045,42 @@ document.addEventListener('DOMContentLoaded', () => {
             filteredItemsData = [];
             requestIdleCallback(debouncedRenderBrowseItems);
             return;
-        }
-
-        // Use the mapping if it exists, otherwise use a normalized version of the input
+        }        // Use the mapping if it exists, otherwise use a normalized version of the input
         const apiCategoryName = categoryNameMapping[itemType] || itemType;
 
-        fetchData(DATA_URL, { method: 'GET' })
-            .then(data => {
-                const items = Object.values(data.items);
+        // Use cached category data if available
+        const loadBrowseData = async () => {
+            // Ensure game data is loaded
+            if (!gameDataCache) {
+                await preloadGameData();
+            }
+
+            // Try to use optimized category filter first
+            if (categoryFilterMap && categoryFilterMap.has(apiCategoryName)) {
+                browseItemsData = categoryFilterMap.get(apiCategoryName);
+            } else {
+                // Fallback to manual filtering
+                const items = itemsArrayCache || Object.values(gameDataCache.items);
                 browseItemsData = items.filter(item =>
                     item.handbookCategories.some(category => {
                         // Try exact match first with the API category name
                         return category.name === apiCategoryName ||
-                               // Fallback to normalized comparison for other categories
-                               category.name.replace(/\s*\/\s*/g, '/') === itemType.replace(/\s*\/\s*/g, '/');
+                            // Fallback to normalized comparison for other categories
+                            category.name.replace(/\s*\/\s*/g, '/') === itemType.replace(/\s*\/\s*/g, '/');
                     })
                 );
-                browseItemsData.sort((a, b) => a.name.localeCompare(b.name));
+            }
 
-                categoryCache[itemType] = browseItemsData;
-                filteredItemsData = [];
-                requestIdleCallback(debouncedRenderBrowseItems);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                browseItems.innerHTML = 'Error fetching data.';
-            });
+            browseItemsData.sort((a, b) => a.name.localeCompare(b.name));
+            categoryCache[itemType] = browseItemsData;
+            filteredItemsData = [];
+            requestIdleCallback(debouncedRenderBrowseItems);
+        };
+
+        loadBrowseData().catch(error => {
+            console.error('Error fetching data:', error);
+            browseItems.innerHTML = 'Error fetching data.';
+        });
     };
 
     Object.values(typesEnum).forEach(type => {
@@ -1023,27 +1118,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if (activeContainer.id === 'browseContainer') {
                 const activeCategory = lastActiveCategory || 'Ammo-packs';
                 const categoryElement = document.querySelector(`#browseSidebar .browse-category[data-item-type="${activeCategory}"]`);
-                
+
                 if (categoryElement) {
-                    document.querySelectorAll('#browseSidebar .browse-category').forEach(category => 
+                    document.querySelectorAll('#browseSidebar .browse-category').forEach(category =>
                         category.classList.remove('active')
                     );
                     categoryElement.classList.add('active');
-                    
+
                     // Convert the category name format properly for fetching data
                     const formattedCategory = activeCategory.replace(/-/g, ' ');
                     fetchBrowseData(formattedCategory);
                 }
             }
         }
-    }
-
-    templateNavLink.addEventListener('click', (event) => {
+    } templateNavLink.addEventListener('click', (event) => {
         event.preventDefault();
-        toggleContainers(templateContainer, templateContainer, handbookContainer, browseContainer);
-        if (editor) {
-            editor.refresh();
-            checkJsonEditorSimple();
+        // Only switch to template view if the template tab is not disabled
+        if (!templateNavLink.classList.contains('disabled')) {
+            toggleContainers(templateContainer, templateContainer, handbookContainer, browseContainer);
+            if (editor) {
+                editor.refresh();
+                checkJsonEditorSimple();
+            }
         }
     });
 

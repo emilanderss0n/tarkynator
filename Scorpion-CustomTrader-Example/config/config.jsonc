@@ -1,0 +1,20 @@
+{
+    "priceMultiplier": 1.25,               // Multiplies the prices by the number set here. 
+
+    "traderRefreshMin": 1800,           // Minimum Refresh Timer for the trader (in seconds)
+    "traderRefreshMax": 3600,           // Maximum Refresh Timer for the trader (in seconds)
+
+    "addTraderToFlea": true,            // Enable trader to have offers on flea
+    
+    "unlimitedStock": false,            // Whether you want unlimited available stock - this overrides randomizeStockAvailable
+    "unlimitedBuyRestriction": false,   // Whether you want unlimited item buys - this overrides randomizeBuyRestriction
+    "removeLoyaltyRestriction": false,  // Removes Quest Unlocks & Loyalty Level Requirements - Entire assort available at level 1
+    
+    "randomizeBuyRestriction": false,   // Randomizes the amount of items in stock that you can buy per reset
+    "randomizeStockAvailable": false,   // Randomizes the amount of items in stock per reset
+    "outOfStockChance": 25,             // Chance for an item to be out of stock per reset
+
+    "eventQuestsAlwaysActive" : false,       // Change to true to make event quests always active
+
+    "debugLogging": false               // Enables server console logging for above settings
+}

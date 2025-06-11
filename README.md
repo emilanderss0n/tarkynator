@@ -26,7 +26,7 @@ Visit the live tool: [https://moxopixel.com/tarkynator](https://moxopixel.com/ta
 ## Features Under the Hood
 
 - 🚀 **Smart Caching System**  
-  Efficient local storage caching for fast data access and reduced API load
+  Efficient IndexedDB and localStorage caching for fast data access and reduced API load
 
 - ⚡ **Live Data Integration**  
   Real-time data from [tarkov.dev](https://tarkov.dev/) GraphQL API
