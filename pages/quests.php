@@ -30,7 +30,8 @@ include_once('../header.php');
                 <div class="search-container-quests">
                     <input type="text" id="questSearch" placeholder="Search by name or ID..." class="form-control">
                 </div>
-                <div class="filter-container flex-container">                    <select id="selectMap" class="select-default">
+                <div class="filter-container flex-container">
+                    <select id="selectMap" class="select-default">
                         <option value="All">All Quests</option>
                         <option value="Any">Multiple Maps</option>
                         <option value="Customs">Customs</option>
@@ -46,7 +47,7 @@ include_once('../header.php');
                 </div>
             </div>
         </div>
-        <div class="body animate-in" id="questsContent">
+        <div class="body animate-in grid grid-550" grid-max-col-count="4" id="questsContent">
             <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>

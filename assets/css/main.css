@@ -204,6 +204,102 @@ a[data-tooltip] {
     position: relative;
 }
 
+.grid {
+    --grid-max-col-count: attr(grid-max-col-count type(<number>), 4);
+    --grid-min-col-size: 300px;
+    --grid-gap: 1rem;
+    --grid-gap-vertical: 1rem;
+
+    --grid-col-size-calc: calc((100% - var(--grid-gap) * var(--grid-max-col-count)) / var(--grid-max-col-count));
+    --grid-col-min-size-calc: min(100%, max(var(--grid-min-col-size), var(--grid-col-size-calc)));
+
+    display: grid;
+    grid-column-gap: var(--grid-gap);
+    grid-row-gap: var(--grid-gap-vertical);
+    grid-template-columns: repeat(auto-fit,
+            minmax(var(--grid-col-min-size-calc), 1fr));
+
+    & .grid-inline-text {
+        grid-column: 1 / -1;
+    }
+
+    & .break {
+        grid-column: 1 / -1;
+    }
+}
+
+.grid-550 {
+    --grid-min-col-size: 550px;
+}
+
+.grid-500 {
+    --grid-min-col-size: 500px;
+}
+
+.grid-400 {
+    --grid-min-col-size: 400px;
+}
+
+.grid-300 {
+    --grid-min-col-size: 300px;
+}
+
+.grid-200 {
+    --grid-min-col-size: 200px;
+}
+
+.grid-150 {
+    --grid-min-col-size: 150px;
+}
+
+.grid-gap-sm {
+    --grid-gap: 0.5rem;
+
+    @media screen and (max-width: 1000px) {
+        --grid-gap: 1rem;
+    }
+}
+
+.grid-gap {
+    --grid-gap: 1rem;
+}
+
+.grid-gap-lg {
+    --grid-gap: 2rem;
+}
+
+.grid-gap-xl {
+    --grid-gap: 3rem;
+
+    @media screen and (max-width: 1000px) {
+        --grid-gap: 2rem;
+    }
+}
+
+.grid-gap-row-sm {
+    --grid-gap-vertical: 0.5rem;
+
+    @media screen and (max-width: 1000px) {
+        --grid-gap-vertical: 1rem;
+    }
+}
+
+.grid-gap-row {
+    --grid-gap-vertical: 1rem;
+}
+
+.grid-gap-row-lg {
+    --grid-gap-vertical: 2rem;
+}
+
+.grid-gap-row-xl {
+    --grid-gap-vertical: 3rem;
+
+    @media screen and (max-width: 1000px) {
+        --grid-gap-vertical: 2rem;
+    }
+}
+
 .tag {
     display: inline-block;
     background-color: var(--main-bg-color-dark);
@@ -285,9 +381,25 @@ ol li {
     align-items: center;
     background-color: var(--content-bg);
     color: var(--bright-color);
-    padding: 4px;
-    border-radius: 0.3rem;
-    gap: 0.4rem;
+    padding: 5px;
+    border-radius: var(--br-sm);
+
+    @media screen and (max-width: 1000px) {
+    --grid-max-col-count: attr(grid-max-col-count type(<number>), 4);
+    --grid-min-col-size: 200px;
+    --grid-gap: 0.4rem;
+    --grid-gap-vertical: 0.4rem;
+
+    --grid-col-size-calc: calc((100% - var(--grid-gap) * var(--grid-max-col-count)) / var(--grid-max-col-count));
+    --grid-col-min-size-calc: min(100%, max(var(--grid-min-col-size), var(--grid-col-size-calc)));
+
+    display: grid;
+    grid-column-gap: var(--grid-gap);
+    grid-row-gap: var(--grid-gap-vertical);
+    grid-template-columns: repeat(auto-fit,
+            minmax(var(--grid-col-min-size-calc), 1fr));
+    padding: 0.5rem;
+    }
 }
 
 .btn-group.inactive {
@@ -318,20 +430,29 @@ ol li {
     background-color: var(--background-color);
 }
 
-.btn-group > a {
+.btn-group .btn {
+    background-color: rgb(255 255 255 / 3%) !important;
+    color: var(--bright-color);
+    border-radius: inherit;
+    margin: 0;
     padding: 4px 7px;
     background-color: transparent;
-    color: var(--bright-color);
-    margin: 0;
-    border-radius: 0.15rem;
+
+    @media screen and (max-width: 1000px) {
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+.btn-group .btn:hover {
+    background-color: rgb(255 255 255 / 6%) !important;
+    color: var(--brighter-color);
 }
 
 .btn-group .btn.active {
-    background-color: #796f5d;
+    background-color: #796f5d !important;
     background-image: url(../img/news_li_bg.png);
     color: var(--brighter-color);
     background-size: 20px 20px;
-    border-radius: var(--br-sm) !important;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     border: 1px solid rgb(244 234 179 / 18%);
@@ -464,7 +585,7 @@ select {
     border-radius: var(--br-lg);
     border: 1px solid var(--border-color-weak);
     background-image: url(../img/news_li_bg.png);
-    padding: clamp(1.5rem, 2vw, 2rem);
+    padding: clamp(1rem, 1.6vw, 1.6rem);
     will-change: opacity, transform;
 }
 
@@ -527,8 +648,8 @@ select {
     flex-direction: column;
     flex-grow: 1;
     z-index: 3;
-    padding: 1rem;
     position: relative;
+    padding: clamp(1rem, 1.6vw, 1.6rem);
 }
 
 caption {
@@ -567,6 +688,10 @@ span.global-id {
     color: var(--bright-color);
     cursor: pointer;
     transition: 0.2s all linear;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 span.global-id.disabled {
@@ -707,6 +832,15 @@ span.global-id.copied::after {
     background-color: var(--header-bg);
     box-shadow: var(--glow-box-shadow);
     padding: 0;
+    white-space: nowrap;
+
+    @media screen and (max-width: 1400px) {
+        zoom: 0.7;
+    }
+
+    @media screen and (max-width: 1000px) {
+        zoom: 1;
+    }
 }
 
 .navbar > .container-fluid {
@@ -1014,11 +1148,19 @@ span.global-id.copied::after {
 #handbookContainer .handbook-item {
     gap: 2rem;
     flex-direction: row-reverse;
+
+    @media screen and (max-width: 1600px) {
+        flex-direction: column;
+    }
 }
 
 .handbook-item .top {
     display: flex;
     gap: 2rem;
+
+    @media screen and (max-width: 1400px) {
+        flex-direction: column;
+    }
 }
 
 .handbook-side {
@@ -1117,6 +1259,10 @@ span.global-id.copied::after {
     align-items: center;
     justify-content: center;
     padding: 1rem;
+
+    @media screen and (max-width: 1000px) {
+        min-width: 100%;
+    }
 }
 
 .handbook-image .stripes {
@@ -1189,9 +1335,6 @@ span.global-id.copied::after {
 
 #recentSearches {
     padding: 1rem 1.5rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
     animation-name: inAni;
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
@@ -1320,11 +1463,10 @@ span.global-id.copied::after {
     margin: 0;
 }
 
-#craftsContainer .body {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
+#craftsContainer .craft-id {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 #craftsContainer .body > div {
@@ -1332,13 +1474,13 @@ span.global-id.copied::after {
     display: inline-block;
 }
 
-.required-items {
+#craftsContainer .required-items {
     border-radius: 0.5rem;
     margin: 0 0 1rem;
     border: 1px dashed var(--border-color);
 }
 
-a.toggle-req-items {
+#craftsContainer a.toggle-req-items {
     color: var(--brighter-color);
     cursor: pointer;
     display: block;
@@ -1346,19 +1488,19 @@ a.toggle-req-items {
     padding: 0.6rem 1rem;
 }
 
-.req-items-list {
+#craftsContainer .req-items-list {
     margin-bottom: 0;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s ease-out;
 }
 
-.req-items-list.expanded {
+#craftsContainer .req-items-list.expanded {
     max-height: 500px;
     padding-right: 0.7rem;
 }
 
-.req-items-list.expanded .req-item .req-item-containter {
+#craftsContainer .req-items-list.expanded .req-item .req-item-containter {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1387,15 +1529,7 @@ a.toggle-req-items {
 }
 
 #commonIdContainer .body {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
     margin-top: 1rem;
-}
-
-#commonIdContainer .table-responsive {
-    padding: 1rem 1.5rem;
 }
 
 #resourcesContainer .title {
@@ -1405,9 +1539,6 @@ a.toggle-req-items {
 }
 
 #resourcesContainer .links {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
     margin-bottom: 2rem;
 }
 
@@ -1461,10 +1592,6 @@ a.toggle-req-items {
 }
 
 #achievementsContainer .body {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
     margin-top: 1rem;
 }
 
@@ -1541,9 +1668,6 @@ a.toggle-req-items {
 }
 
 #questsContent {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
     animation-delay: 500ms;
 }
 
@@ -1896,7 +2020,7 @@ a.toggle-req-items {
 }
 
 #customTraderContent .quest-item {
-    padding: clamp(1.5rem, 2vw, 2rem);
+    padding: clamp(1rem, 1.6vw, 1.6rem);
 }
 
 #customTraderContent .quest-header {
@@ -1920,7 +2044,8 @@ a.toggle-req-items {
     width: 100%;
 }
 
-#customTraderContent .quest-title-section input, #customTraderContent .quest-title-section textarea {
+#customTraderContent .quest-title-section input,
+#customTraderContent .quest-title-section textarea {
     width: 100%;
 }
 
@@ -2317,9 +2442,17 @@ footer .text-end {
 }
 
 @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .quest-item.editing {
@@ -2367,12 +2500,7 @@ footer .text-end {
 
 .quest-id {
     color: var(--text-color);
-}
-
-.global-id {
-    font-family: monospace;
-    background: var(--content-bg);
-    padding: 0.1rem 0.3rem;
-    border-radius: var(--br-sm);
-    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }

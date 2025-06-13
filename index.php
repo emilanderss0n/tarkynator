@@ -66,7 +66,7 @@ include_once('header.php');
             </div>
         </div>
 
-        <div id="recentSearches"></div>
+        <div id="recentSearches" class="grid"></div>
 
     </section> <!-- /.itemInfo -->
 

@@ -6,7 +6,7 @@ include_once('../header.php');
     <div id="resourcesContainer" class="component-container item-info-item">
         <div class="body" id="resourcesContent">
             <h5 class="title">Modding Tools</h5>
-            <div class="links" id="cardsMt">
+            <div class="links grid grid-500" grid-max-col-count="3" id="cardsMt">
                 <a href="https://discord.gg/mS8dAtV98B" target="_blank" class="card-bfx">
                     <div class="card-body discord">
                         <h5 class="card-title">WTT Discord Server</h5>
@@ -104,7 +104,7 @@ include_once('../header.php');
             </div>
 
             <h5 class="title">Tutorials</h5>
-            <div class="links" id="cardsTut">
+            <div class="links grid grid-500" grid-max-col-count="3" id="cardsTut">
                 <a href="https://www.youtube.com/watch?v=bZovDdXqcno" target="_blank" class="card-bfx">
                     <div class="card-body video">
                         <h5 class="card-title">Weapon Container with AIO Tool</h5>

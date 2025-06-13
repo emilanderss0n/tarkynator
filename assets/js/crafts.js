@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${craft.rewardItems.map(reward => `
                                     <img src="${reward.item.iconLink}" alt="${reward.item.name}" />
                                     <div class="item-title">
-                                        <h4><span class="global-id title">${reward.item.name}</span></h4>
+                                        <h4>${reward.item.name}</h4>
                                         <p class="level">
                                             <i class="bi bi-lightning-charge-fill"></i> Level ${craft.level}
                                         </p>

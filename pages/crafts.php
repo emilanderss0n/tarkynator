@@ -12,7 +12,7 @@ include_once('../header.php');
                 <a class="btn sm" href="javascript:void(0);">Medstation</a>
             </nav>
         </div>
-        <div class="body" id="craftsContent">
+        <div class="body grid grid-400" grid-max-col-count="3" id="craftsContent">
             <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>
