@@ -33,6 +33,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="<?= BASE_URL ?>/assets/js/themeManager.js"></script>
         
     <?php if ($activePage === 'template' || $activePage === 'quests' ) : ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>

@@ -20,7 +20,10 @@
     --main-color: #998766;
     --main-color-hover: #a08e6e;
     --main-color-bg: #998766;
+    --main-color-bg-hover: #a08e6e;
     --main-color-bg-active: #685a40;
+    --main-color-btn: #796f5d;
+    --main-color-btn-border: 1px solid rgb(244 234 179 / 18%);
     --switch-main-color: #fff;
     --text-color: #aeaeb0;
     --link-natural: #fff;
@@ -55,6 +58,44 @@
     --border-color-weak: hsl(0deg 0% 100% / 10%);
     --border-color-strong: hsl(0deg 0% 100% / 20%);
     --border-color-stronger: hsl(0deg 0% 100% / 30%);
+    --background-blend-mode: normal;
+}
+
+[data-theme="modern"] {
+    --main-color: #aec4ff;
+    --main-color-hover: #d6e1ff;
+    --main-color-bg: #6a7eb7;
+    --main-color-bg-hover: #778bc4;
+    --main-color-bg-active: #4c5e8b;
+    --main-color-btn: #5263ad;
+    --main-color-btn-border: 1px solid rgba(179, 229, 244, 0.18);
+    --switch-main-color: #fff;
+    --text-color: #bcccd8;
+    --link-natural: #fff;
+    --background-color: #0b0c11;
+    --darkest-bg: #010409;
+    --dark-bg: #151722;
+    --cool-bg: #10131b;
+    --medium-bg: #1a1b21;
+    --content-bg: rgb(0 0 0 / 16%);
+    --content-bg-light: rgb(180 201 229 / 6%);
+    --toolbar-bg: rgb(128 162 255 / 5%);
+    --modal-bg: rgb(23 23 23 / 44%);
+    --subtle-bg: rgb(197 218 255 / 4%);
+    --checkmark-color: #4cd574;
+    --bright-color: #c1c3ca;
+    --brighter-color: #dbdee6;
+    --box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 5px 10px -3px rgb(0 0 0 / 75%);
+    --list-item: #13151c;
+    --header-bg: #000;
+    --border-color: #2f3338;
+    --white: #fff;
+    --input-bg: #000;
+    --card-shadow: 0 0 0 1px #282c33;
+    --card-shadow-hover: 0 10px 30px 0 rgb(0 0 0 / 15%), 0 30px 30px rgb(0 0 0 / 12%), 0 15px 15px rgb(0 0 0 / 4%), 0 10px 8px rgb(0 0 0 / 14%), 0 4px 4px rgb(0 0 0 / 20%), 0 2px 2px rgb(0 0 0 / 8%);
+    --glow-box-shadow: none;
+    --small-glow-box-shadow: none;
+    --background-blend-mode: luminosity;
 }
 
 html,
@@ -335,19 +376,20 @@ a[data-tooltip] {
 .btn:not(.btn-group .btn.sm),
 .btn:not(.btn-group .btn.sm):focus,
 #browseSidebar .browse-category.active {
-    background-color: #796f5d;
+    background-color: var(--main-color-btn);
     background-image: url(../img/news_li_bg.png);
+    background-blend-mode: var(--background-blend-mode);
     color: var(--brighter-color);
     background-size: 20px 20px;
     border-radius: var(--br-sm);
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgb(244 234 179 / 18%);
+    border: var(--main-color-btn-border);
     box-shadow: inset 0 0 0 2px rgb(255 255 255 / 11%);
 }
 
 .btn:not(.btn-group .btn.sm):hover {
-    background-color: var(--main-color-hover);
+    background-color: var(--main-color-bg-hover);
 }
 
 .btn:not(.btn-group .btn.sm):active {
@@ -453,13 +495,13 @@ ol li {
 }
 
 .btn-group .btn.active {
-    background-color: #796f5d !important;
+    background-color: var(--main-color-btn) !important;
     background-image: url(../img/news_li_bg.png);
     color: var(--brighter-color);
     background-size: 20px 20px;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgb(244 234 179 / 18%);
+    border: var(--main-color-btn-border);
     box-shadow: inset 0 0 0 2px rgb(255 255 255 / 11%);
 }
 
@@ -484,23 +526,45 @@ select {
     border-radius: var(--br-sm);
     cursor: pointer;
 
-    /* Remove IE arrow */
     &::-ms-expand {
         display: none;
     }
 
-    /* Remove focus outline */
     &:focus {
         outline: none;
         color: var(--option-bg);
         border: 1px solid var(--border-color-strong);
     }
 
-    /* <option> colors */
     option {
         color: var(--option-bg);
         background-color: var(--background-color);
     }
+}
+
+.theme-selector {
+    width: inherit;
+
+    @media screen and (max-width: 1000px) {
+        width: 100%;
+        margin: 1rem 0 2rem;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.theme-selector > select {
+    border-radius: var(--bs-border-radius) !important;
+    display: flex;
+    align-items: center;
+    min-width: 160px;
+    background-color: var(--list-item);
+    border: 1px solid var(--border-color-weak);
+}
+
+.theme-selector > select option {
+    display: flex;
+    align-items: center;
 }
 
 .flex-container {
@@ -591,6 +655,7 @@ select {
     background-image: url(../img/news_li_bg.png);
     padding: clamp(1rem, 1.6vw, 1.6rem);
     will-change: opacity, transform;
+    background-blend-mode: var(--background-blend-mode);
 }
 
 .handbook-side .card {
@@ -853,11 +918,20 @@ span.global-id.copied::after {
 
 .navbar-expand-lg .navbar-nav {
     --bs-nav-link-padding-y: 1rem;
+
+    @media screen and (max-width: 1000px) {
+        gap: 1rem;
+        margin: 2rem 0;
+    }
 }
 
 .navbar-nav .nav-item {
     margin-bottom: 0;
     border-right: 1px solid var(--border-color-weak);
+
+    @media screen and (max-width: 1000px) {
+        border-right: none;
+    }
 }
 
 .navbar-nav .nav-item:last-child {
@@ -866,6 +940,11 @@ span.global-id.copied::after {
 
 .navbar-expand-lg .navbar-nav .nav-link {
     padding: 1rem 1.5rem;
+
+    @media screen and (max-width: 1000px) {
+        text-align: center;
+        border-radius: var(--br-med);
+    }
 }
 
 .navbar-nav .nav-link,
@@ -1092,7 +1171,7 @@ span.global-id.copied::after {
 
 #toggleNav .btn {
     padding: 0.2rem 0.6rem;
-    background-color: transparent;
+    background-color: transparent !important;
 
     @media screen and (max-width: 1000px) {
         flex: 1;
@@ -1100,7 +1179,7 @@ span.global-id.copied::after {
 }
 
 #toggleNav .btn.active {
-    background-color: var(--main-color-bg);
+    background-color: var(--main-color-bg) !important;
 }
 
 #breadcrumb {
@@ -1768,7 +1847,7 @@ span.global-id.copied::after {
     }
 
     &[open] summary {
-        background-color: #796f5d;
+        background-color: var(--main-color-btn);
         color: var(--brighter-color);
     }
 
@@ -2057,6 +2136,7 @@ span.global-id.copied::after {
     border: 1px solid var(--border-color-weak);
     background-color: var(--list-item);
     background-image: url(../img/news_li_bg.png);
+    background-blend-mode: var(--background-blend-mode);
     width: 500px;
 
     @media screen and (max-width: 1000px) {
@@ -2337,10 +2417,6 @@ span.global-id.copied::after {
     border-bottom: 1px solid var(--border-color-weak);
 }
 
-#customTraderContent .trader-info-box {
-    background-color: var(--dark-bg);
-}
-
 #customTraderContent .trader-profile {
     display: flex;
     align-items: flex-start;
@@ -2397,6 +2473,7 @@ span.global-id.copied::after {
 #customTraderContent .edit-indicator {
     font-size: 0.75rem;
     animation: pulse 2s infinite;
+    display: none;
 }
 
 @keyframes pulse {
@@ -2486,12 +2563,12 @@ footer .text-end {
 }
 
 .cm-s-mbo.CodeMirror {
-    background: #1e1e1e;
+    background: var(--list-item);
     color: var(--text-color);
 }
 
 .cm-s-mbo .CodeMirror-gutters {
-    background: #151515;
+    background: var(--main-bg-color-dark);
     padding-right: 0.1rem;
     border-right: 1px solid var(--border-color);
 }
