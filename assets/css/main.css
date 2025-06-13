@@ -99,10 +99,6 @@ figure {
     margin: 0;
 }
 
-img.small-glow {
-    box-shadow: var(--small-glow-box-shadow);
-}
-
 ul.no-st,
 ol.no-st {
     padding: 0;
@@ -226,6 +222,10 @@ a[data-tooltip] {
     & .break {
         grid-column: 1 / -1;
     }
+
+    & .search-filter {
+        grid-column: 1 / -1;
+    }
 }
 
 .grid-550 {
@@ -326,6 +326,10 @@ a[data-tooltip] {
     align-items: center;
     font-size: 1.3rem;
     opacity: 0.5;
+
+    @media screen and (max-width: 1000px) {
+        height: 46%;
+    }
 }
 
 .btn:not(.btn-group .btn.sm),
@@ -649,7 +653,7 @@ select {
     flex-grow: 1;
     z-index: 3;
     position: relative;
-    padding: clamp(1rem, 1.6vw, 1.6rem);
+    padding: 1rem;
 }
 
 caption {
@@ -679,7 +683,7 @@ caption {
 }
 
 span.global-id {
-    display: inline-block;
+    display: inline-flex;
     background: var(--darkest-bg);
     padding: 0 0.3rem;
     width: fit-content;
@@ -1054,9 +1058,49 @@ span.global-id.copied::after {
 
 #toggleNav {
     position: absolute;
-    right: 60px;
-    top: 1px;
+    right: 3rem;
+    top: 0.4ch;
     z-index: 2;
+    background-color: transparent;
+    padding: 4px;
+    gap: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+
+    @media screen and (max-width: 1000px) {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 1rem;
+    }
+}
+
+#toggleNav.inactive {
+    pointer-events: none;
+    opacity: 0.2;
+    cursor: default;
+}
+
+#toggleNav .bi {
+    padding: 0.2rem 0.4rem;
+    border-right: 1px solid var(--border-color-weak);
+    display: none;
+}
+
+#toggleNav .btn {
+    padding: 0.2rem 0.6rem;
+    background-color: transparent;
+
+    @media screen and (max-width: 1000px) {
+        flex: 1;
+    }
+}
+
+#toggleNav .btn.active {
+    background-color: var(--main-color-bg);
 }
 
 #breadcrumb {
@@ -1165,6 +1209,10 @@ span.global-id.copied::after {
 
 .handbook-side {
     width: 400px;
+
+    @media screen and (max-width: 1600px) {
+        width: 100%;
+    }
 }
 
 .handbook-item .main {
@@ -1404,22 +1452,17 @@ span.global-id.copied::after {
     background-color: var(--bs-border-radius);
     border-top-right-radius: var(--br-lg);
     border-bottom-right-radius: var(--br-lg);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 0.7rem;
     align-items: start;
-    grid-auto-rows: max-content;
     will-change: transform, opacity;
 }
 
 #browseItems .search-filter {
-    grid-column: 1 / 4;
     display: inline-flex;
     justify-content: flex-end;
 }
 
 #browseItems .break {
-    grid-column: 1 / 4;
     margin-top: 1rem;
 }
 
@@ -1446,8 +1489,13 @@ span.global-id.copied::after {
 
 #browseItems .browse-item h4,
 #recentSearches .last-search-item h4 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin: 0;
+    line-height: 1.3;
+}
+
+#browseItems .browse-item h4 {
+    font-size: 1.15rem;
 }
 
 #browsePagination {
@@ -1936,11 +1984,8 @@ span.global-id.copied::after {
 
 #bulkContainer .bulk-output:has(div) {
     margin-top: 1rem;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
     padding: 2rem;
+    justify-items: center;
     background-color: var(--list-item);
     border-radius: var(--br-lg);
 }
@@ -1991,6 +2036,10 @@ span.global-id.copied::after {
     background: var(--toolbar-bg);
     display: flex;
     gap: 2rem;
+
+    @media screen and (max-width: 1000px) {
+        flex-direction: column;
+    }
 }
 
 .custom-trader-header h3 {
@@ -2009,6 +2058,10 @@ span.global-id.copied::after {
     background-color: var(--list-item);
     background-image: url(../img/news_li_bg.png);
     width: 500px;
+
+    @media screen and (max-width: 1000px) {
+        width: 100%;
+    }
 }
 
 #customTraderContent .quest-list {
@@ -2017,6 +2070,12 @@ span.global-id.copied::after {
 
 #customTraderContent .card-header {
     margin-bottom: 1rem;
+
+    @media screen and (max-width: 760px) {
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
 }
 
 #customTraderContent .quest-item {
@@ -2312,6 +2371,10 @@ span.global-id.copied::after {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
+
+    @media screen and (max-width: 760px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 #customTraderContent .trader-description {
@@ -2321,6 +2384,87 @@ span.global-id.copied::after {
     max-width: 600px;
     padding-left: 10px;
     border-left: 3px solid var(--border-color-weak);
+}
+
+#customTraderContent .edit-controls {
+    background: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--br-med);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+#customTraderContent .edit-indicator {
+    font-size: 0.75rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#customTraderContent .quest-item.editing {
+    border: 2px solid var(--main-color);
+    background: var(--content-bg-light);
+}
+
+#customTraderContent .quest-item input.form-control,
+#customTraderContent .quest-item textarea.form-control {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: var(--br-sm);
+}
+
+#customTraderContent .quest-item input.form-control:focus,
+#customTraderContent .quest-item textarea.form-control:focus {
+    border-color: var(--main-color);
+    box-shadow: 0 0 0 0.2rem rgba(153, 135, 102, 0.25);
+}
+
+#customTraderContent .locale-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @media screen and (max-width: 760px) {
+        margin-left: 0 !important;
+    }
+}
+
+#customTraderContent .locale-selector .form-label {
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+#customTraderContent .locale-selector .form-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    min-width: 80px;
+}
+
+#customTraderContent .quest-meta {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+#customTraderContent .quest-id {
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 #loaderContainer {
@@ -2425,82 +2569,4 @@ footer .text-end {
         background-position: 200% 50%;
         transform: rotate(360deg);
     }
-}
-
-/* Custom Trader Edit Styles */
-.edit-controls {
-    background: var(--content-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--br-med);
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-.edit-indicator {
-    font-size: 0.75rem;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-.quest-item.editing {
-    border: 2px solid var(--main-color);
-    background: var(--content-bg-light);
-}
-
-.quest-item input.form-control,
-.quest-item textarea.form-control {
-    background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    border-radius: var(--br-sm);
-}
-
-.quest-item input.form-control:focus,
-.quest-item textarea.form-control:focus {
-    border-color: var(--main-color);
-    box-shadow: 0 0 0 0.2rem rgba(153, 135, 102, 0.25);
-}
-
-.locale-selector {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.locale-selector .form-label {
-    margin: 0;
-    font-size: 0.9rem;
-    white-space: nowrap;
-}
-
-.locale-selector .form-select {
-    background: var(--input-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    min-width: 80px;
-}
-
-.quest-meta {
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
-}
-
-.quest-id {
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }

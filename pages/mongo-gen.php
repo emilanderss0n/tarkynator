@@ -21,7 +21,7 @@ include_once('../header.php');
                     <button type="button" class="btn" id="bulkGen">Generate <i class="bi bi-arrow-right"></i></button>
                 </div>
             </div>
-            <div class="bulk-output"></div>
+            <div class="bulk-output grid"></div>
             <div class="bulk-output-tools"></div>
         </div>
     </div>

@@ -12,7 +12,7 @@ include_once('header.php');
                 <div class="input-control">
                     <input id="itemSearchInput" class="form-control form-control-lg" type="text"
                         placeholder="Search item id or name" aria-label="Item search" autofocus>
-                    <nav id="toggleNav" class="btn-group inactive">
+                    <nav id="toggleNav" class="inactive">
                         <i class="bi bi-filter icon"></i>
                         <a class="nav-link btn sm" id="templateNavLink" href="javascript:void(0);">Template</a>
                         <a class="nav-link btn sm " id="handbookNavLink" href="javascript:void(0);">Handbook</a>
@@ -59,7 +59,7 @@ include_once('header.php');
                     <div id="browseSidebar" class="sidebar">
 
                     </div>
-                    <div id="browseItems" class="items">
+                    <div id="browseItems" class="items grid grid-400" grid-max-col-count="3">
 
                     </div>
                 </div>
