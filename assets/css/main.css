@@ -59,6 +59,7 @@
     --border-color-strong: hsl(0deg 0% 100% / 20%);
     --border-color-stronger: hsl(0deg 0% 100% / 30%);
     --background-blend-mode: normal;
+    --font-family: "Bender", sans-serif;
 }
 
 [data-theme="modern"] {
@@ -93,6 +94,7 @@
     --glow-box-shadow: none;
     --small-glow-box-shadow: none;
     --background-blend-mode: luminosity;
+    --font-family: 'Inter', 'Open Sans', 'Roboto', 'SF Pro', "Segoe UI", sans-serif;
 }
 
 [data-theme="hacker"] {
@@ -125,6 +127,7 @@
     --border-color-weak: hsl(138.93deg 100% 77.58% / 10%);
     --border-color-strong: hsl(138.93deg 100% 77.58% / 20%);
     --border-color-stronger: hsl(138.93deg 100% 77.58% / 30%);
+    --font-family: "Consolas", "SF Mono", "DejaVu Sans Mono", "Roboto Mono", monospace;
 }
 
 html,
@@ -139,7 +142,7 @@ body {
     background-color: var(--background-color);
     line-height: 1.6;
     color: var(--text-color);
-    font-family: "Bender", sans-serif;
+    font-family: var(--font-family);
     -webkit-font-smoothing: antialiased !important;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, .004) !important;
     font-optical-sizing: auto;
@@ -1564,6 +1567,7 @@ span.global-id.copied::after {
     border-bottom-right-radius: var(--br-lg);
     gap: 0.7rem;
     align-items: start;
+    place-content: start;
     will-change: transform, opacity;
 }
 
