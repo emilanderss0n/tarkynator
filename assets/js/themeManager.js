@@ -39,7 +39,7 @@ class ThemeManager {
 
     // Check if theme is valid
     isValidTheme(theme) {
-        const validThemes = ['eft', 'modern'];
+        const validThemes = ['eft', 'modern', 'hacker'];
         return validThemes.includes(theme);
     }
 
@@ -47,14 +47,14 @@ class ThemeManager {
     applyTheme(theme) {
         if (!this.isValidTheme(theme)) {
             console.warn(`Invalid theme: ${theme}. Using default dark theme.`);
-            theme = 'dark';
+            theme = 'eft';
         }
 
         // Remove existing theme attributes
         document.documentElement.removeAttribute('data-theme');
         
-        // Apply new theme (dark is default, no attribute needed)
-        if (theme !== 'dark') {
+        // Apply new theme (eft is default, no attribute needed)
+        if (theme !== 'eft') {
             document.documentElement.setAttribute('data-theme', theme);
         }
 
@@ -116,8 +116,9 @@ class ThemeManager {
     // Get available themes
     getAvailableThemes() {
         return [
-            { value: 'eft', label: '🌙 EFT' },
-            { value: 'modern', label: '🔵 Modern' },
+            { value: 'eft', label: 'EFT' },
+            { value: 'modern', label: 'Modern' },
+            { value: 'hacker', label: 'Hacker' },
         ];
     }
 }

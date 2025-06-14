@@ -69,9 +69,7 @@
     --main-color-bg-active: #4c5e8b;
     --main-color-btn: #5263ad;
     --main-color-btn-border: 1px solid rgba(179, 229, 244, 0.18);
-    --switch-main-color: #fff;
     --text-color: #bcccd8;
-    --link-natural: #fff;
     --background-color: #0b0c11;
     --darkest-bg: #010409;
     --dark-bg: #151722;
@@ -80,7 +78,6 @@
     --content-bg: rgb(0 0 0 / 16%);
     --content-bg-light: rgb(180 201 229 / 6%);
     --toolbar-bg: rgb(128 162 255 / 5%);
-    --modal-bg: rgb(23 23 23 / 44%);
     --subtle-bg: rgb(197 218 255 / 4%);
     --checkmark-color: #4cd574;
     --bright-color: #c1c3ca;
@@ -96,6 +93,38 @@
     --glow-box-shadow: none;
     --small-glow-box-shadow: none;
     --background-blend-mode: luminosity;
+}
+
+[data-theme="hacker"] {
+    --main-color: #00ff00;
+    --main-color-hover: #00cc00;
+    --main-color-bg: #007700;
+    --main-color-bg-hover: #005500;
+    --main-color-bg-active: #003300;
+    --main-color-btn: #004400;
+    --main-color-btn-border: 1px solid rgba(0, 255, 0, 0.18);
+    --text-color: #d7e3d7;
+    --background-color: #000000;
+    --darkest-bg: #010901;
+    --dark-bg: #0c0c0c;
+    --cool-bg: #242424;
+    --medium-bg: #191c18;
+    --content-bg: rgb(0 0 0 / 16%);
+    --content-bg-light: rgb(179 179 179 / 6%);
+    --toolbar-bg: rgb(137 255 116 / 6%);
+    --subtle-bg: rgb(197 218 255 / 4%);
+    --glow-box-shadow: 0 0 100px #375d4663, 0 0 6px rgb(173 255 202 / 30%);
+    --checkmark-color: #4cd574;
+    --bright-color: #8dd48d;
+    --brighter-color: #c5f7c5;
+    --box-shadow: none;
+    --list-item: #000000;
+    --header-bg: #000;
+    --border-color: rgb(200 255 200 / 18%);
+    --background-blend-mode: luminosity;
+    --border-color-weak: hsl(138.93deg 100% 77.58% / 10%);
+    --border-color-strong: hsl(138.93deg 100% 77.58% / 20%);
+    --border-color-stronger: hsl(138.93deg 100% 77.58% / 30%);
 }
 
 html,
@@ -116,6 +145,7 @@ body {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+    overflow-x: hidden;
 }
 
 a {
@@ -656,6 +686,7 @@ select {
     padding: clamp(1rem, 1.6vw, 1.6rem);
     will-change: opacity, transform;
     background-blend-mode: var(--background-blend-mode);
+    color: var(--text-color);
 }
 
 .handbook-side .card {

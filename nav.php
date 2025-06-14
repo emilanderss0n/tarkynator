@@ -36,6 +36,7 @@
                     <select id="theme-select" class="form-select form-select-sm" style="width: auto;">
                         <option value="eft">EFT Theme</option>
                         <option value="modern">Modern Theme</option>
+                        <option value="hacker">Hacker Theme</option>
                     </select>
                 </div>
             </span>
