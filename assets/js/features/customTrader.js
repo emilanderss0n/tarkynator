@@ -1,4 +1,4 @@
-﻿import { DATA_URL } from './localData.js';
+﻿import { DATA_URL } from '../core/localData.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const uploadForm = document.getElementById('traderUploadForm');

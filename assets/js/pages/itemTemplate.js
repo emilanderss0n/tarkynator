@@ -1,10 +1,14 @@
-import { checkJsonEditor, checkJsonEditorSimple } from './checkJsonEditor.js';
-import { fetchData } from './cache.js';
-import { searchOptimizer } from './searchOptimizer.js';
-import { DATA_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS, DEPENDENCIES } from './localData.js';
+import { checkJsonEditor, checkJsonEditorSimple } from '../components/checkJsonEditor.js';
+import { fetchData } from '../core/cache.js';
+import { searchOptimizer } from '../core/searchOptimizer.js';
+import { DATA_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS, DEPENDENCIES } from '../core/localData.js';
+import { navigationManager } from '../core/navigationManager.js';
 
 // Add lastActiveCategory variable at the top level
 let lastActiveCategory = '';
+
+// Navigation state tracking
+let isNavigationHandlerActive = false;
 
 // Cache for storing frequently accessed data
 let gameDataCache = null;
@@ -52,6 +56,9 @@ document.body.addEventListener('click', function (e) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Initialize navigation manager
+    navigationManager.init();
 
     const itemSearchInput = document.getElementById('itemSearchInput');
     const handbookContent = document.getElementById('handbookContent');
@@ -114,17 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
         })
-        .then(data => { localItems = data; })
-        .catch(error => console.error('Error loading local items:', error)); itemSearchInput.addEventListener('input', searchOptimizer.debounce(() => {
-            const query = itemSearchInput.value.trim();
-            if (query.length > 2) {
-                fetchItemData(query);
-            } else {
-                handbookContent.innerHTML = '';
-                searchResults.innerHTML = '';
-            }
-            checkJsonEditorSimple();
-        }, 150)); // Reduced debounce time for better responsiveness
+        .then(data => { localItems = data; }).catch(error => console.error('Error loading local items:', error));
 
     // Remove the duplicate fetchData function since we import it from cache.js
     const fetchItemData = async (query) => {
@@ -153,45 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
             spinner.style.display = 'none';
             displayNoResults('Error loading local items');
         }
-    }; const urlParams = new URLSearchParams(window.location.search);
-    const itemId = urlParams.get('item');
-    if (itemId) {
-        // Use cached data if available
-        const loadItemFromUrl = async () => {
-            let data = gameDataCache;
-            if (!data) {
-                data = await preloadGameData();
-            }
+    };
 
-            const item = data.items[itemId];
-            if (item) {
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item';
-                const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
-
-                listItem.innerHTML = `
-                    <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
-                    ${item.name}
-                `;
-
-                const handbookCategoriesNames = item.handbookCategories.map(category => category.name).join(', ');
-
-                // Convert usedInTasks array to just the task IDs
-                const taskIds = item.usedInTasks ? item.usedInTasks.map(task => task.id).join(',') : '';
-
-                Object.assign(listItem.dataset, {
-                    itemId: item.id,
-                    itemTypes: handbookCategoriesNames,
-                    usedInTasks: taskIds
-                });
-                displayItemDetails(listItem);
-            }
-        };
-
-        loadItemFromUrl().catch(error => {
-            console.error('Error fetching item data:', error);
-        });
-    }
+    // URL parameter handling is now managed by navigationManager
 
     const updateSearchResults = (items) => {
         searchResults.innerHTML = '';
@@ -216,15 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const handbookCategoriesNames = item.handbookCategories.map(category => category.name).join(', ');
 
         // Convert usedInTasks array to just the task IDs
-        const taskIds = item.usedInTasks ? item.usedInTasks.map(task => task.id).join(',') : '';
-
-        Object.assign(listItem.dataset, {
+        const taskIds = item.usedInTasks ? item.usedInTasks.map(task => task.id).join(',') : ''; Object.assign(listItem.dataset, {
             itemId: item.id,
             itemTypes: handbookCategoriesNames,
             usedInTasks: taskIds
         });
 
-        listItem.addEventListener('click', () => displayItemDetails(listItem));
         searchResults.appendChild(listItem);
 
         setTimeout(() => {
@@ -238,12 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toggleRecentSearchesVisibility = (isVisible) => {
         recentSearchesElement.style.display = isVisible ? 'grid' : 'none';
-    };
+    }; const displayItemDetails = async (itemElement, updateHistory = true) => {
+        const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
 
-    const displayItemDetails = async (itemElement) => {
-        const { itemId, itemTypes, usedInTasks } = itemElement.dataset; const url = new URL(window.location);
-        url.searchParams.set('item', itemId);
-        window.history.pushState({}, '', url);
+        if (updateHistory) {
+            // Use navigation manager for URL updates
+            navigationManager.navigateToItem(itemId, 'handbook');
+        }
 
         // Store the search in localStorage
         storeRecentSearch(itemElement);
@@ -411,11 +370,10 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             listItem.dataset.itemId = item.id;
             listItem.dataset.itemTypes = item.itemTypes;
-            listItem.dataset.usedInTasks = item.usedInTasks;
-
-            listItem.addEventListener('click', () => {
-                displayItemDetails(listItem);
-                breadcrumb.style.display = 'block'; // Ensure breadcrumb is displayed
+            listItem.dataset.usedInTasks = item.usedInTasks; listItem.addEventListener('click', () => {
+                const itemId = listItem.dataset.itemId;
+                // Use navigation manager to navigate to item
+                navigationManager.navigateToItem(itemId, 'handbook');
             });
             fragment.appendChild(listItem);
         });
@@ -782,16 +740,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             templateNavLink.classList.add('disabled');
         }
-    };
-
-    searchResults.addEventListener('click', (event) => {
+    }; searchResults.addEventListener('click', (event) => {
         if (event.target && event.target.matches('li.list-group-item')) {
             const itemElement = event.target.closest('li.list-group-item');
-            displayItemDetails(itemElement);
-            handbookNavLink.classList.add('active'); // Changed from templateNavLink
+            const itemId = itemElement.dataset.itemId;
+
+            // Use navigation manager to navigate to item
+            navigationManager.navigateToItem(itemId, 'handbook');
+
+            // Hide search results
             searchResultsCont.style.display = "none";
-            handbookContainer.style.display = 'block'; // Changed from templateContainer
-            breadcrumb.style.display = 'block';
         }
     });
 
@@ -1001,7 +959,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#browseItems .browse-item').forEach(itemElement => {
             itemElement.addEventListener('click', () => {
                 const itemId = itemElement.dataset.itemId;
-                fetchItemData(itemId);
+                // Use navigation manager to navigate to item
+                navigationManager.navigateToItem(itemId, 'handbook');
                 checkJsonEditorSimple();
                 window.scrollTo({ top: 0, behavior: "smooth" });
             });
@@ -1131,30 +1090,334 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-    } templateNavLink.addEventListener('click', (event) => {
+    }
+
+    // Setup navigation link handlers
+    templateNavLink.addEventListener('click', (event) => {
         event.preventDefault();
-        // Only switch to template view if the template tab is not disabled
+        // Only switch to template view if the template tab is not disabled and we have an item
         if (!templateNavLink.classList.contains('disabled')) {
-            toggleContainers(templateContainer, templateContainer, handbookContainer, browseContainer);
-            if (editor) {
-                editor.refresh();
-                checkJsonEditorSimple();
+            const currentState = navigationManager.getState();
+            if (currentState.item) {
+                navigationManager.switchView('template');
             }
         }
     });
 
     handbookNavLink.addEventListener('click', (event) => {
         event.preventDefault();
-        toggleContainers(handbookContainer, templateContainer, handbookContainer, browseContainer);
+        const currentState = navigationManager.getState();
+        if (currentState.item) {
+            navigationManager.switchView('handbook');
+        } else {
+            navigationManager.navigateToSearch();
+        }
     });
 
     browseNavLink.addEventListener('click', (event) => {
         event.preventDefault();
-        toggleContainers(browseContainer, templateContainer, handbookContainer, browseContainer);
-        toggleNav.classList.add('inactive');
-        breadcrumb.style.display = 'none';
+        navigationManager.navigateToBrowse();
+    });// Setup navigation state change handler
+    navigationManager.onStateChange((state, previousState, updateURL) => {
+        if (isNavigationHandlerActive) return; // Prevent recursion
+        isNavigationHandlerActive = true;
+
+        handleNavigationStateChange(state, previousState);
+
+        isNavigationHandlerActive = false;
     });
 
-    attachEventListeners();
+    // Helper function to show search view
+    const showSearchView = () => {
+        // Hide all containers
+        templateContainer.style.display = 'none';
+        handbookContainer.style.display = 'none';
+        browseContainer.style.display = 'none';
 
+        // Show recent searches
+        toggleRecentSearchesVisibility(true);
+
+        // Hide breadcrumb and toggle nav
+        breadcrumb.style.display = 'none';
+        toggleNav.classList.add('inactive');
+
+        // Clear navigation active states
+        templateNavLink.classList.remove('active');
+        handbookNavLink.classList.remove('active');
+        browseNavLink.classList.remove('active');
+
+        // Clear search results
+        searchResults.innerHTML = '';
+        searchResultsCont.style.display = "none";
+
+        // Focus search input
+        itemSearchInput.focus();
+    };
+
+    // Helper function to perform search
+    const performSearch = async (query) => {
+        if (query.length > 2) {
+            await fetchItemData(query);
+        } else {
+            searchResults.innerHTML = '';
+            searchResultsCont.style.display = "none";
+        }
+    };    // Helper function to load item from ID
+    const loadItemFromId = async (itemId) => {
+        let data = gameDataCache;
+        if (!data) {
+            data = await preloadGameData();
+        }
+
+        const item = data.items[itemId];
+        if (item) {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
+
+            listItem.innerHTML = `
+                <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
+                ${item.name}
+            `;
+
+            const handbookCategoriesNames = item.handbookCategories.map(category => category.name).join(', ');
+            const taskIds = item.usedInTasks ? item.usedInTasks.map(task => task.id).join(',') : '';
+
+            Object.assign(listItem.dataset, {
+                itemId: item.id,
+                itemTypes: handbookCategoriesNames,
+                usedInTasks: taskIds
+            });
+
+            // Call a version of displayItemDetails that doesn't change the view
+            await loadItemDataOnly(listItem);
+        }
+    };
+
+    // Helper function to load item data without changing views
+    const loadItemDataOnly = async (itemElement) => {
+        const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
+
+        // Store the search in localStorage
+        storeRecentSearch(itemElement);
+
+        // Save the current active category before switching views
+        const activeCategoryElement = document.querySelector('#browseSidebar .browse-category.active');
+        if (activeCategoryElement) {
+            lastActiveCategory = activeCategoryElement.dataset.itemType;
+        }
+
+        // Enable navigation but don't change active states - let navigation manager handle this
+        toggleNav.classList.remove('inactive');
+
+        // Enhanced breadcrumb generation with clickable navigation
+        const types = itemTypes.split(',').reverse();
+        const validCategories = new Set(Object.values(typesEnum));
+        const breadcrumbHTML = types
+            .map((type, index) => {
+                // Check if this category exists in our valid categories or has a mapping
+                const normalizedType = type.trim();
+                const isValidCategory = validCategories.has(normalizedType) ||
+                    Object.keys(categoryNameMapping).includes(normalizedType);
+
+                if (index === types.length - 1 && isValidCategory) {
+                    // First (root) category - make it a link only if it's a valid category
+                    return `<a href="javascript:void(0);" class="breadcrumb-link" data-view="browse" data-category="${Object.entries(typesEnum).find(([key, value]) => value === normalizedType)?.[0] || normalizedType}">${type}</a>`;
+                } else if (index === 0 || !isValidCategory) {
+                    // Last category or invalid category - just text
+                    return `<span class="breadcrumb-text">${type}</span>`;
+                } else if (isValidCategory) {
+                    // Middle categories - links only if they're valid categories
+                    const enumKey = Object.entries(typesEnum).find(([key, value]) => value === normalizedType)?.[0] || normalizedType;
+                    return `<a href="javascript:void(0);" class="breadcrumb-link" data-category="${enumKey}">${type}</a>`;
+                } else {
+                    return `<span class="breadcrumb-text">${type}</span>`;
+                }
+            })
+            .join(' <i class="bi bi-caret-right-fill"></i> ') +
+            ' <i class="bi bi-caret-right-fill"></i> ' +
+            `<span class="breadcrumb-current">${itemElement.textContent}</span>`;
+
+        breadcrumb.innerHTML = "<div class='breadcrumb-container'>" + breadcrumbHTML + "</div>";
+        breadcrumb.style.display = 'block';
+
+        // Add click handlers for breadcrumb links
+        breadcrumb.querySelectorAll('.breadcrumb-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                browseNavLink.click();
+
+                // Get the category from the data attribute
+                let categoryName = link.dataset.category;
+
+                // If we have a direct mapping, use it
+                const mappedName = Object.entries(categoryNameMapping)
+                    .find(([key, value]) => value === categoryName)?.[0];
+
+                if (mappedName) {
+                    // Use the mapped display name
+                    categoryName = mappedName.replace(/\s+/g, '-');
+                } else if (typesEnum[categoryName]) {
+                    // If it's an enum key, get the display name
+                    categoryName = typesEnum[categoryName].replace(/\s+/g, '-');
+                } else {
+                    // Otherwise, normalize it
+                    categoryName = categoryName.replace(/\s+/g, '-');
+                }
+
+                const categoryElement = document.querySelector(`#browseSidebar .browse-category[data-item-type="${categoryName}"]`);
+                if (categoryElement) {
+                    categoryElement.click();
+                }
+            });
+        });
+
+        // Load tasks data
+        let usedInTasksHTML = '';
+        if (usedInTasks) {
+            try {
+                // Use cached data if available
+                let data = gameDataCache;
+                if (!data) {
+                    data = await fetchData(DATA_URL, { method: 'GET' });
+                }
+
+                const taskIds = usedInTasks.split(',');
+                const tasks = taskIds.map(taskId => {
+                    const taskInfo = data.items[itemId].usedInTasks.find(task => task.id === taskId);
+                    return taskInfo ? `<li class="list-group-item"><strong>${taskInfo.name}</strong><span class="global-id">${taskId}</span></li>` : null;
+                }).filter(task => task !== null).join('');
+
+                if (tasks) {
+                    usedInTasksHTML = `
+                        <div class="used-in card">
+                            <figure>
+                                <figcaption class="blockquote-footer">Used in quests</figcaption>
+                            </figure>
+                            <ul class="list-group">${tasks}</ul>
+                        </div>`;
+                }
+            } catch (error) {
+                console.error('Error fetching tasks data:', error);
+                usedInTasksHTML = '<p>Error fetching tasks data.</p>';
+            }
+        }
+
+        // Update handbook content
+        updateHandbookContent(itemElement, usedInTasksHTML);
+
+        // Clear search results and input
+        searchResults.innerHTML = '';
+        itemSearchInput.value = '';
+
+        // Load JSON template but don't refresh editor yet - let the navigation manager handle that
+        await fetchItemJsonTemplate(itemId);
+
+        // Hide recent searches
+        toggleRecentSearchesVisibility(false);
+    };// Helper function to load browse category
+    const loadBrowseCategory = async (category, page = 1) => {
+        // Call the existing fetchBrowseData function
+        if (category) {
+            fetchBrowseData(category);
+        }
+    };
+
+    // Handle navigation state changes
+    const handleNavigationStateChange = async (state, previousState) => {
+        const { view, item, category, search, page } = state;
+
+        // Handle view switching
+        switch (view) {
+            case 'search':
+                if (search) {
+                    itemSearchInput.value = search;
+                    await performSearch(search);
+                } else {
+                    showSearchView();
+                }
+                break;
+            case 'handbook':
+                if (item) {
+                    // First show the container
+                    toggleContainers(handbookContainer, templateContainer, handbookContainer, browseContainer);
+                    handbookNavLink.classList.add('active');
+                    templateNavLink.classList.remove('active');
+                    browseNavLink.classList.remove('active');
+                }
+                if (item && item !== previousState?.item) {
+                    // Then load the item data
+                    await loadItemFromId(item);
+                }
+                break; case 'template':
+                if (item && item !== previousState?.item) {
+                    await loadItemFromId(item);
+                } else if (item) {
+                    // Even if it's the same item, ensure template is loaded when switching to template view
+                    await fetchItemJsonTemplate(item);
+                }
+                if (item) {
+                    toggleContainers(templateContainer, templateContainer, handbookContainer, browseContainer);
+                    templateNavLink.classList.add('active');
+                    handbookNavLink.classList.remove('active');
+                    browseNavLink.classList.remove('active');
+
+                    // Ensure editor is refreshed after container is visible
+                    setTimeout(() => {
+                        if (typeof editor !== 'undefined' && editor) {
+                            editor.refresh();
+                            checkJsonEditorSimple();
+                        }
+                    }, 50); // Small delay to ensure container is visible
+                }
+                break;
+
+            case 'browse':
+                toggleContainers(browseContainer, templateContainer, handbookContainer, browseContainer);
+                toggleNav.classList.add('inactive');
+                breadcrumb.style.display = 'none';
+                templateNavLink.classList.remove('active');
+                handbookNavLink.classList.remove('active');
+                browseNavLink.classList.add('active');
+
+                if (category) {
+                    await loadBrowseCategory(category, page);
+                }
+                break;
+        }
+    };    // Setup search input handler with navigation manager
+    itemSearchInput.addEventListener('input', searchOptimizer.debounce((e) => {
+        const query = itemSearchInput.value.trim();
+
+        if (query.length > 2) {
+            // Don't update navigation state here, just perform the search
+            // Navigation state will be updated when user selects an item
+            fetchItemData(query);
+        } else {
+            // Clear search results
+            searchResults.innerHTML = '';
+            searchResultsCont.style.display = "none";
+            handbookContent.innerHTML = '';
+
+            // If completely empty, show search view
+            if (query.length === 0) {
+                showSearchView();
+            }
+        }
+        checkJsonEditorSimple();
+    }, 150));    // Initial state restoration from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('item') || urlParams.has('view') || urlParams.has('search') || urlParams.has('category')) {
+        // Let navigation manager handle the initial state
+        setTimeout(() => {
+            navigationManager.restoreStateFromURL();
+        }, 100); // Small delay to ensure all elements are ready
+    } else {        // No URL parameters, show default search view
+        setTimeout(() => {
+            showSearchView();
+        }, 100);
+    }
+
+    // Attach event listeners for browse functionality
+    attachEventListeners();
 });

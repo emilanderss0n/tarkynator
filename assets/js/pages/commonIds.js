@@ -1,4 +1,4 @@
-import { fetchData } from './cache.js';
+import { fetchData } from '../core/cache.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const commonIdContainer = document.getElementById('commonIdContainer');
