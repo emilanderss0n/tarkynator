@@ -2,9 +2,9 @@
 $activePage = 'quests';
 include_once('../header.php');
 ?>
-<link rel="stylesheet" href="assets/css/search-highlight.css">
-<div class="container-fluid main-app">    <div id="questsContainer" class="component-container item-info-item">
-        <div class="head-nav" id="traderQuests">
+   
+    <div id="questsContainer" class="item-info-item">
+        <div class="head-nav component-container" id="traderQuests">
             <nav class="btn-group filters animate-in">
                 <a class="btn sm active" href="javascript:void(0);">Prapor</a>
                 <a class="btn sm" href="javascript:void(0);">Therapist</a>
@@ -25,7 +25,7 @@ include_once('../header.php');
             </div>
             <textarea id="jsoneditor" name="jsoneditor"></textarea>
         </div>
-        <div id="questFilters" class="animate-in">
+        <div id="questFilters" class="animate-in container-fluid page">
             <div class="search-filter-container flex-container">                
                 <div class="search-container-quests">
                     <input type="text" id="questSearch" placeholder="Search by name or ID..." class="form-control">
@@ -47,9 +47,9 @@ include_once('../header.php');
                 </div>
             </div>
         </div>
-        <div class="body animate-in grid grid-550" grid-max-col-count="4" id="questsContent">
+        <div class="body animate-in grid grid-550 container-fluid page" grid-max-col-count="4" id="questsContent">
             <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>
-</div>
+
 <?php include_once('../footer.php') ?>

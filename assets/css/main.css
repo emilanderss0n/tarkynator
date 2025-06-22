@@ -389,6 +389,11 @@ a[data-tooltip] {
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
     opacity: 0;
+    will-change: transform, opacity;
+    -webkit-font-smoothing: antialised;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .input-control .input-search-icon {
@@ -1047,13 +1052,8 @@ span.global-id.copied::after {
 }
 
 #itemSearch {
-    will-change: transform, opacity;
     padding: 1.5rem 0;
     position: relative;
-    animation: inAni 0.5s ease;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
 }
 
 #itemSearchInput {
@@ -1156,8 +1156,14 @@ span.global-id.copied::after {
     animation: loader 1s linear infinite;
 }
 
+.component-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
 .component-container .body {
-    padding: 2rem 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .head-nav {
@@ -1217,15 +1223,11 @@ span.global-id.copied::after {
 }
 
 #breadcrumb {
-    will-change: transform, opacity;
-    padding: 0.3rem 1.5rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;;
     font-size: 14px;
     color: var(--bright-color);
     text-transform: capitalize;
-    animation: inAni 0.5s ease;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
     animation-delay: 250ms;
 }
 
@@ -1242,29 +1244,12 @@ span.global-id.copied::after {
     color: var(--border-color);
 }
 
-#itemInfo {
-    will-change: transform, opacity;
-    animation: inAni 0.5s ease;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
-    animation-delay: 350ms;
-}
-
 .container-fluid {
     padding: 0 1.5rem;
 }
 
-#templateContainer {
-    will-change: transform, opacity;
-    animation: inAni 0.5s ease;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
-}
-
-#templateContent {
-    padding: 1rem 1.5rem 3rem;
+.container-fluid.page {
+    padding: 1rem 1.5rem;
 }
 
 #templateContent .CodeMirror {
@@ -1275,18 +1260,6 @@ span.global-id.copied::after {
 
 #templateContent .cm-s-moxer.CodeMirror {
     border-radius: 0.5rem;
-}
-
-#handbookContainer {
-    will-change: transform, opacity;
-    animation: inAni 0.5s ease;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
-}
-
-#handbookContainer .body {
-    padding: 1rem 1.5rem 5rem;
 }
 
 #handbookLoad {
@@ -1495,25 +1468,7 @@ span.global-id.copied::after {
 }
 
 #recentSearches {
-    padding: 1rem 1.5rem;
-    animation-name: inAni;
-    animation-duration: 0.5s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
     animation-delay: 250ms;
-}
-
-#browseContainer {
-    will-change: transform, opacity;
-    animation: inAni 0.5s ease;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
-}
-
-#browseContent {
-    padding: 1rem 1.5rem 3rem;
 }
 
 .browse-container {
@@ -1623,6 +1578,10 @@ span.global-id.copied::after {
 
 #browsePagination .pagination {
     margin: 0;
+}
+
+#craftsContent {
+    animation-delay: 250ms;
 }
 
 #craftsContainer .craft-id {
@@ -1797,7 +1756,6 @@ span.global-id.copied::after {
 }
 
 #questFilters {
-    padding: 1.5rem 1.5rem 0;
     animation-delay: 250ms;
 }
 
@@ -1831,12 +1789,17 @@ span.global-id.copied::after {
 
 #questsContent {
     animation-delay: 500ms;
+    padding-top: 0;
 }
 
 #questsContent .card {
     overflow: hidden;
     justify-content: space-between;
     padding: 0;
+}
+
+#customTraderContent {
+    animation-delay: 250ms;;
 }
 
 #customTraderContent .card {
@@ -1945,14 +1908,6 @@ span.global-id.copied::after {
 .quest-buttons {
     display: flex;
     gap: 0.5rem;
-}
-
-.generate-single {
-    will-change: transform, opacity;
-    animation: inAni 0.5s ease;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
 }
 
 .generate-single .single-body {
@@ -2084,12 +2039,7 @@ span.global-id.copied::after {
 
 #bulkContainer .header .input-group {
     margin-bottom: 2rem;
-    will-change: transform, opacity;
-    animation: inAni 0.5s ease;
     animation-delay: 400ms;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    opacity: 0;
 }
 
 #bulkContainer .header .input-group #objectIds {
@@ -2106,6 +2056,7 @@ span.global-id.copied::after {
 
 #bulkContainer .bulk-output-tools {
     margin-top: 2rem;
+    text-align: center;
 }
 
 .main-app {
@@ -2116,6 +2067,7 @@ span.global-id.copied::after {
 
 #welcomeMessage {
     background-color: var(--medium-bg);
+    padding: 2rem 0;
 }
 
 #welcomeMessage .blockquote-footer {
@@ -2146,7 +2098,8 @@ span.global-id.copied::after {
 }
 
 .custom-trader-header {
-    padding: 2rem 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;;
     background: var(--toolbar-bg);
     display: flex;
     gap: 2rem;
@@ -2681,4 +2634,47 @@ footer .text-end {
         background-position: 200% 50%;
         transform: rotate(360deg);
     }
+}
+
+@media screen and (min-width: 1500px) {
+    .container-fluid {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .container-fluid.page {
+        padding: 2rem 3rem;
+    }
+
+    .component-container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+    .component-container .body {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    #itemSearch {
+        padding: 3rem 0 1rem;
+    }
+
+    #itemInfo {
+        padding-top: 1.5rem;
+    }
+}
+
+[data-theme="modern"] body {
+    font-size: 0.9rem;
+}
+
+[data-theme="modern"] .btn {
+    font-size: 0.9rem;
+}
+
+.handbook-item .slots-filter .slot .break {
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin: 0 0 0.8rem;
 }

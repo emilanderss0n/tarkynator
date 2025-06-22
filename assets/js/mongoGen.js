@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.href = url;
         link.download = 'generated_ids.txt';
         link.innerHTML = '<i class="bi bi-download"></i> Download IDs';
-        link.classList.add('btn-sm', 'btn', 'btn-primary', 'download-link');
+        link.classList.add('btn', 'download-link');
         bulkOutput.appendChild(link);
     }
 

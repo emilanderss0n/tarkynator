@@ -32,4 +32,5 @@ include_once 'includes/functions.php';
 </head>
 
 <body>
-<?php include_once('nav.php'); ?>
+    <?php include_once('nav.php'); ?>
+    <div class="main-app">

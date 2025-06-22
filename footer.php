@@ -1,7 +1,8 @@
-<div class="footer-container">
+    </div> <!-- End of main-app div -->
+    <div class="footer-container">
 
-        <section id="welcomeMessage" class="component-container">
-            <div class="body">
+        <section id="welcomeMessage">
+            <div class="body container-fluid">
                 <p>Search through Escape From Tarkov databases with Tarkov API. This tool is designed to help you
                     find items and their information in the game. You can search for items by their name or by their
                     ID. The search results will show you the item's name, ID, and other information. This tool is

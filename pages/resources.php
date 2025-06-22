@@ -2,9 +2,9 @@
 $activePage = 'resources';
 include_once('../header.php');
 ?>
-<div class="container-fluid main-app">
-    <div id="resourcesContainer" class="component-container item-info-item">
-        <div class="body" id="resourcesContent">
+
+    <div id="resourcesContainer" class="item-info-item animate-in">
+        <div class="body container-fluid page" id="resourcesContent">
             <h5 class="title">Modding Tools</h5>
             <div class="links grid grid-500" grid-max-col-count="3" id="cardsMt">
                 <a href="https://discord.gg/mS8dAtV98B" target="_blank" class="card-bfx">
@@ -135,5 +135,5 @@ include_once('../header.php');
             </div>
         </div>
     </div>
-</div>
+    
 <?php include_once('../footer.php') ?>
