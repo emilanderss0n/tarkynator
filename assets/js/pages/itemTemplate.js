@@ -13,26 +13,19 @@ import {
   checkJsonEditorSimple,
 } from "../components/checkJsonEditor.js";
 
-// Add lastActiveCategory variable at the top level
 let lastActiveCategory = "";
-
-// Navigation state tracking
 let isNavigationHandlerActive = false;
 
-// Cache for storing frequently accessed data
 let gameDataCache = null;
 let itemsArrayCache = null;
 let searchIndex = null;
 let categoryFilterMap = null;
 
-// Add category name mapping at the top level
 const categoryNameMapping = {
   "Light & laser devices": "LightLaserDevices",
   "Light/laser devices": "LightLaserDevices",
 };
 
-// Add this at the beginning of the file, after imports
-// Global click handler for copy buttons
 document.body.addEventListener("click", function (e) {
   const copyButton = e.target.closest(".copy-deps");
   if (copyButton) {
@@ -68,7 +61,7 @@ document.body.addEventListener("click", function (e) {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize navigation manager
+
   navigationManager.init();
 
   const itemSearchInput = document.getElementById("itemSearchInput");
@@ -92,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const browseSidebar = document.getElementById("browseSidebar");
   const browseItems = document.getElementById("browseItems");
 
-  // Add search filter input element
   const searchFilter = document.createElement("div");
   searchFilter.className = "search-filter";
   searchFilter.innerHTML = `
@@ -101,16 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
   browseItems.insertAdjacentElement("afterbegin", searchFilter);
 
   checkJsonEditor();
-  let localItems = {}; // Preload and cache game data
+  let localItems = {};
   const preloadGameData = async () => {
     if (!gameDataCache) {
       try {
         gameDataCache = await fetchData(DATA_URL, { method: "GET" });
-        // Create items array cache for faster searching
         itemsArrayCache = Object.values(gameDataCache.items);
-        // Create optimized search index
         searchIndex = searchOptimizer.createSearchIndex(itemsArrayCache);
-        // Create category filter map
         categoryFilterMap =
           searchOptimizer.createCategoryFilter(itemsArrayCache);
       } catch (error) {
@@ -120,14 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return gameDataCache;
   };
 
-  // Fast search using search optimizer
   const fastItemSearch = (query) => {
     if (!itemsArrayCache || !searchIndex) return [];
     return searchOptimizer.fastSearch(query, searchIndex, itemsArrayCache);
   };
   spinner.style.display = "none";
 
-  // Preload game data immediately
   preloadGameData();
 
   fetch(ITEMS_URL)
@@ -141,13 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch((error) => console.error("Error loading local items:", error));
 
-  // Remove the duplicate fetchData function since we import it from cache.js
   const fetchItemData = async (query) => {
     const isId = /^[0-9a-fA-F]{24}$/.test(query);
     spinner.style.display = "inline-block";
 
     try {
-      // Use cached data if available, otherwise fetch
       let data = gameDataCache;
       if (!data) {
         data = await preloadGameData();
@@ -155,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       spinner.style.display = "none";
 
-      // Use fast search with index
       const filteredItems = fastItemSearch(query);
 
       if (filteredItems.length > 0) {
@@ -169,8 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
       displayNoResults("Error loading local items");
     }
   };
-
-  // URL parameter handling is now managed by navigationManager
 
   const updateSearchResults = (items) => {
     searchResults.innerHTML = "";
@@ -196,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .map((category) => category.name)
       .join(", ");
 
-    // Convert usedInTasks array to just the task IDs
     const taskIds = item.usedInTasks
       ? item.usedInTasks.map((task) => task.id).join(",")
       : "";
@@ -224,14 +205,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
 
     if (updateHistory) {
-      // Use navigation manager for URL updates
       navigationManager.navigateToItem(itemId, "handbook");
     }
 
-    // Store the search in localStorage
     storeRecentSearch(itemElement);
 
-    // Save the current active category before switching views
     const activeCategoryElement = document.querySelector(
       "#browseSidebar .browse-category.active"
     );
@@ -239,7 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
       lastActiveCategory = activeCategoryElement.dataset.itemType;
     }
 
-    // Always enable handbook view
     handbookNavLink.classList.add("active");
     handbookNavLink.classList.remove("disabled");
     toggleContainers(
@@ -250,32 +227,27 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     toggleNav.classList.remove("inactive");
-    // Don't enable template view yet - we'll check if the template exists first
 
-    // Enhanced breadcrumb generation with clickable navigation
     const types = itemTypes.split(",").reverse();
     const validCategories = new Set(Object.values(typesEnum));
     const breadcrumbHTML =
       types
         .map((type, index) => {
-          // Check if this category exists in our valid categories or has a mapping
+
           const normalizedType = type.trim();
           const isValidCategory =
             validCategories.has(normalizedType) ||
             Object.keys(categoryNameMapping).includes(normalizedType);
 
           if (index === types.length - 1 && isValidCategory) {
-            // First (root) category - make it a link only if it's a valid category
             return `<a href="javascript:void(0);" class="breadcrumb-link" data-view="browse" data-category="${
               Object.entries(typesEnum).find(
                 ([key, value]) => value === normalizedType
               )?.[0] || normalizedType
             }">${type}</a>`;
           } else if (index === 0 || !isValidCategory) {
-            // Last category or invalid category - just text
             return `<span class="breadcrumb-text">${type}</span>`;
           } else if (isValidCategory) {
-            // Middle categories - links only if they're valid categories
             const enumKey =
               Object.entries(typesEnum).find(
                 ([key, value]) => value === normalizedType
@@ -293,28 +265,22 @@ document.addEventListener("DOMContentLoaded", () => {
       "<div class='breadcrumb-container'>" + breadcrumbHTML + "</div>";
     breadcrumb.style.display = "block";
 
-    // Add click handlers for breadcrumb links
     breadcrumb.querySelectorAll(".breadcrumb-link").forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
         browseNavLink.click();
 
-        // Get the category from the data attribute
         let categoryName = link.dataset.category;
 
-        // If we have a direct mapping, use it
         const mappedName = Object.entries(categoryNameMapping).find(
           ([key, value]) => value === categoryName
         )?.[0];
 
         if (mappedName) {
-          // Use the mapped display name
           categoryName = mappedName.replace(/\s+/g, "-");
         } else if (typesEnum[categoryName]) {
-          // If it's an enum key, get the display name
           categoryName = typesEnum[categoryName].replace(/\s+/g, "-");
         } else {
-          // Otherwise, normalize it
           categoryName = categoryName.replace(/\s+/g, "-");
         }
 
@@ -329,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let usedInTasksHTML = "";
     if (usedInTasks) {
       try {
-        // Use cached data if available
         let data = gameDataCache;
         if (!data) {
           data = await fetchData(DATA_URL, { method: "GET" });
@@ -372,7 +337,6 @@ document.addEventListener("DOMContentLoaded", () => {
       checkJsonEditorSimple();
     }
 
-    // Hide recent searches
     toggleRecentSearchesVisibility(false);
   };
 
@@ -387,7 +351,6 @@ document.addEventListener("DOMContentLoaded", () => {
       usedInTasks: itemElement.dataset.usedInTasks,
     };
 
-    // Remove duplicate entries
     const existingIndex = recentSearches.findIndex(
       (item) => item.id === itemData.id
     );
@@ -395,10 +358,8 @@ document.addEventListener("DOMContentLoaded", () => {
       recentSearches.splice(existingIndex, 1);
     }
 
-    // Add the new search to the beginning of the array
     recentSearches.unshift(itemData);
 
-    // Keep only the last 8 searches
     if (recentSearches.length > 8) {
       recentSearches.pop();
     }
@@ -431,7 +392,6 @@ document.addEventListener("DOMContentLoaded", () => {
       listItem.dataset.usedInTasks = item.usedInTasks;
       listItem.addEventListener("click", () => {
         const itemId = listItem.dataset.itemId;
-        // Use navigation manager to navigate to item
         navigationManager.navigateToItem(itemId, "handbook");
       });
       fragment.appendChild(listItem);
@@ -441,10 +401,8 @@ document.addEventListener("DOMContentLoaded", () => {
     recentSearchesElement.appendChild(fragment);
   };
 
-  // Call updateRecentSearches on page load to populate recent searches
   updateRecentSearches();
 
-  // Hide recent searches when browseContainer is visible
   const observer = new MutationObserver(() => {
     const isBrowseContainerVisible = browseContainer.style.display !== "none";
     toggleRecentSearchesVisibility(!isBrowseContainerVisible);
@@ -458,7 +416,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const itemId = itemElement.dataset.itemId;
 
-      // Use cached data if available, otherwise fetch
       let data = gameDataCache;
       if (!data) {
         data = await fetchData(DATA_URL, { method: "GET" });
@@ -469,7 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!itemData) {
         handbookContent.innerHTML = "<p>Item not found in tarkov_data.json</p>";
         return;
-      } // Then try to get the template data, but don't fail if it's not available
+      }
       let itemTemplate = null;
       let properties = null;
       let fleaBanHTML = "";
@@ -485,7 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (itemTemplate) {
-          // Check if item is banned on flea market based on template data
+
           const isFleaBanned =
             itemTemplate._props && !itemTemplate._props.CanSellOnRagfair;
           fleaBanHTML = isFleaBanned
@@ -494,7 +451,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
           properties = itemTemplate._props;
 
-          // Generate slots HTML if template exists
           if (properties && properties.Slots) {
             slotsHTML = properties.Slots.map((slot) => {
               if (slot._props.filters) {
@@ -534,12 +490,11 @@ document.addEventListener("DOMContentLoaded", () => {
               return "";
             }).join("");
           }
-          // Only try to fetch dependencies if we have a template with a Prefab path
+
           if (properties && properties.Prefab && properties.Prefab.path) {
             dependenciesData = await fetchData(DEPENDENCIES, { method: "GET" });
             const prefabPath = properties.Prefab.path;
 
-            // Find dependencies related to this item using Prefab path
             if (dependenciesData) {
               const itemDependencies = Object.entries(dependenciesData).filter(
                 ([key]) => {
@@ -587,11 +542,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.warn("Could not load items.json template data:", error.message);
-        // Continue without template data - this is not critical for basic item display
       }
       const categories = itemData.categories;
 
-      // Create JSON for copying dependencies only if we have the necessary data
       let prefabPath = "";
       if (properties && properties.Prefab && properties.Prefab.path) {
         prefabPath = properties.Prefab.path;
@@ -601,9 +554,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dependencyKeys: [],
       };
 
-      // Only process dependencies if we have both a prefab path and dependency data
       if (prefabPath && dependenciesData) {
-        // Find dependencies related to this item using Prefab path
         const itemDependencies = Object.entries(dependenciesData).filter(
           ([key]) => {
             const normalizedPrefabPath = prefabPath.toLowerCase();
@@ -644,7 +595,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             </div>
                         </div>`;
         }
-      } // Generate allowed ammo HTML if it exists in item data
+      }
       let allowedAmmoHTML = "";
       if (
         itemData.properties &&
@@ -672,7 +623,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
           console.error("Error generating allowed ammo HTML:", error);
         }
-      } // Slots HTML is now generated earlier if the template exists
+      }
 
       const categoriesHTML = categories
         .map(
@@ -705,7 +656,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let presetName = "";
         let presetItemsHTML = "";
 
-        // Get mastering and preset data if the item is a weapon or armor
         if (
           categories.some(
             (category) =>
@@ -718,7 +668,6 @@ document.addEventListener("DOMContentLoaded", () => {
           try {
             const globalsData = await fetchData(GLOBALS, { method: "GET" });
 
-            // Look for mastering info
             if (globalsData.Mastering) {
               const mastering = globalsData.Mastering.find((master) =>
                 master.Templates.includes(itemId)
@@ -728,7 +677,6 @@ document.addEventListener("DOMContentLoaded", () => {
               }
             }
 
-            // Look for preset info
             if (globalsData.ItemPresets) {
               const itemPreset = Object.values(globalsData.ItemPresets).find(
                 (preset) => preset._encyclopedia === itemId
@@ -740,7 +688,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           } catch (error) {
             console.error("Error fetching globals data:", error);
-            // Continue without globals data
           }
         }
         let armorClassHTML = "";
@@ -815,7 +762,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         handbookNavLink.classList.remove("disabled");
 
-        // Add event listener for search-result-link
         document.addEventListener("click", function (event) {
           const link = event.target.closest(".search-result-link");
           if (link) {
@@ -830,7 +776,6 @@ document.addEventListener("DOMContentLoaded", () => {
           .forEach((slotItem) => {
             slotItem.addEventListener("click", () => {
               const itemId = slotItem.dataset.itemId;
-              // Use navigation manager to navigate to the item in handbook view
               navigationManager.navigateToItem(itemId, "handbook");
               checkJsonEditorSimple();
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -885,10 +830,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const itemElement = event.target.closest("li.list-group-item");
       const itemId = itemElement.dataset.itemId;
 
-      // Use navigation manager to navigate to item
       navigationManager.navigateToItem(itemId, "handbook");
 
-      // Hide search results
       searchResultsCont.style.display = "none";
     }
   });
@@ -920,7 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Headsets: "Headsets",
     InfoItems: "Info items",
     Keys: "Keys",
-    LightLaserDevices: "Light & laser devices", // Changed to match the API category name
+    LightLaserDevices: "Light & laser devices",
     MachineGuns: "Machine guns",
     Magazines: "Magazines",
     Maps: "Maps",
@@ -963,7 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let currentPage = 1;
   let browseItemsData = [];
-  let filteredItemsData = []; // New variable for filtered data
+  let filteredItemsData = [];
   const itemsPerPageDefault = 63;
   let itemsPerPage = itemsPerPageDefault;
 
@@ -1012,12 +955,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return itemElement;
   };
 
-  let isRendering = false; // Add a flag to prevent multiple calls
-  let isAttachingListeners = false; // Add a flag to prevent multiple calls to attachEventListeners
+  let isRendering = false;
+  let isAttachingListeners = false;
 
   const renderBrowseItems = () => {
-    if (isRendering) return; // If already rendering, exit the function
-    isRendering = true; // Set the flag to true
+    if (isRendering) return;
+    isRendering = true;
 
     const itemsToDisplay =
       filteredItemsData.length > 0 ? filteredItemsData : browseItemsData;
@@ -1026,14 +969,13 @@ document.addEventListener("DOMContentLoaded", () => {
       .dataset.itemType.replace(/-/g, " ");
     const shouldGroupItems = typesToGroup.has(currentItemType);
 
-    // Adjust itemsPerPage based on grouping
     itemsPerPage = shouldGroupItems ? 30 : itemsPerPageDefault;
 
     const paginatedItems = paginate(itemsToDisplay, currentPage, itemsPerPage);
     const fragment = document.createDocumentFragment();
 
     if (shouldGroupItems) {
-      // Group items by the first word in their name
+
       const groupedItems = paginatedItems.reduce((groups, item) => {
         const firstWord = item.name.split(" ")[0];
         if (!groups[firstWord]) {
@@ -1043,7 +985,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return groups;
       }, {});
 
-      // Render grouped items
       Object.keys(groupedItems).forEach((group) => {
         const groupTitle = document.createElement("div");
         groupTitle.className = "break group-title";
@@ -1056,15 +997,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     } else {
-      // Render items without grouping
       paginatedItems.forEach((item) => {
         const itemElement = createItemElement(item);
         fragment.appendChild(itemElement);
       });
     }
 
-    browseItems.innerHTML = ""; // Clear existing items
-    browseItems.appendChild(searchFilter); // Ensure search filter is at the top
+    browseItems.innerHTML = "";
+    browseItems.appendChild(searchFilter);
     browseItems.appendChild(fragment);
     browseItems.insertAdjacentHTML(
       "beforeend",
@@ -1076,10 +1016,10 @@ document.addEventListener("DOMContentLoaded", () => {
       requestIdleCallback(() => {
         attachEventListeners();
         isAttachingListeners = false;
-      }); // Defer attaching event listeners
+      });
     }
 
-    isRendering = false; // Reset the flag after rendering is complete
+    isRendering = false;
   };
 
   const debounce = (func, delay) => {
@@ -1099,19 +1039,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const handleSearch = searchOptimizer.debounce((event) => {
     const searchTerm = event.target.value.toLowerCase();
     if (searchTerm.length > 2) {
-      // Use optimized search for browse filtering
       filteredItemsData = searchOptimizer.fastSearch(
         searchTerm,
         searchIndex,
         browseItemsData
       );
-      currentPage = 1; // Reset to the first page on search
+      currentPage = 1;
       renderBrowseItems();
     } else if (searchTerm.length === 0) {
       filteredItemsData = [];
       renderBrowseItems();
     }
-  }, 300); // Slightly longer debounce for browse search
+  }, 300);
 
   const attachEventListeners = () => {
     document
@@ -1119,7 +1058,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .forEach((itemElement) => {
         itemElement.addEventListener("click", () => {
           const itemId = itemElement.dataset.itemId;
-          // Use navigation manager to navigate to item
           navigationManager.navigateToItem(itemId, "handbook");
           checkJsonEditorSimple();
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1139,7 +1077,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const browseSearchInput = document.getElementById("browseSearchInput");
     if (browseSearchInput) {
-      browseSearchInput.removeEventListener("input", handleSearch); // Prevent duplicate listeners
+      browseSearchInput.removeEventListener("input", handleSearch);
       browseSearchInput.addEventListener("input", handleSearch);
     }
 
@@ -1150,8 +1088,8 @@ document.addEventListener("DOMContentLoaded", () => {
           .forEach((el) => el.classList.remove("active"));
         categoryElement.classList.add("active");
         const itemType = categoryElement.dataset.itemType;
-        lastActiveCategory = itemType; // Store the category name with hyphens
-        fetchBrowseData(itemType.replace(/-/g, " ")); // Convert to spaces for data fetching
+        lastActiveCategory = itemType;
+        fetchBrowseData(itemType.replace(/-/g, " "));
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     });
@@ -1169,28 +1107,23 @@ document.addEventListener("DOMContentLoaded", () => {
       filteredItemsData = [];
       requestIdleCallback(debouncedRenderBrowseItems);
       return;
-    } // Use the mapping if it exists, otherwise use a normalized version of the input
+    }
     const apiCategoryName = categoryNameMapping[itemType] || itemType;
 
-    // Use cached category data if available
     const loadBrowseData = async () => {
-      // Ensure game data is loaded
+
       if (!gameDataCache) {
         await preloadGameData();
       }
 
-      // Try to use optimized category filter first
       if (categoryFilterMap && categoryFilterMap.has(apiCategoryName)) {
         browseItemsData = categoryFilterMap.get(apiCategoryName);
       } else {
-        // Fallback to manual filtering
         const items = itemsArrayCache || Object.values(gameDataCache.items);
         browseItemsData = items.filter((item) =>
           item.handbookCategories.some((category) => {
-            // Try exact match first with the API category name
             return (
               category.name === apiCategoryName ||
-              // Fallback to normalized comparison for other categories
               category.name.replace(/\s*\/\s*/g, "/") ===
                 itemType.replace(/\s*\/\s*/g, "/")
             );
@@ -1228,14 +1161,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function toggleContainers(activeContainer, ...containers) {
     const isActive = activeContainer.style.display === "block";
 
-    // Hide all containers
     containers.forEach((container) => {
       const navLinkId = container.id.replace("Container", "NavLink");
       document.getElementById(navLinkId).classList.remove("active");
       container.style.display = "none";
     });
 
-    // Toggle the active container based on its current visibility
     if (!isActive) {
       activeContainer.style.display = "block";
       const activeNavLinkId = activeContainer.id.replace(
@@ -1244,7 +1175,6 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       document.getElementById(activeNavLinkId).classList.add("active");
 
-      // When switching to browse container
       if (activeContainer.id === "browseContainer") {
         const activeCategory = lastActiveCategory || "Ammo-packs";
         const categoryElement = document.querySelector(
@@ -1257,7 +1187,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .forEach((category) => category.classList.remove("active"));
           categoryElement.classList.add("active");
 
-          // Convert the category name format properly for fetching data
           const formattedCategory = activeCategory.replace(/-/g, " ");
           fetchBrowseData(formattedCategory);
         }
@@ -1265,10 +1194,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Setup navigation link handlers
   templateNavLink.addEventListener("click", (event) => {
     event.preventDefault();
-    // Only switch to template view if the template tab is not disabled and we have an item
     if (!templateNavLink.classList.contains("disabled")) {
       const currentState = navigationManager.getState();
       if (currentState.item) {
@@ -1290,9 +1217,9 @@ document.addEventListener("DOMContentLoaded", () => {
   browseNavLink.addEventListener("click", (event) => {
     event.preventDefault();
     navigationManager.navigateToBrowse();
-  }); // Setup navigation state change handler
+  });
   navigationManager.onStateChange((state, previousState, updateURL) => {
-    if (isNavigationHandlerActive) return; // Prevent recursion
+    if (isNavigationHandlerActive) return;
     isNavigationHandlerActive = true;
 
     handleNavigationStateChange(state, previousState);
@@ -1300,34 +1227,26 @@ document.addEventListener("DOMContentLoaded", () => {
     isNavigationHandlerActive = false;
   });
 
-  // Helper function to show search view
   const showSearchView = () => {
-    // Hide all containers
     templateContainer.style.display = "none";
     handbookContainer.style.display = "none";
     browseContainer.style.display = "none";
 
-    // Show recent searches
     toggleRecentSearchesVisibility(true);
 
-    // Hide breadcrumb and toggle nav
     breadcrumb.style.display = "none";
     toggleNav.classList.add("inactive");
 
-    // Clear navigation active states
     templateNavLink.classList.remove("active");
     handbookNavLink.classList.remove("active");
     browseNavLink.classList.remove("active");
 
-    // Clear search results
     searchResults.innerHTML = "";
     searchResultsCont.style.display = "none";
 
-    // Focus search input
     itemSearchInput.focus();
   };
 
-  // Helper function to perform search
   const performSearch = async (query) => {
     if (query.length > 2) {
       await fetchItemData(query);
@@ -1335,7 +1254,7 @@ document.addEventListener("DOMContentLoaded", () => {
       searchResults.innerHTML = "";
       searchResultsCont.style.display = "none";
     }
-  }; // Helper function to load item from ID
+  };
   const loadItemFromId = async (itemId) => {
     let data = gameDataCache;
     if (!data) {
@@ -1369,19 +1288,15 @@ document.addEventListener("DOMContentLoaded", () => {
         usedInTasks: taskIds,
       });
 
-      // Call a version of displayItemDetails that doesn't change the view
       await loadItemDataOnly(listItem);
     }
   };
 
-  // Helper function to load item data without changing views
   const loadItemDataOnly = async (itemElement) => {
     const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
 
-    // Store the search in localStorage
     storeRecentSearch(itemElement);
 
-    // Save the current active category before switching views
     const activeCategoryElement = document.querySelector(
       "#browseSidebar .browse-category.active"
     );
@@ -1389,33 +1304,27 @@ document.addEventListener("DOMContentLoaded", () => {
       lastActiveCategory = activeCategoryElement.dataset.itemType;
     }
 
-    // Enable navigation but don't change active states - let navigation manager handle this
     toggleNav.classList.remove("inactive");
 
-    // Enhanced breadcrumb generation with clickable navigation
     const types = itemTypes.split(",").reverse();
     const validCategories = new Set(Object.values(typesEnum));
     const breadcrumbHTML =
       types
         .map((type, index) => {
-          // Check if this category exists in our valid categories or has a mapping
           const normalizedType = type.trim();
           const isValidCategory =
             validCategories.has(normalizedType) ||
             Object.keys(categoryNameMapping).includes(normalizedType);
 
           if (index === types.length - 1 && isValidCategory) {
-            // First (root) category - make it a link only if it's a valid category
             return `<a href="javascript:void(0);" class="breadcrumb-link" data-view="browse" data-category="${
               Object.entries(typesEnum).find(
                 ([key, value]) => value === normalizedType
               )?.[0] || normalizedType
             }">${type}</a>`;
           } else if (index === 0 || !isValidCategory) {
-            // Last category or invalid category - just text
             return `<span class="breadcrumb-text">${type}</span>`;
           } else if (isValidCategory) {
-            // Middle categories - links only if they're valid categories
             const enumKey =
               Object.entries(typesEnum).find(
                 ([key, value]) => value === normalizedType
@@ -1433,28 +1342,22 @@ document.addEventListener("DOMContentLoaded", () => {
       "<div class='breadcrumb-container'>" + breadcrumbHTML + "</div>";
     breadcrumb.style.display = "block";
 
-    // Add click handlers for breadcrumb links
     breadcrumb.querySelectorAll(".breadcrumb-link").forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
         browseNavLink.click();
 
-        // Get the category from the data attribute
         let categoryName = link.dataset.category;
 
-        // If we have a direct mapping, use it
         const mappedName = Object.entries(categoryNameMapping).find(
           ([key, value]) => value === categoryName
         )?.[0];
 
         if (mappedName) {
-          // Use the mapped display name
           categoryName = mappedName.replace(/\s+/g, "-");
         } else if (typesEnum[categoryName]) {
-          // If it's an enum key, get the display name
           categoryName = typesEnum[categoryName].replace(/\s+/g, "-");
         } else {
-          // Otherwise, normalize it
           categoryName = categoryName.replace(/\s+/g, "-");
         }
 
@@ -1467,11 +1370,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Load tasks data
     let usedInTasksHTML = "";
     if (usedInTasks) {
       try {
-        // Use cached data if available
+
         let data = gameDataCache;
         if (!data) {
           data = await fetchData(DATA_URL, { method: "GET" });
@@ -1505,31 +1407,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Update handbook content
     updateHandbookContent(itemElement, usedInTasksHTML);
 
-    // Clear search results and input
     searchResults.innerHTML = "";
     itemSearchInput.value = "";
 
-    // Load JSON template but don't refresh editor yet - let the navigation manager handle that
     await fetchItemJsonTemplate(itemId);
 
-    // Hide recent searches
     toggleRecentSearchesVisibility(false);
-  }; // Helper function to load browse category
+  };
   const loadBrowseCategory = async (category, page = 1) => {
-    // Call the existing fetchBrowseData function
     if (category) {
       fetchBrowseData(category);
     }
   };
 
-  // Handle navigation state changes
   const handleNavigationStateChange = async (state, previousState) => {
     const { view, item, category, search, page } = state;
 
-    // Handle view switching
     switch (view) {
       case "search":
         if (search) {
@@ -1541,7 +1436,6 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "handbook":
         if (item) {
-          // First show the container
           toggleContainers(
             handbookContainer,
             templateContainer,
@@ -1554,7 +1448,6 @@ document.addEventListener("DOMContentLoaded", () => {
           breadcrumb.style.display = "block";
         }
         if (item && item !== previousState?.item) {
-          // Then load the item data
           await loadItemFromId(item);
         }
         break;
@@ -1562,7 +1455,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (item && item !== previousState?.item) {
           await loadItemFromId(item);
         } else if (item) {
-          // Even if it's the same item, ensure template is loaded when switching to template view
           await fetchItemJsonTemplate(item);
         }
         if (item) {
@@ -1576,13 +1468,12 @@ document.addEventListener("DOMContentLoaded", () => {
           handbookNavLink.classList.remove("active");
           browseNavLink.classList.remove("active");
 
-          // Ensure editor is refreshed after container is visible
           setTimeout(() => {
             if (typeof editor !== "undefined" && editor) {
               editor.refresh();
               checkJsonEditorSimple();
             }
-          }, 50); // Small delay to ensure container is visible
+          }, 50);
         }
         break;
 
@@ -1604,30 +1495,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         break;
     }
-  }; // Setup search input handler with navigation manager
+  };
   itemSearchInput.addEventListener(
     "input",
     searchOptimizer.debounce((e) => {
       const query = itemSearchInput.value.trim();
 
       if (query.length > 2) {
-        // Don't update navigation state here, just perform the search
-        // Navigation state will be updated when user selects an item
         fetchItemData(query);
       } else {
-        // Clear search results
         searchResults.innerHTML = "";
         searchResultsCont.style.display = "none";
         handbookContent.innerHTML = "";
 
-        // If completely empty, show search view
         if (query.length === 0) {
           showSearchView();
         }
       }
       checkJsonEditorSimple();
     }, 150)
-  ); // Initial state restoration from URL
+  );
   const urlParams = new URLSearchParams(window.location.search);
   if (
     urlParams.has("item") ||
@@ -1635,17 +1522,14 @@ document.addEventListener("DOMContentLoaded", () => {
     urlParams.has("search") ||
     urlParams.has("category")
   ) {
-    // Let navigation manager handle the initial state
     setTimeout(() => {
       navigationManager.restoreStateFromURL();
-    }, 100); // Small delay to ensure all elements are ready
+    }, 100);
   } else {
-    // No URL parameters, show default search view
     setTimeout(() => {
       showSearchView();
     }, 100);
   }
 
-  // Attach event listeners for browse functionality
   attachEventListeners();
 });
