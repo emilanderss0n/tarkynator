@@ -10,9 +10,11 @@ include_once 'includes/functions.php';
     <meta charset="UTF-8" />
     <title>TARKYNATOR - SPT Modding Tool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Search Tarkov database through Tarkov API" />
+    <meta name="description" content="Best web based tool for modding Escape From Tarkov (Single Player Tarkov)" />
+    <meta name="keywords" content="Tarkov, SPT, Modding, Tool, Database, API" />
+    <meta name="author" content="MoxoPixel">
     <meta property="og:image" content="assets/img/icon.png" />
-    <meta property="og:description" content="Search Tarkov database through Tarkov API" />
+    <meta property="og:description" content="Best web based tool for modding Escape From Tarkov (Single Player Tarkov)" />
     <meta property="og:title" content="TARKYNATOR" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
