@@ -3,7 +3,7 @@
  * Integrates the existing itemTemplate.js functionality with the NavigationManager
  */
 
-import { navigationManager } from '../core/navigationManager.js';
+import { navigationManager } from "../core/navigationManager.js";
 
 export class NavigationIntegration {
     constructor() {
@@ -15,8 +15,8 @@ export class NavigationIntegration {
      */
     initializeEventHandlers() {
         // Wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => {
                 this.setupNavigationHandlers();
             });
         } else {
@@ -50,20 +50,20 @@ export class NavigationIntegration {
 
         // Handle view changes
         switch (view) {
-            case 'search':
+            case "search":
                 this.showSearchView(search);
                 break;
-            case 'handbook':
+            case "handbook":
                 if (item) {
                     this.showItemHandbook(item);
                 }
                 break;
-            case 'template':
+            case "template":
                 if (item) {
                     this.showItemTemplate(item);
                 }
                 break;
-            case 'browse':
+            case "browse":
                 this.showBrowseView(category, page);
                 break;
         }
@@ -76,28 +76,28 @@ export class NavigationIntegration {
      * Setup view switching handlers
      */
     setupViewSwitchHandlers() {
-        const templateNavLink = document.getElementById('templateNavLink');
-        const handbookNavLink = document.getElementById('handbookNavLink');
-        const browseNavLink = document.getElementById('browseNavLink');
+        const templateNavLink = document.getElementById("templateNavLink");
+        const handbookNavLink = document.getElementById("handbookNavLink");
+        const browseNavLink = document.getElementById("browseNavLink");
 
         if (templateNavLink) {
-            templateNavLink.addEventListener('click', (e) => {
+            templateNavLink.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (!templateNavLink.classList.contains('disabled')) {
+                if (!templateNavLink.classList.contains("disabled")) {
                     const currentState = navigationManager.getState();
                     if (currentState.item) {
-                        navigationManager.switchView('template');
+                        navigationManager.switchView("template");
                     }
                 }
             });
         }
 
         if (handbookNavLink) {
-            handbookNavLink.addEventListener('click', (e) => {
+            handbookNavLink.addEventListener("click", (e) => {
                 e.preventDefault();
                 const currentState = navigationManager.getState();
                 if (currentState.item) {
-                    navigationManager.switchView('handbook');
+                    navigationManager.switchView("handbook");
                 } else {
                     navigationManager.navigateToSearch();
                 }
@@ -105,7 +105,7 @@ export class NavigationIntegration {
         }
 
         if (browseNavLink) {
-            browseNavLink.addEventListener('click', (e) => {
+            browseNavLink.addEventListener("click", (e) => {
                 e.preventDefault();
                 navigationManager.navigateToBrowse();
             });
@@ -116,13 +116,13 @@ export class NavigationIntegration {
      * Setup search handlers
      */
     setupSearchHandlers() {
-        const itemSearchInput = document.getElementById('itemSearchInput');
-        const browseSearchInput = document.getElementById('browseSearchInput');
+        const itemSearchInput = document.getElementById("itemSearchInput");
+        const browseSearchInput = document.getElementById("browseSearchInput");
 
         if (itemSearchInput) {
             // Update search when user types (with debouncing)
             let searchTimeout;
-            itemSearchInput.addEventListener('input', (e) => {
+            itemSearchInput.addEventListener("input", (e) => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     const query = e.target.value.trim();
@@ -140,7 +140,7 @@ export class NavigationIntegration {
 
         if (browseSearchInput) {
             let browseSearchTimeout;
-            browseSearchInput.addEventListener('input', (e) => {
+            browseSearchInput.addEventListener("input", (e) => {
                 clearTimeout(browseSearchTimeout);
                 browseSearchTimeout = setTimeout(() => {
                     // Handle browse search locally without changing URL
@@ -154,12 +154,17 @@ export class NavigationIntegration {
      * Setup search result click handlers
      */
     setupSearchResultHandlers() {
-        const searchResults = document.querySelector('.searchResults .list-group');
+        const searchResults = document.querySelector(
+            ".searchResults .list-group"
+        );
         if (searchResults) {
-            searchResults.addEventListener('click', (e) => {
-                const listItem = e.target.closest('li.list-group-item');
+            searchResults.addEventListener("click", (e) => {
+                const listItem = e.target.closest("li.list-group-item");
                 if (listItem && listItem.dataset.itemId) {
-                    navigationManager.navigateToItem(listItem.dataset.itemId, 'handbook');
+                    navigationManager.navigateToItem(
+                        listItem.dataset.itemId,
+                        "handbook"
+                    );
                 }
             });
         }
@@ -169,10 +174,10 @@ export class NavigationIntegration {
      * Setup browse handlers
      */
     setupBrowseHandlers() {
-        const browseSidebar = document.getElementById('browseSidebar');
+        const browseSidebar = document.getElementById("browseSidebar");
         if (browseSidebar) {
-            browseSidebar.addEventListener('click', (e) => {
-                const categoryElement = e.target.closest('.browse-category');
+            browseSidebar.addEventListener("click", (e) => {
+                const categoryElement = e.target.closest(".browse-category");
                 if (categoryElement) {
                     const category = categoryElement.dataset.itemType;
                     navigationManager.navigateToBrowse(category, 1);
@@ -181,12 +186,12 @@ export class NavigationIntegration {
         }
 
         // Handle pagination
-        const browseItems = document.getElementById('browseItems');
+        const browseItems = document.getElementById("browseItems");
         if (browseItems) {
-            browseItems.addEventListener('click', (e) => {
-                if (e.target.closest('.page-link')) {
+            browseItems.addEventListener("click", (e) => {
+                if (e.target.closest(".page-link")) {
                     e.preventDefault();
-                    const pageLink = e.target.closest('.page-link');
+                    const pageLink = e.target.closest(".page-link");
                     const page = parseInt(pageLink.dataset.page);
                     if (page && !isNaN(page)) {
                         navigationManager.updatePage(page);
@@ -194,10 +199,10 @@ export class NavigationIntegration {
                 }
 
                 // Handle item clicks in browse view
-                const itemCard = e.target.closest('[data-item-id]');
+                const itemCard = e.target.closest("[data-item-id]");
                 if (itemCard) {
                     const itemId = itemCard.dataset.itemId;
-                    navigationManager.navigateToItem(itemId, 'handbook');
+                    navigationManager.navigateToItem(itemId, "handbook");
                 }
             });
         }
@@ -207,10 +212,10 @@ export class NavigationIntegration {
      * Show search view
      */
     showSearchView(search = null) {
-        const searchInput = document.getElementById('itemSearchInput');
-        const recentSearches = document.getElementById('recentSearches');
-        const breadcrumb = document.getElementById('breadcrumb');
-        const toggleNav = document.getElementById('toggleNav');
+        const searchInput = document.getElementById("itemSearchInput");
+        const recentSearches = document.getElementById("recentSearches");
+        const breadcrumb = document.getElementById("breadcrumb");
+        const toggleNav = document.getElementById("toggleNav");
 
         // Hide all containers
         this.hideAllContainers();
@@ -222,41 +227,46 @@ export class NavigationIntegration {
                 // Trigger search
                 this.performSearch(search);
             } else {
-                searchInput.value = '';
+                searchInput.value = "";
                 searchInput.focus();
             }
         }
 
         // Show recent searches if no search query
         if (recentSearches && !search) {
-            recentSearches.style.display = 'grid';
+            recentSearches.style.display = "grid";
         }
 
         // Hide breadcrumb and toggle nav
-        if (breadcrumb) breadcrumb.style.display = 'none';
-        if (toggleNav) toggleNav.classList.add('inactive');
+        if (breadcrumb) breadcrumb.style.display = "none";
+        if (toggleNav) toggleNav.classList.add("inactive");
     }
 
     /**
      * Show item handbook view
      */
     showItemHandbook(itemId) {
-        const handbookContainer = document.getElementById('handbookContainer');
-        const templateContainer = document.getElementById('templateContainer');
-        const browseContainer = document.getElementById('browseContainer');
-        const handbookNavLink = document.getElementById('handbookNavLink');
-        const toggleNav = document.getElementById('toggleNav');
+        const handbookContainer = document.getElementById("handbookContainer");
+        const templateContainer = document.getElementById("templateContainer");
+        const browseContainer = document.getElementById("browseContainer");
+        const handbookNavLink = document.getElementById("handbookNavLink");
+        const toggleNav = document.getElementById("toggleNav");
 
         // Show handbook container
-        this.toggleContainers(handbookContainer, templateContainer, handbookContainer, browseContainer);
+        this.toggleContainers(
+            handbookContainer,
+            templateContainer,
+            handbookContainer,
+            browseContainer
+        );
 
         // Update navigation
         if (handbookNavLink) {
-            handbookNavLink.classList.add('active');
-            handbookNavLink.classList.remove('disabled');
+            handbookNavLink.classList.add("active");
+            handbookNavLink.classList.remove("disabled");
         }
         if (toggleNav) {
-            toggleNav.classList.remove('inactive');
+            toggleNav.classList.remove("inactive");
         }
 
         // Load item details (call existing function from itemTemplate.js)
@@ -267,18 +277,23 @@ export class NavigationIntegration {
      * Show item template view
      */
     showItemTemplate(itemId) {
-        const templateContainer = document.getElementById('templateContainer');
-        const handbookContainer = document.getElementById('handbookContainer');
-        const browseContainer = document.getElementById('browseContainer');
-        const templateNavLink = document.getElementById('templateNavLink');
+        const templateContainer = document.getElementById("templateContainer");
+        const handbookContainer = document.getElementById("handbookContainer");
+        const browseContainer = document.getElementById("browseContainer");
+        const templateNavLink = document.getElementById("templateNavLink");
 
         // Show template container
-        this.toggleContainers(templateContainer, templateContainer, handbookContainer, browseContainer);
+        this.toggleContainers(
+            templateContainer,
+            templateContainer,
+            handbookContainer,
+            browseContainer
+        );
 
         // Update navigation
         if (templateNavLink) {
-            templateNavLink.classList.add('active');
-            templateNavLink.classList.remove('disabled');
+            templateNavLink.classList.add("active");
+            templateNavLink.classList.remove("disabled");
         }
 
         // Load item template (call existing function from itemTemplate.js)
@@ -289,18 +304,23 @@ export class NavigationIntegration {
      * Show browse view
      */
     showBrowseView(category = null, page = 1) {
-        const browseContainer = document.getElementById('browseContainer');
-        const templateContainer = document.getElementById('templateContainer');
-        const handbookContainer = document.getElementById('handbookContainer');
-        const breadcrumb = document.getElementById('breadcrumb');
-        const toggleNav = document.getElementById('toggleNav');
+        const browseContainer = document.getElementById("browseContainer");
+        const templateContainer = document.getElementById("templateContainer");
+        const handbookContainer = document.getElementById("handbookContainer");
+        const breadcrumb = document.getElementById("breadcrumb");
+        const toggleNav = document.getElementById("toggleNav");
 
         // Show browse container
-        this.toggleContainers(browseContainer, templateContainer, handbookContainer, browseContainer);
+        this.toggleContainers(
+            browseContainer,
+            templateContainer,
+            handbookContainer,
+            browseContainer
+        );
 
         // Hide breadcrumb and toggle nav
-        if (breadcrumb) breadcrumb.style.display = 'none';
-        if (toggleNav) toggleNav.classList.add('inactive');
+        if (breadcrumb) breadcrumb.style.display = "none";
+        if (toggleNav) toggleNav.classList.add("inactive");
 
         // Load browse data
         this.loadBrowseData(category, page);
@@ -313,35 +333,35 @@ export class NavigationIntegration {
         const { view, item, category } = state;
 
         // Update active navigation links
-        const templateNavLink = document.getElementById('templateNavLink');
-        const handbookNavLink = document.getElementById('handbookNavLink');
-        const browseNavLink = document.getElementById('browseNavLink');
+        const templateNavLink = document.getElementById("templateNavLink");
+        const handbookNavLink = document.getElementById("handbookNavLink");
+        const browseNavLink = document.getElementById("browseNavLink");
 
         // Remove active class from all navigation links
-        [templateNavLink, handbookNavLink, browseNavLink].forEach(link => {
-            if (link) link.classList.remove('active');
+        [templateNavLink, handbookNavLink, browseNavLink].forEach((link) => {
+            if (link) link.classList.remove("active");
         });
 
         // Add active class to current view
         switch (view) {
-            case 'template':
-                if (templateNavLink) templateNavLink.classList.add('active');
+            case "template":
+                if (templateNavLink) templateNavLink.classList.add("active");
                 break;
-            case 'handbook':
-                if (handbookNavLink) handbookNavLink.classList.add('active');
+            case "handbook":
+                if (handbookNavLink) handbookNavLink.classList.add("active");
                 break;
-            case 'browse':
-                if (browseNavLink) browseNavLink.classList.add('active');
+            case "browse":
+                if (browseNavLink) browseNavLink.classList.add("active");
                 break;
         }
 
         // Update breadcrumb for item views
-        if (item && (view === 'handbook' || view === 'template')) {
+        if (item && (view === "handbook" || view === "template")) {
             this.updateBreadcrumb(item);
         }
 
         // Update browse category selection
-        if (view === 'browse' && category) {
+        if (view === "browse" && category) {
             this.updateBrowseCategory(category);
         }
     }
@@ -352,28 +372,28 @@ export class NavigationIntegration {
 
     hideAllContainers() {
         const containers = [
-            'templateContainer',
-            'handbookContainer',
-            'browseContainer'
+            "templateContainer",
+            "handbookContainer",
+            "browseContainer",
         ];
 
-        containers.forEach(id => {
+        containers.forEach((id) => {
             const container = document.getElementById(id);
             if (container) {
-                container.style.display = 'none';
+                container.style.display = "none";
             }
         });
     }
 
     toggleContainers(activeContainer, ...allContainers) {
         // Hide all containers
-        allContainers.forEach(container => {
-            if (container) container.style.display = 'none';
+        allContainers.forEach((container) => {
+            if (container) container.style.display = "none";
         });
 
         // Show active container
         if (activeContainer) {
-            activeContainer.style.display = 'block';
+            activeContainer.style.display = "block";
         }
     }
 
@@ -415,21 +435,25 @@ export class NavigationIntegration {
 
     updateBrowseCategory(category) {
         // Update browse category selection
-        const categoryElements = document.querySelectorAll('#browseSidebar .browse-category');
-        categoryElements.forEach(el => {
-            el.classList.toggle('active', el.dataset.itemType === category);
+        const categoryElements = document.querySelectorAll(
+            "#browseSidebar .browse-category"
+        );
+        categoryElements.forEach((el) => {
+            el.classList.toggle("active", el.dataset.itemType === category);
         });
     }
 
     filterBrowseItems(query) {
         // Filter browse items locally
-        const items = document.querySelectorAll('#browseItems .card-bfx');
+        const items = document.querySelectorAll("#browseItems .card-bfx");
         const searchQuery = query.toLowerCase();
 
-        items.forEach(item => {
-            const itemName = item.querySelector('.card-title')?.textContent.toLowerCase() || '';
+        items.forEach((item) => {
+            const itemName =
+                item.querySelector(".card-title")?.textContent.toLowerCase() ||
+                "";
             const shouldShow = !query || itemName.includes(searchQuery);
-            item.style.display = shouldShow ? 'block' : 'none';
+            item.style.display = shouldShow ? "block" : "none";
         });
     }
 }

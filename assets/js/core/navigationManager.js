@@ -6,11 +6,11 @@
 export class NavigationManager {
     constructor() {
         this.defaultState = {
-            view: 'search', // search, template, handbook, browse
+            view: "search", // search, template, handbook, browse
             item: null,
             category: null,
             search: null,
-            page: 1
+            page: 1,
         };
 
         this.currentState = { ...this.defaultState };
@@ -28,7 +28,7 @@ export class NavigationManager {
         if (this.isInitialized) return;
 
         // Listen for browser back/forward events
-        window.addEventListener('popstate', this.handlePopState);
+        window.addEventListener("popstate", this.handlePopState);
 
         // Restore state from current URL
         this.restoreStateFromURL();
@@ -40,7 +40,7 @@ export class NavigationManager {
      * Clean up event listeners
      */
     destroy() {
-        window.removeEventListener('popstate', this.handlePopState);
+        window.removeEventListener("popstate", this.handlePopState);
         this.isInitialized = false;
     }
 
@@ -59,11 +59,11 @@ export class NavigationManager {
     getStateFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
         return {
-            view: urlParams.get('view') || this.defaultState.view,
-            item: urlParams.get('item'),
-            category: urlParams.get('category'),
-            search: urlParams.get('search'),
-            page: parseInt(urlParams.get('page')) || this.defaultState.page
+            view: urlParams.get("view") || this.defaultState.view,
+            item: urlParams.get("item"),
+            category: urlParams.get("category"),
+            search: urlParams.get("search"),
+            page: parseInt(urlParams.get("page")) || this.defaultState.page,
         };
     }
 
@@ -97,31 +97,31 @@ export class NavigationManager {
         const params = url.searchParams;
 
         // Clear existing parameters
-        params.delete('view');
-        params.delete('item');
-        params.delete('category');
-        params.delete('search');
-        params.delete('page');
+        params.delete("view");
+        params.delete("item");
+        params.delete("category");
+        params.delete("search");
+        params.delete("page");
 
         // Set new parameters (only if they're not default values)
         if (state.view && state.view !== this.defaultState.view) {
-            params.set('view', state.view);
+            params.set("view", state.view);
         }
         if (state.item) {
-            params.set('item', state.item);
+            params.set("item", state.item);
         }
         if (state.category) {
-            params.set('category', state.category);
+            params.set("category", state.category);
         }
         if (state.search) {
-            params.set('search', state.search);
+            params.set("search", state.search);
         }
         if (state.page && state.page !== this.defaultState.page) {
-            params.set('page', state.page.toString());
+            params.set("page", state.page.toString());
         }
 
         // Update browser history
-        window.history.pushState(state, '', url);
+        window.history.pushState(state, "", url);
     }
 
     /**
@@ -145,11 +145,14 @@ export class NavigationManager {
      * Notify all handlers of state changes
      */
     notifyStateChange(newState, updateURL = true, previousState = null) {
-        this.stateChangeHandlers.forEach(handler => {
+        this.stateChangeHandlers.forEach((handler) => {
             try {
                 handler(newState, previousState, updateURL);
             } catch (error) {
-                console.error('Error in navigation state change handler:', error);
+                console.error(
+                    "Error in navigation state change handler:",
+                    error
+                );
             }
         });
     }
@@ -166,24 +169,24 @@ export class NavigationManager {
      */
     navigateToSearch(search = null) {
         this.updateState({
-            view: 'search',
+            view: "search",
             item: null,
             category: null,
             search: search,
-            page: 1
+            page: 1,
         });
     }
 
     /**
      * Navigate to item view
      */
-    navigateToItem(itemId, view = 'handbook') {
+    navigateToItem(itemId, view = "handbook") {
         this.updateState({
             view: view,
             item: itemId,
             category: null,
             search: null,
-            page: 1
+            page: 1,
         });
     }
 
@@ -192,11 +195,11 @@ export class NavigationManager {
      */
     navigateToBrowse(category = null, page = 1) {
         this.updateState({
-            view: 'browse',
+            view: "browse",
             item: null,
             category: category,
             search: null,
-            page: page
+            page: page,
         });
     }
 
@@ -213,7 +216,7 @@ export class NavigationManager {
     updateSearch(search) {
         this.updateState({
             search: search,
-            page: 1
+            page: 1,
         });
     }
 
@@ -240,7 +243,7 @@ export class NavigationManager {
         const params = url.searchParams;
 
         // Update URL parameters
-        Object.keys(newState).forEach(key => {
+        Object.keys(newState).forEach((key) => {
             if (newState[key] && newState[key] !== this.defaultState[key]) {
                 params.set(key, newState[key]);
             } else {
@@ -248,7 +251,7 @@ export class NavigationManager {
             }
         });
 
-        window.history.replaceState(this.currentState, '', url);
+        window.history.replaceState(this.currentState, "", url);
         this.notifyStateChange(this.currentState, false);
     }
 }
