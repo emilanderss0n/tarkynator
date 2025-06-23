@@ -23,11 +23,7 @@ include_once 'includes/functions.php';
     <?php endif; ?>
     <?= css_tag(BASE_URL . '/assets/css/main.css') ?>
     <link rel="icon" href="<?= BASE_URL ?>/assets/img/favicon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
-        rel="stylesheet"> <!-- Navigation Manager Preload -->
+
     <script type="module">
         import { navigationManager } from '<?= BASE_URL ?>/assets/js/core/navigationManager.js';
         window.navigationManager = navigationManager;

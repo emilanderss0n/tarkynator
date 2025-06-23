@@ -61,7 +61,6 @@ document.body.addEventListener("click", function (e) {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-
   navigationManager.init();
 
   const itemSearchInput = document.getElementById("itemSearchInput");
@@ -233,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const breadcrumbHTML =
       types
         .map((type, index) => {
-
           const normalizedType = type.trim();
           const isValidCategory =
             validCategories.has(normalizedType) ||
@@ -442,7 +440,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (itemTemplate) {
-
           const isFleaBanned =
             itemTemplate._props && !itemTemplate._props.CanSellOnRagfair;
           fleaBanHTML = isFleaBanned
@@ -975,7 +972,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const fragment = document.createDocumentFragment();
 
     if (shouldGroupItems) {
-
       const groupedItems = paginatedItems.reduce((groups, item) => {
         const firstWord = item.name.split(" ")[0];
         if (!groups[firstWord]) {
@@ -1111,7 +1107,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const apiCategoryName = categoryNameMapping[itemType] || itemType;
 
     const loadBrowseData = async () => {
-
       if (!gameDataCache) {
         await preloadGameData();
       }
@@ -1373,7 +1368,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let usedInTasksHTML = "";
     if (usedInTasks) {
       try {
-
         let data = gameDataCache;
         if (!data) {
           data = await fetchData(DATA_URL, { method: "GET" });
