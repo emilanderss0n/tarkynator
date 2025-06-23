@@ -2671,6 +2671,7 @@ footer .text-end {
 
 [data-theme="modern"] .btn {
     font-size: 0.9rem;
+    line-height: inherit;
 }
 
 .handbook-item .slots-filter .slot .break {
