@@ -4,23 +4,14 @@
  */
 
 // Core modules
-export { navigationManager } from "./core/navigationManager.js";
-export { fetchData } from "./core/cache.js";
-export { searchOptimizer } from "./core/searchOptimizer.js";
-export {
-    DATA_URL,
-    ITEMS_URL,
-    HANDBOOK_URL,
-    GLOBALS,
-    DEPENDENCIES,
-} from "./core/localData.js";
-export { themeManager } from "./core/themeManager.js";
+export { navigationManager } from './core/navigationManager.js';
+export { fetchData } from './core/cache.js';
+export { searchOptimizer } from './core/searchOptimizer.js';
+export { DATA_URL, ITEMS_URL, HANDBOOK_URL, GLOBALS, DEPENDENCIES } from './core/localData.js';
+export { themeManager } from './core/themeManager.js';
 
 // Component modules
-export {
-    checkJsonEditor,
-    checkJsonEditorSimple,
-} from "./components/checkJsonEditor.js";
+export { checkJsonEditor, checkJsonEditorSimple } from './components/checkJsonEditor.js';
 
 // Application initialization
 class TarkynatorApp {
@@ -32,36 +23,33 @@ class TarkynatorApp {
     async init() {
         if (this.initialized) return;
 
-        console.log("🚀 Initializing Tarkynator App...");
+        console.log('🚀 Initializing Tarkynator App...');
 
         try {
             // Initialize core modules
-            const { navigationManager } = await import(
-                "./core/navigationManager.js"
-            );
-            const { themeManager } = await import("./core/themeManager.js");
+            const { navigationManager } = await import('./core/navigationManager.js');
+            const { themeManager } = await import('./core/themeManager.js');
 
             // Initialize navigation
             navigationManager.init();
-            this.modules.set("navigation", navigationManager);
+            this.modules.set('navigation', navigationManager);
 
             // Initialize theme
             if (themeManager && themeManager.init) {
                 themeManager.init();
-                this.modules.set("theme", themeManager);
+                this.modules.set('theme', themeManager);
             }
 
             this.initialized = true;
-            console.log("✅ Tarkynator App initialized successfully");
+            console.log('✅ Tarkynator App initialized successfully');
 
             // Dispatch custom event for other scripts to listen to
-            window.dispatchEvent(
-                new CustomEvent("tarkynator:ready", {
-                    detail: { app: this },
-                })
-            );
+            window.dispatchEvent(new CustomEvent('tarkynator:ready', {
+                detail: { app: this }
+            }));
+
         } catch (error) {
-            console.error("❌ Failed to initialize Tarkynator App:", error);
+            console.error('❌ Failed to initialize Tarkynator App:', error);
         }
     }
 
@@ -74,16 +62,16 @@ class TarkynatorApp {
             console.log(`📄 Loading page: ${pageName}`);
 
             switch (pageName) {
-                case "items":
-                    return await import("./pages/itemTemplate.js");
-                case "quests":
-                    return await import("./pages/quests.js");
-                case "achievements":
-                    return await import("./pages/achievements.js");
-                case "crafts":
-                    return await import("./pages/crafts.js");
-                case "custom-trader":
-                    return await import("./features/customTrader.js");
+                case 'items':
+                    return await import('./pages/itemTemplate.js');
+                case 'quests':
+                    return await import('./pages/quests.js');
+                case 'achievements':
+                    return await import('./pages/achievements.js');
+                case 'crafts':
+                    return await import('./pages/crafts.js');
+                case 'custom-trader':
+                    return await import('./features/customTrader.js');
                 default:
                     console.warn(`Unknown page: ${pageName}`);
             }
@@ -97,10 +85,8 @@ class TarkynatorApp {
 window.TarkynatorApp = new TarkynatorApp();
 
 // Auto-initialize on DOM ready
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () =>
-        window.TarkynatorApp.init()
-    );
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => window.TarkynatorApp.init());
 } else {
     window.TarkynatorApp.init();
 }
