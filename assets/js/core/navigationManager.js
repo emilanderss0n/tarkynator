@@ -17,7 +17,6 @@ export class NavigationManager {
         this.stateChangeHandlers = [];
         this.isInitialized = false;
 
-        // Bind the popstate handler
         this.handlePopState = this.handlePopState.bind(this);
     }
 
@@ -120,7 +119,6 @@ export class NavigationManager {
             params.set("page", state.page.toString());
         }
 
-        // Update browser history
         window.history.pushState(state, "", url);
     }
 
