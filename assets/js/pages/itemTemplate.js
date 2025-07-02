@@ -823,6 +823,22 @@ document.addEventListener("DOMContentLoaded", () => {
                             window.scrollTo({ top: 0, behavior: "smooth" });
                         });
                     });
+                
+                document
+                    .querySelectorAll(".ammo-item")
+                    .forEach((ammoItem) => {
+                        ammoItem.addEventListener("click", (event) => {
+                            event.preventDefault();
+                            const href = ammoItem.getAttribute("href");
+                            const itemId = href.split("item=")[1];
+                            navigationManager.navigateToItem(
+                                itemId,
+                                "handbook"
+                            );
+                            checkJsonEditorSimple();
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                        });
+                    });
             } catch (error) {
                 console.error("Error fetching handbook data:", error);
                 handbookContent.innerHTML =

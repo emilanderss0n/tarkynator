@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     filteredCrafts.sort((a, b) => a.level - b.level);
                     const craftsHTML = filteredCrafts.map(craft => `
                         <div class="craft-item card" data-item-station="${craft.station.name}">
-                            <div class="title">
+                            <div class="main-title">
                                 ${craft.rewardItems.map(reward => `
                                     <img src="${reward.item.iconLink}" alt="${reward.item.name}" />
                                     <div class="item-title">
@@ -76,35 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `).join(', ')}
                             </div>
                             ${Array.isArray(craft.requiredItems) && craft.requiredItems.length > 0 ? `
-                                <div class="required-items">
-                                    <a href="#" class="toggle-req-items">Required Items</a>
+                                <details class="required-items">
+                                    <summary class="toggle-req-items btn">Required Items</summary>
                                     <ul class="req-items-list">
                                     ${craft.requiredItems.map(item => `
                                         <li class="req-item"><div class="req-item-containter"><span class="global-id title">${item.item.name}</span> (${item.count})</div></li>
                                     `).join('')}
                                     </ul>
-                                </div>
+                                </details>
                             ` : ''}
-                            ${craft.taskUnlock ? `
-                                <p class="quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /><strong>${craft.taskUnlock.name}</strong> (Player lvl ${craft.taskUnlock.minPlayerLevel})</p>
-                            ` : ''}
-                            <div class="craft-id">Craft ID: <span class="global-id">${craft.id}</span></div>
+                            <div class="card-footer">
+                                <div class="craft-id"><a href="#" data-id="${craft.id}" class="global-id btn"><i class="bi bi-copy"></i> Craft ID</a></div>
+                                ${craft.taskUnlock ? `
+                                <p class="quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /><a href="#" data-id="${craft.taskUnlock.id}" class="global-id">${craft.taskUnlock.name}</a></p>
+                                ` : ''}
+                            </div>
                         </div>
                     `).join('');
                     craftsContent.innerHTML = craftsHTML;
-
-                    // Add event listeners for toggling required items
-                    document.querySelectorAll('.toggle-req-items').forEach(toggleLink => {
-                        toggleLink.addEventListener('click', (event) => {
-                            event.preventDefault();
-                            const reqItemsList = toggleLink.nextElementSibling;
-                            if (reqItemsList.classList.contains('expanded')) {
-                                reqItemsList.classList.remove('expanded');
-                            } else {
-                                reqItemsList.classList.add('expanded');
-                            }
-                        });
-                    });
                 } else {
                     craftsContent.innerHTML = 'No crafts data found.';
                 }

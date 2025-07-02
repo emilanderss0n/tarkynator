@@ -29,7 +29,7 @@
                 </li>
             </ul>
             <span class="navbar-text">
-                <a href="<?= BASE_URL ?>/custom-trader" class="btn btn-outline-info d-none d-lg-block"><i class="bi bi-tools"></i> Custom Trader</a>
+                <!-- <a href="<?= BASE_URL ?>/custom-trader" class="btn btn-outline-info d-none d-lg-block"><i class="bi bi-tools"></i> Custom Trader</a> -->
                 <a href="<?= BASE_URL ?>/mongo-gen" class="btn btn-outline-info d-none d-lg-block"><i class="bi bi-stars"></i> ID Generator</a>
 
                 <div class="theme-selector">

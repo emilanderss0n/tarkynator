@@ -2,15 +2,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const cards = document.getElementsByClassName("card-bfx");
 
     document.addEventListener("click", function (event) {
-        if (event.target.matches("span.global-id")) {
-            const textToCopy = event.target.textContent;
+        if (event.target.matches("span.global-id") || event.target.matches("a.global-id")) {
+            event.preventDefault();
+            let textToCopy;
+            
+            if (event.target.matches("a.global-id")) {
+                textToCopy = event.target.getAttribute("data-id");
+            } else {
+                textToCopy = event.target.textContent;
+            }
+            
             navigator.clipboard
                 .writeText(textToCopy)
                 .then(() => {
-                    event.target.classList.add("copied");
-                    setTimeout(() => {
-                        event.target.classList.remove("copied");
-                    }, 1400);
+                    if (event.target.matches("a.global-id")) {
+                        const originalHTML = event.target.innerHTML;
+                        event.target.innerHTML = '<i class="bi bi-check"></i> Copied';
+                        event.target.classList.add("copied");
+                        setTimeout(() => {
+                            event.target.innerHTML = originalHTML;
+                            event.target.classList.remove("copied");
+                        }, 3000);
+                    } else {
+                        event.target.classList.add("copied");
+                        setTimeout(() => {
+                            event.target.classList.remove("copied");
+                        }, 1400);
+                    }
                 })
                 .catch((err) => {
                     console.error("Failed to copy text: ", err);
