@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     id
                     name
                 }
+                lootContainers {
+                    name
+                    id
+                }
             }
         `;
 
@@ -47,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     let currentPageStations = 1;
                     let currentPageTraders = 1;
                     let currentPageHandbook = 1;
+                    let currentPageContainers = 1;
 
                     const createTableRows = (items, page) => {
                         // Add null check for items
@@ -95,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const stationsHTML = createTableRows(data.data.hideoutStations, currentPageStations);
                         const tradersHTML = createTableRows(data.data.traders, currentPageTraders);
                         const handbookCategoriesHTML = createTableRows(data.data.handbookCategories, currentPageHandbook);
+                        const lootContainersHTML = createTableRows(data.data.lootContainers, currentPageContainers);
 
 
                         commonIdContent.innerHTML = `
@@ -178,6 +184,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="handbook-pagination"></div>
                                 </div>
                             </div>
+                            <div class="loot-containers card">
+                                <div class="table-responsive">
+                                    <table class="table caption-top">
+                                        <div class="page-top-title">
+                                            <img src="assets/img/handbook/icon_gear_cases.png" height="29" width="34" />
+                                            <h4>Loot Containers</h4>
+                                        </div>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">ID</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                            ${lootContainersHTML}
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination-controls" id="containers-pagination"></div>
+                                </div>
+                            </div>
                         `;
 
                         createPaginationControls(data.data.bosses, currentPageBosses, 'bosses-pagination', (newPage) => {
@@ -191,6 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                         createPaginationControls(data.data.handbookCategories, currentPageHandbook, 'handbook-pagination', (newPage) => {
                             currentPageHandbook = newPage;
+                        });
+                        createPaginationControls(data.data.lootContainers, currentPageContainers, 'containers-pagination', (newPage) => {
+                            currentPageContainers = newPage;
                         });
                     };
 
