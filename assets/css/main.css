@@ -276,7 +276,7 @@ a[data-tooltip] {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    text-wrap: balance;
+    text-wrap: pretty;
 }
 
 .grid {
@@ -458,6 +458,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .list-group {
     border-color: var(--border-color);
+    border-top: none !important;
 }
 
 ul li,
@@ -871,6 +872,7 @@ span.global-id.copied::after {
 .handbook-side .list-group-item {
     display: flex;
     flex-direction: column;
+    gap: 0.2rem;
 }
 
 .table > :not(caption) > * > * {
@@ -1295,7 +1297,7 @@ span.global-id.copied::after {
     display: flex;
     gap: 2rem;
 
-    @media screen and (max-width: 1400px) {
+    @media screen and (max-width: 1100px) {
         flex-direction: column;
     }
 }
@@ -1308,8 +1310,42 @@ span.global-id.copied::after {
     }
 }
 
-.handbook-item .main {
+.handbook-item .main, .handbook-item .main .left, .handbook-item .main .right {
     flex: 1;
+}
+
+.main .handbook-item-title {
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.main .handbook-item-title .title {
+    margin: 0;
+}
+
+.handbook-item .rarity-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--br-sm);
+    font-size: 0.8rem;
+    background-color: #7a8071;
+    font-weight: bold;
+    color: #fff;
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+
+    &.not_exist {
+        background-color: #ab243c;
+    }
+    &.rare {
+        background-color: #2d7c5e;
+    }
+    &.superrare {
+        background-color: #af4caf;
+    }
 }
 
 .handbook-item .slots-filter:has(>div) {
@@ -1392,7 +1428,6 @@ span.global-id.copied::after {
     background: radial-gradient(#32322f 0%, black 70%, black 80%);
     border-radius: 0.6rem;
     position: relative;
-    overflow: hidden;
     min-width: 500px;
     text-align: center;
     min-height: 100%;
@@ -1414,6 +1449,7 @@ span.global-id.copied::after {
     z-index: 1;
     mix-blend-mode: overlay;
     opacity: 0.5;
+    border-radius: inherit;
 }
 
 .handbook-image .flea-ban {
@@ -1432,6 +1468,7 @@ span.global-id.copied::after {
 .blockquote-footer {
     margin-top: 0;
     color: var(--bright-color);
+    line-height: 2;
 }
 
 .handbook-item .links {

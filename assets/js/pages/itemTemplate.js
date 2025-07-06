@@ -741,23 +741,24 @@ document.addEventListener("DOMContentLoaded", () => {
                                         ${fleaBanHTML}
                                         <div class="stripes"></div>
                                         <img src="${image512pxLink}" alt="Handbook image" />
+                                        ${ properties && properties.RarityPvE ? `<div class="rarity-badge ${properties.RarityPvE.toLowerCase()}" data-tooltip="Rarity in loose/container loot">${properties.RarityPvE.toLowerCase()}</div>` : '' }
                                     </div>
                                 </div>
                                 <div class="right">
-                                    <h3 class="title">${
-                                        itemElement.textContent
-                                    }</h3>
+                                    <div class="handbook-item-title">
+                                        <h3 class="title">${itemElement.textContent}</h3>
+                                    </div>
                                     <figure>
                                         <figcaption class="blockquote-footer">
                                             ${
                                                 masteringName
-                                                    ? `Mastering Name: ${masteringName} /`
+                                                    ? `Mastering Name: ${masteringName} ━`
                                                     : ""
-                                            } Short Name: ${
+                                            } Short Name: <span class="global-id">${
                     itemData.shortName
-                } / Weight: ${
-                    itemData.weight
-                } / Base Price: <span class="global-id">${
+                }</span> ━ Item ID: <span class="global-id">${
+                    itemData.id
+                }</span> ━ Base Price: <span class="global-id">${
                     itemData.basePrice
                 }</span>
                                         </figcaption>
