@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     name
                     id
                 }
+                maps {
+                    id
+                    name
+                    nameId
+                }
             }
         `;
 
@@ -52,16 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     let currentPageTraders = 1;
                     let currentPageHandbook = 1;
                     let currentPageContainers = 1;
+                    let currentPageMaps = 1;
 
-                    const createTableRows = (items, page) => {
+                    const createTableRows = (items, page, isMap = false) => {
                         // Add null check for items
                         if (!items || !Array.isArray(items)) return '';
 
+                        // Sort items alphabetically by name
+                        const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
+
                         const start = (page - 1) * ITEMS_PER_PAGE;
                         const end = start + ITEMS_PER_PAGE;
-                        return items.slice(start, end).map(item => `
+                        return sortedItems.slice(start, end).map(item => `
                             <tr>
-                                <td>${item.name}</td>
+                                <td>${isMap ? `${item.name} / ${item.nameId}` : item.name}</td>
                                 <td><span class="global-id">${item.id}</span></td>
                             </tr>
                         `).join('');
@@ -101,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const tradersHTML = createTableRows(data.data.traders, currentPageTraders);
                         const handbookCategoriesHTML = createTableRows(data.data.handbookCategories, currentPageHandbook);
                         const lootContainersHTML = createTableRows(data.data.lootContainers, currentPageContainers);
+                        const mapsHTML = createTableRows(data.data.maps, currentPageMaps, true);
 
 
                         commonIdContent.innerHTML = `
@@ -204,6 +214,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="containers-pagination"></div>
                                 </div>
                             </div>
+                            <div class="maps card">
+                                <div class="table-responsive">
+                                    <table class="table caption-top">
+                                        <div class="page-top-title">
+                                            <img src="assets/img/handbook/icon_maps.png" height="25" width="29" />
+                                            <h4>Maps</h4>
+                                        </div>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">ID</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                            ${mapsHTML}
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination-controls" id="maps-pagination"></div>
+                                </div>
+                            </div>
                         `;
 
                         createPaginationControls(data.data.bosses, currentPageBosses, 'bosses-pagination', (newPage) => {
@@ -220,6 +250,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                         createPaginationControls(data.data.lootContainers, currentPageContainers, 'containers-pagination', (newPage) => {
                             currentPageContainers = newPage;
+                        });
+                        createPaginationControls(data.data.maps, currentPageMaps, 'maps-pagination', (newPage) => {
+                            currentPageMaps = newPage;
                         });
                     };
 
