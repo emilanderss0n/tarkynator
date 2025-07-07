@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCardMouseMove("browseItems");
     setupCardMouseMove("cardsMt");
     setupCardMouseMove("cardsTut");
+    setupCardMouseMove("sptReleases");
 
     let isAnimationFrameRequested = false;
     let mouseEvent = null;
@@ -71,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isAnimationFrameRequested = false;
     }
 
-    ["recentSearches", "browseItems", "cardsMt", "cardsTut"].forEach((id) => {
+    ["recentSearches", "browseItems", "cardsMt", "cardsTut", "sptReleases"].forEach((id) => {
         const element = document.getElementById(id);
         if (element) {
             element.onmousemove = (e) => {

@@ -709,6 +709,7 @@ select {
 
 #cardsMt:hover > .card-bfx::after,
 #cardsTut:hover > .card-bfx::after,
+#sptReleases:hover > .card-bfx::after,
 #browseItems:hover > .card-bfx::after,
 #recentSearches:hover > .card-bfx::after {
     opacity: 1;
@@ -1736,7 +1737,8 @@ span.global-id.copied::after {
 #resourcesContainer .links .card-body.github::before,
 #resourcesContainer .links .card-body.discord::before,
 #resourcesContainer .links .card-body.web::before,
-#resourcesContainer .links .card-body.video::before {
+#resourcesContainer .links .card-body.video::before,
+#resourcesContainer .links .card-body.spt::before {
     position: absolute;
     font-size: 5rem;
     font-family: 'Bootstrap-icons';
@@ -1767,6 +1769,39 @@ span.global-id.copied::after {
     content: "\F21F";
 }
 
+#resourcesContainer .links .card-body.spt {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#resourcesContainer .links .card-body.spt::before {
+    content: "";
+    background-image: url(../img/spt_logo.png);
+    background-size: cover;
+    position: relative;
+    border-radius: var(--br-med);
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+}
+
+#resourcesContainer .links .card-bfx:hover .card-body.spt::before {
+    opacity: 1;
+}
+
+#resourcesContainer .links .card-body.spt .card-title {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#resourcesContainer .links .card-body.spt .card-text {
+    margin-left: auto;
+}
+
 #resourcesContainer .links .card-body:hover::before {
     opacity: 0.4;
 }
@@ -1780,6 +1815,26 @@ span.global-id.copied::after {
     color: var(--brighter-color);
     font-size: .9rem;
     margin-left: 7rem;
+}
+
+.spt .round-badge {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background-color: var(--main-color);
+    color: var(--brighter-color);
+    mask: linear-gradient(180deg, #000, hsl(0deg 0% 0% / 31%) 80%);
+
+    &.lime {
+        background-color: #d89455;
+    }
+    &.green {
+        background-color: #2db681;
+    }
+    &.gray {
+        background-color: #616769;
+    }
 }
 
 #achievementsContainer .body {

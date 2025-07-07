@@ -8,9 +8,9 @@
                 ID. The search results will show you the item's name, ID, and other information. This tool is
                 perfect for modders, developers, and players who want to learn more about the game's items and
                 their properties.</p>
-            This website takes advantage of localStorage. If you want to clear the data, you can do it in your
-            browser settings. When a new SPT version is released and the website is not updated, you can clear
-            the localStorage to get the latest data.
+            This website takes advantage of Local storage and IndexedDB. If you want to clear the data before expiry (2 days), 
+            you can do it in your browser settings. When a new SPT version is released and the website is not yet updated, 
+            you can clear Local storage and IndexedDB to get the latest data.
         </div>
     </section>
 
@@ -113,6 +113,9 @@
 <?php endif; ?>
 <?php if ($activePage === 'common-id'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/pages/commonIds.js"></script>
+<?php endif; ?>
+<?php if ($activePage === 'resources'): ?>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/features/sptApi.js"></script>
 <?php endif; ?>
 <?php if ($activePage === 'custom-trader'): ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
