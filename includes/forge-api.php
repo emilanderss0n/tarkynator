@@ -1,4 +1,5 @@
 <?php
+require_once '../path.php';
 // Prevent any output before headers
 ob_start();
 
