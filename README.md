@@ -43,11 +43,16 @@ Visit the live tool: [https://moxopixel.com/tarkynator](https://moxopixel.com/ta
 - `data/` — Static JSON data files
 - `assets/img/` — Icons and UI assets
 - `pages/` — Individual tool sections
-- `path.php` — Add this file to root folder with:
 
-`define('ROOT_PATH', realpath(dirname(__FILE__)));`
-`define('BASE_URL', 'http://localhost/your-project');`
-`define('SPT_API_TOKEN', 'spt-forge-api-key');`
+## Setup
+
+- Create `path.php` file in root folder and add:
+
+```php
+define('ROOT_PATH', realpath(dirname(__FILE__)));
+define('BASE_URL', 'http://localhost/your-project');
+define('SPT_API_TOKEN', 'spt-forge-api-key');
+```
 
 ## Who is this for?
 
