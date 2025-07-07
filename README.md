@@ -45,9 +45,9 @@ Visit the live tool: [https://moxopixel.com/tarkynator](https://moxopixel.com/ta
 - `pages/` — Individual tool sections
 - `path.php` — Add this file to root folder with:
 
-define('ROOT_PATH', realpath(dirname(__FILE__)));
-define('BASE_URL', 'http://localhost/your-project');
-define('SPT_API_TOKEN', 'spt-forge-api-key');
+`define('ROOT_PATH', realpath(dirname(__FILE__)));`
+`define('BASE_URL', 'http://localhost/your-project');`
+`define('SPT_API_TOKEN', 'spt-forge-api-key');`
 
 ## Who is this for?
 
