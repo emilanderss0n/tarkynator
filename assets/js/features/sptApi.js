@@ -3,12 +3,11 @@ import { fetchData } from "../core/cache.js";
 const sptReleases = document.getElementById("sptReleases");
 
 if (sptReleases) {
-    const url = "https://forge.sp-tarkov.com/api/v0/spt/versions";
+    const url = "includes/forge-api.php";
 
     const options = {
         method: "GET",
         headers: {
-            "Authorization": "Bearer TJ0qCq8kpXMTGey1vCZtPaa3cN46AiBzh4A3ODQh1c1a107e",
             "Content-Type": "application/json",
             "Accept": "application/json",
         }
@@ -17,7 +16,7 @@ if (sptReleases) {
     fetchData(url, options)
     .then(data => {
         if (data.success && data.data) {
-            // Get all releases and sort by version (highest first)
+            // ...existing code...
             const releases = data.data.sort((a, b) => {
                 // Compare major version first
                 if (a.version_major !== b.version_major) {
@@ -51,5 +50,4 @@ if (sptReleases) {
         console.error('Error fetching SPT releases:', error);
         sptReleases.innerHTML = '<p>Error loading SPT releases</p>';
     });
-
 }

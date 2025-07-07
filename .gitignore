@@ -3,5 +3,4 @@ fetch_tarkov_tasks.php
 data/cacert.pem
 converter/
 assets/css/main.min.css
-Painter-CustomTrader-Example/
-Scorpion-CustomTrader-Example/
+path.php

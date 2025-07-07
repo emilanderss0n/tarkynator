@@ -39,10 +39,15 @@ Visit the live tool: [https://moxopixel.com/tarkynator](https://moxopixel.com/ta
 
 ## Project Structure
 
-- `assets/js/` — Core JavaScript modules
+- `assets/js/` — JavaScript modules
 - `data/` — Static JSON data files
 - `assets/img/` — Icons and UI assets
 - `pages/` — Individual tool sections
+- `path.php` — Add this file to root folder with:
+
+define('ROOT_PATH', realpath(dirname(__FILE__)));
+define('BASE_URL', 'http://localhost/your-project');
+define('SPT_API_TOKEN', 'spt-forge-api-key');
 
 ## Who is this for?
 
