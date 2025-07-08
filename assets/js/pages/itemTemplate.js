@@ -745,24 +745,16 @@ document.addEventListener("DOMContentLoaded", () => {
                                     </div>
                                 </div>
                                 <div class="right">
-                                    <div class="handbook-item-title">
-                                        <h3 class="title">${itemElement.textContent}</h3>
+                                    <div class="handbook-item-header">
+                                        <div class="handbook-item-title ${ properties && properties.RarityPvE ? `${properties.RarityPvE.toLowerCase()}` : '' }">
+                                            <h3 class="title">${itemElement.textContent}</h3>
+                                        </div>
+                                        <div class="handbook-item-meta">
+                                            <div>Short Name: <span class="global-id">${itemData.shortName}</span></div>
+                                            <div>Item ID: <span class="global-id">${itemData.id}</span></div>
+                                            <div>Base Price: <span class="global-id">${itemData.basePrice}</span></div>
+                                        </div>
                                     </div>
-                                    <figure>
-                                        <figcaption class="blockquote-footer">
-                                            ${
-                                                masteringName
-                                                    ? `Mastering Name: ${masteringName} ━`
-                                                    : ""
-                                            } Short Name: <span class="global-id">${
-                    itemData.shortName
-                }</span> ━ Item ID: <span class="global-id">${
-                    itemData.id
-                }</span> ━ Base Price: <span class="global-id">${
-                    itemData.basePrice
-                }</span>
-                                        </figcaption>
-                                    </figure>
                                     ${
                                         presetId
                                             ? `<div class="preset-available"><h5>Default Preset: ${presetName}</h5><figure><figcaption class="blockquote-footer">Preset ID: <span class="global-id">${presetId}</span></figcaption></figure><div class="preset-items">${presetItemsHTML}</div></div>`

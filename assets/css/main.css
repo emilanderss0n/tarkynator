@@ -1315,38 +1315,74 @@ span.global-id.copied::after {
     flex: 1;
 }
 
+.main .handbook-item-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    background-color: var(--content-bg-light);
+    border-radius: var(--br-med);
+}
+
 .main .handbook-item-title {
     display: flex;
     gap: 0.7rem;
-    margin-bottom: 1rem;
+    margin: 0;
     align-items: flex-start;
     flex-direction: column;
+    padding: 1rem;
+    background-color: var(--background-color);
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom: 2px solid;
 }
 
 .main .handbook-item-title .title {
     margin: 0;
 }
 
+.main .handbook-item-meta {
+    padding: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.main .handbook-item-meta > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
 .handbook-item .rarity-badge {
     padding: 0.2rem 0.5rem;
     border-radius: var(--br-sm);
     font-size: 0.8rem;
-    background-color: #7a8071;
     font-weight: bold;
     color: #fff;
     position: absolute;
     left: 1rem;
     top: 1rem;
+}
 
-    &.not_exist {
-        background-color: #ab243c;
-    }
-    &.rare {
-        background-color: #2d7c5e;
-    }
-    &.superrare {
-        background-color: #af4caf;
-    }
+.common {
+    background-color: #7a8071;
+    border-color: #7a8071 !important;
+}
+
+.not_exist {
+    background-color: #ab243c;
+    border-color: #ab243c !important;
+}
+
+.rare {
+    background-color: #2d7c5e;
+    border-color: #2d7c5e !important;
+}
+
+.superrare {
+    background-color: #af4caf;
+    border-color: #af4caf !important;
 }
 
 .handbook-item .slots-filter:has(>div) {

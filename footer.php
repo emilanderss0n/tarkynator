@@ -38,7 +38,7 @@
     crossorigin="anonymous"></script>
 <script src="<?= BASE_URL ?>/assets/js/core/themeManager.js"></script>
 
-<?php if ($activePage === 'template' || $activePage === 'quests'): ?>
+<?php if ($activePage === 'template' || $activePage === 'quests' || $activePage === 'achievements'): ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <script>

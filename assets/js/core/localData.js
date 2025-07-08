@@ -7,3 +7,4 @@ export const GLOBALS = "data/globals.json";
 export const SUITS = "data/suits.json";
 export const FLEAPRICES = "data/prices.json";
 export const DEPENDENCIES = "data/Windows.json";
+export const ACHIEVEMENTS = "data/achievements.json";
