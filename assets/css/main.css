@@ -1333,7 +1333,19 @@ span.global-id.copied::after {
     background-color: var(--background-color);
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
-    border-bottom: 2px solid;
+    border-bottom: 2px solid #7a8071;
+
+    &.not_exist {
+        border-color: #ab243c;
+    }
+
+    &.rare {
+        border-color: #2d7c5e;
+    }
+
+    &.superrare {
+        border-color: #af4caf;
+    }
 }
 
 .main .handbook-item-title .title {
@@ -1359,30 +1371,21 @@ span.global-id.copied::after {
     border-radius: var(--br-sm);
     font-size: 0.8rem;
     font-weight: bold;
+    background-color: #7a8071;
     color: #fff;
     position: absolute;
     left: 1rem;
     top: 1rem;
-}
 
-.common {
-    background-color: #7a8071;
-    border-color: #7a8071 !important;
-}
-
-.not_exist {
-    background-color: #ab243c;
-    border-color: #ab243c !important;
-}
-
-.rare {
-    background-color: #2d7c5e;
-    border-color: #2d7c5e !important;
-}
-
-.superrare {
-    background-color: #af4caf;
-    border-color: #af4caf !important;
+    &.not_exist {
+        background-color: #ab243c;
+    }
+    &.rare {
+        background-color: #2d7c5e;
+    }
+    &.superrare {
+        background-color: #af4caf;
+    }
 }
 
 .handbook-item .slots-filter:has(>div) {
