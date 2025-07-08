@@ -1321,6 +1321,9 @@ span.global-id.copied::after {
     margin-bottom: 1rem;
     background-color: var(--content-bg-light);
     border-radius: var(--br-med);
+
+    container-type: inline-size;
+    container-name: handbook-item;
 }
 
 .main .handbook-item-title {
@@ -1346,24 +1349,39 @@ span.global-id.copied::after {
     &.superrare {
         border-color: #af4caf;
     }
-}
 
-.main .handbook-item-title .title {
-    margin: 0;
+    & .title {
+        margin: 0;
+    }
 }
 
 .main .handbook-item-meta {
-    padding: 1rem;
+    padding: 0;
     display: flex;
     justify-content: flex-start;
-    gap: 1rem;
-    flex-wrap: wrap;
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        flex: auto;
+        padding: 1rem;
+        border-right: 1px solid var(--border-color-weak);
+    }
+
+    & > div:last-child {
+        border-right: none;
+    }
 }
 
-.main .handbook-item-meta > div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+@container handbook-item (width <= 500px) {
+    .main .handbook-item-meta {
+        flex-direction: column;
+    }
+
+    .main .handbook-item-meta > div {
+        border-right: none;
+    }
 }
 
 .handbook-item .rarity-badge {
