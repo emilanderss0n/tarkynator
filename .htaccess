@@ -29,7 +29,19 @@ php_value max_input_time 300
 
 # Enable rewrite engine
 RewriteEngine On
-RewriteBase /tarkynator/
+
+# Set RewriteBase based on environment
+# For production
+RewriteCond %{HTTP_HOST} ^tarkynator\.com$ [NC]
+RewriteRule ^(.*)$ - [E=BASE:/]
+
+# For local development
+RewriteCond %{HTTP_HOST} ^localhost$ [NC]
+RewriteRule ^(.*)$ - [E=BASE:/tarkynator/]
+
+# Default fallback
+RewriteCond %{ENV:BASE} ^$
+RewriteRule ^(.*)$ - [E=BASE:/]
 
 # Handle PHP files in pages directory
 RewriteCond %{REQUEST_FILENAME} !-f
