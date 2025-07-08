@@ -536,28 +536,22 @@ document.addEventListener("DOMContentLoaded", () => {
                                 dependenciesHTML = `
                                     <div class="dependencies card">
                                         <div class="dep-item">
-                                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                                <h3>Dependency</h3>
+                                            <div class="dep-item-title ${ properties && properties.RarityPvE ? `${properties.RarityPvE.toLowerCase()}` : '' }">
+                                                <h3>Dependency Information</h3>
                                                 <button class="btn btn-sm btn-info copy-deps">
                                                     <i class="bi bi-clipboard"></i> Copy
                                                 </button>
                                             </div>
-                                            <figure>
-                                                <figcaption class="blockquote-footer">
-                                                    Location: EscapeFromTarkov_Data/StreamingAssets/Windows/Windows.json
-                                                </figcaption>
-                                            </figure>
-                                            <p>Asset Path: <span class="global-id">${path}</span></p>
-                                            <p>CRC: <span class="global-id">${
-                                                itemDependencies[0][1].Crc
-                                            }</span></p>
-                                            <div class="list-group">
-                                                ${deps
-                                                    .map(
-                                                        (dep) =>
-                                                            `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
-                                                    )
-                                                    .join(" ")}
+                                            <div class="dep-contents">>
+                                                <p>Asset Path: <span class="global-id">${path}</span></p>
+                                                <div class="list-group">
+                                                    ${deps
+                                                        .map(
+                                                            (dep) =>
+                                                                `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
+                                                        )
+                                                        .join(" ")}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>`;
@@ -597,28 +591,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     dependenciesHTML = `
                         <div class="dependencies card">
                             <div class="dep-item">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3>Dependency</h3>
+                                <div class="dep-item-title ${ properties && properties.RarityPvE ? `${properties.RarityPvE.toLowerCase()}` : '' }">
+                                    <h3>Dependency Information</h3>
                                     <button class="btn btn-sm btn-info copy-deps">
                                         <i class="bi bi-clipboard"></i> Copy
                                     </button>
                                 </div>
-                                <figure>
-                                    <figcaption class="blockquote-footer">
-                                        Location: EscapeFromTarkov_Data/StreamingAssets/Windows/Windows.json
-                                    </figcaption>
-                                </figure>
-                                <p>Asset Path: <span class="global-id">${path}</span></p>
-                                <p>CRC: <span class="global-id">${
-                                    itemDependencies[0][1].Crc
-                                }</span></p>
-                                <div class="list-group">
-                                    ${deps
-                                        .map(
-                                            (dep) =>
-                                                `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
-                                        )
-                                        .join(" ")}
+                                <div class="dep-contents">
+                                    <p>Asset Path: <span class="global-id">${path}</span></p>
+                                    <div class="list-group">
+                                        ${deps
+                                            .map(
+                                                (dep) =>
+                                                    `<div class="list-group-item"><span class="global-id">${dep}</span></div>`
+                                            )
+                                            .join(" ")}
+                                    </div>
                                 </div>
                             </div>
                         </div>`;

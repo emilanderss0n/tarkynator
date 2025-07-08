@@ -1418,9 +1418,42 @@ span.global-id.copied::after {
     cursor: pointer;
 }
 
-.handbook-item .dependencies {
+.handbook-item .dependencies.card {
     margin-top: 2rem;
-    padding: 1rem;
+    padding: 0 !important;
+    overflow: clip;
+    border: none;
+    background-color: var(--content-bg-light);
+
+    & .dep-item-title {
+        padding: clamp(1rem, 1.6vw, 1.6rem);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-bottom: 2px solid #7a8071;
+        justify-content: space-between;
+        background-color: var(--background-color);
+
+        &.not_exist {
+            border-color: #ab243c;
+        }
+
+        &.rare {
+            border-color: #2d7c5e;
+        }
+
+        &.superrare {
+            border-color: #af4caf;
+        }
+    }
+
+    & .dep-item-title h3 {
+        margin: 0;
+    }
+
+    & .dep-contents {
+        padding: clamp(1rem, 1.6vw, 1.6rem);
+    }
 }
 
 .allowed-ammo .ammo-list {
