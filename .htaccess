@@ -30,26 +30,29 @@ php_value max_input_time 300
 # Enable rewrite engine
 RewriteEngine On
 
-# Set RewriteBase based on environment
-# For production
+# Handle PHP files in pages directory - Production (tarkynator.com)
 RewriteCond %{HTTP_HOST} ^tarkynator\.com$ [NC]
-RewriteRule ^(.*)$ - [E=BASE:/]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/pages/
+RewriteRule ^(.*)$ pages/$1 [L]
 
-# For local development
+# Handle PHP files in pages directory - Local development
 RewriteCond %{HTTP_HOST} ^localhost$ [NC]
-RewriteRule ^(.*)$ - [E=BASE:/tarkynator/]
-
-# Default fallback
-RewriteCond %{ENV:BASE} ^$
-RewriteRule ^(.*)$ - [E=BASE:/]
-
-# Handle PHP files in pages directory
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/tarkynator/pages/
 RewriteRule ^(.*)$ pages/$1 [L]
 
-# Add .php extension
+# Add .php extension - Production
+RewriteCond %{HTTP_HOST} ^tarkynator\.com$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
+# Add .php extension - Local development
+RewriteCond %{HTTP_HOST} ^localhost$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
