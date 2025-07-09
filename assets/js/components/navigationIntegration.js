@@ -1,9 +1,11 @@
 /**
  * Navigation Integration Helper
- * Integrates the existing itemTemplate.js functionality with the NavigationManager
+ * Integrates with the new modular ItemManager system
+ * @deprecated This component is being phased out in favor of ItemManager's built-in navigation
  */
 
 import { navigationManager } from "../core/navigationManager.js";
+import { itemManager } from "../items/ItemManager.js";
 
 export class NavigationIntegration {
     constructor() {
@@ -397,40 +399,38 @@ export class NavigationIntegration {
         }
     }
 
-    // These methods should integrate with existing itemTemplate.js functions
+    // These methods now delegate to ItemManager modules instead of old itemTemplate.js functions
     async performSearch(query) {
-        // Call existing search function from itemTemplate.js
-        if (window.performItemSearch) {
-            await window.performItemSearch(query);
+        // Delegate to ItemManager's search module
+        if (window.itemManager && itemManager.modules.searcher) {
+            await itemManager.modules.searcher.performSearch(query);
         }
     }
 
     async loadItemDetails(itemId) {
-        // Call existing function from itemTemplate.js
-        if (window.loadItemDetails) {
-            await window.loadItemDetails(itemId);
+        // Delegate to ItemManager's displayer module  
+        if (window.itemManager && itemManager.modules.displayer) {
+            await itemManager.modules.displayer.displayItemById(itemId);
         }
     }
 
     async loadItemTemplate(itemId) {
-        // Call existing function from itemTemplate.js
-        if (window.loadItemTemplate) {
-            await window.loadItemTemplate(itemId);
+        // Delegate to ItemManager's template module
+        if (window.itemManager && itemManager.modules.template) {
+            await itemManager.modules.template.loadTemplate(itemId);
         }
     }
 
     async loadBrowseData(category, page) {
-        // Call existing function from itemTemplate.js
-        if (window.loadBrowseData) {
-            await window.loadBrowseData(category, page);
+        // Delegate to ItemManager's browser module
+        if (window.itemManager && itemManager.modules.browser) {
+            await itemManager.modules.browser.loadCategory(category, page);
         }
     }
 
     updateBreadcrumb(itemId) {
-        // Call existing function from itemTemplate.js
-        if (window.updateItemBreadcrumb) {
-            window.updateItemBreadcrumb(itemId);
-        }
+        // ItemManager handles breadcrumb updates internally now
+        console.info('Breadcrumb updates are now handled by ItemManager');
     }
 
     updateBrowseCategory(category) {

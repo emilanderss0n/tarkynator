@@ -279,6 +279,22 @@ h1, h2, h3, h4, h5, h6 {
     text-wrap: pretty;
 }
 
+h1 {
+    font-size: calc(1.4rem + .8vw);
+}
+
+h2 {
+    font-size: calc(1.2rem + .6vw);
+}
+
+h3 {
+    font-size: calc(1rem + .4vw);
+}
+
+h4 {
+    font-size: calc(0.9rem + .2vw);
+}
+
 .grid {
     --grid-max-col-count: attr(grid-max-col-count type(<number>), 4);
     --grid-min-col-size: 300px;
@@ -1294,6 +1310,11 @@ span.global-id.copied::after {
     }
 }
 
+.handbook-item {
+    container-name: handbook-item;
+    container-type: inline-size;
+}
+
 .handbook-item .top {
     display: flex;
     gap: 2rem;
@@ -1409,8 +1430,21 @@ span.global-id.copied::after {
 .handbook-item .slots-filter:has(>div) {
     margin-top: 3rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     gap: 1rem;
+}
+
+@container handbook-item (width <= 500px) {
+    .handbook-item .slots-filter:has(>div) {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@container handbook-item (width >= 1000px) {
+    .handbook-item .slots-filter:has(>div) {
+        gap: 2rem;
+    }
 }
 
 .handbook-item .slots-filter .slot {
@@ -1444,7 +1478,7 @@ span.global-id.copied::after {
     background-color: var(--content-bg-light);
 
     & .dep-item-title {
-        padding: clamp(1rem, 1.6vw, 1.6rem);
+        padding: clamp(0.8rem, 1.3vw, 1.3rem) clamp(1rem, 1.6vw, 1.6rem);
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -1664,6 +1698,11 @@ span.global-id.copied::after {
 #browseItems .search-filter {
     display: inline-flex;
     justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+#browseItems:has(.group-title) .search-filter {
+    margin: 0;
 }
 
 #browseItems .break {

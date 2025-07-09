@@ -97,7 +97,7 @@
 
 <script type="module" src="<?= BASE_URL ?>/assets/js/features/main.js"></script>
 <?php if ($activePage === 'template'): ?>
-    <script type="module" src="<?= BASE_URL ?>/assets/js/pages/itemTemplate.js"></script>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/items/ItemManager.js"></script>
 <?php endif; ?>
 <?php if ($activePage === 'crafts'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/pages/crafts.js"></script>

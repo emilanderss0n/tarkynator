@@ -46,14 +46,21 @@ function get_minified_file($file, $type) {
     $file_path = str_replace(BASE_URL, '', $file);
     $file_path = ltrim($file_path, '/');
     
+    // Determine the correct document root path based on BASE_URL
+    $parsed_url = parse_url(BASE_URL);
+    $base_path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+    $base_path = ltrim($base_path, '/');
+    
     // Create paths for original and minified files
-    $original_path = $_SERVER['DOCUMENT_ROOT'] . '/tarkynator/' . $file_path;
+    $document_path = $base_path ? $_SERVER['DOCUMENT_ROOT'] . '/' . $base_path : $_SERVER['DOCUMENT_ROOT'];
+    $document_path = rtrim($document_path, '/'); // Remove trailing slash
+    $original_path = $document_path . '/' . $file_path;
     
     // Generate minified filename (keep the same directory)
     $min_filename = pathinfo($file_path, PATHINFO_FILENAME) . '.min.' . $type;
     $min_dir = pathinfo($file_path, PATHINFO_DIRNAME);
     $min_file_path = $min_dir . '/' . $min_filename;
-    $min_path = $_SERVER['DOCUMENT_ROOT'] . '/tarkynator/' . $min_file_path;
+    $min_path = $document_path . '/' . $min_file_path;
     
     // Create directory for minified file if it doesn't exist
     $min_dir_full = dirname($min_path);
