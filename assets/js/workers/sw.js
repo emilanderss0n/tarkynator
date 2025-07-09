@@ -1,26 +1,41 @@
 // Service worker for background data processing and caching
-// This helps offload heavy computations from the main thread
+// This helps offload heavy computations from the main thread and provides caching
 
-const CACHE_NAME = 'tarkynator-v1';
+const CACHE_NAME = 'tarkynator-v2';
 const STATIC_CACHE_URLS = [
+    '/',
     'assets/js/cache.js',
-    'assets/js/searchOptimizer.js',
-    'assets/js/indexedDbCache.js'
+    'assets/js/core/searchOptimizer.js',
+    'assets/js/core/indexedDbCache.js',
+    'assets/js/items/ItemManager.js',
+    'assets/js/items/ItemSearcher.js',
+    'assets/js/items/ItemDisplayer.js',
+    'assets/js/items/ItemBrowser.js',
+    'assets/js/items/ItemTemplate.js',
+    'assets/js/items/ItemDependencies.js',
+    'assets/js/items/ItemBreadcrumb.js',
+    'assets/css/main.css'
 ];
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
+    console.log('Service Worker: Installing...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
-                console.log('Service Worker: Caching static assets');
-                return cache.addAll(STATIC_CACHE_URLS);
+                return cache.addAll(STATIC_CACHE_URLS.map(url => new Request(url, { cache: 'reload' })));
+            })
+            .catch((error) => {
+                console.error('Service Worker: Cache installation failed', error);
             })
     );
+    // Force the waiting service worker to become the active service worker
+    self.skipWaiting();
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
+    console.log('Service Worker: Activating...');
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
@@ -31,83 +46,107 @@ self.addEventListener('activate', (event) => {
                     }
                 })
             );
+        }).then(() => {
+            // Take control of all clients immediately
+            return self.clients.claim();
         })
     );
 });
 
-// Fetch event - serve from cache when available
+// Fetch event - serve from cache when available, with network-first for data
 self.addEventListener('fetch', (event) => {
     // Only handle same-origin requests
-    if (event.request.url.startsWith(self.location.origin)) {
+    if (!event.request.url.startsWith(self.location.origin)) {
+        return;
+    }
+
+    const url = new URL(event.request.url);
+    
+    // Network-first strategy for JSON data files (always fresh)
+    if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => {
+                    // Clone the response to cache it
+                    const responseClone = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseClone);
+                    });
+                    return response;
+                })
+                .catch(() => {
+                    // Fallback to cache if network fails
+                    return caches.match(event.request);
+                })
+        );
+    }
+    // Cache-first strategy for static assets (JS, CSS, images)
+    else {
         event.respondWith(
             caches.match(event.request)
                 .then((response) => {
                     // Return cached version or fetch from network
-                    return response || fetch(event.request);
+                    if (response) {
+                        return response;
+                    }
+                    
+                    return fetch(event.request)
+                        .then((response) => {
+                            // Don't cache non-successful responses
+                            if (!response || response.status !== 200 || response.type !== 'basic') {
+                                return response;
+                            }
+
+                            // Clone the response to cache it
+                            const responseClone = response.clone();
+                            caches.open(CACHE_NAME).then((cache) => {
+                                cache.put(event.request, responseClone);
+                            });
+
+                            return response;
+                        });
                 })
         );
     }
 });
 
-// Handle background data processing messages
-self.addEventListener('message', (event) => {
-    const { type, data } = event.data;
-
-    switch (type) {
-        case 'PROCESS_SEARCH_INDEX':
-            // Process search index in background
-            const searchIndex = processSearchIndex(data.items);
-            event.ports[0].postMessage({ type: 'SEARCH_INDEX_READY', data: searchIndex });
-            break;
-
-        case 'PROCESS_CATEGORY_FILTER':
-            // Process category filter in background
-            const categoryFilter = processCategoryFilter(data.items);
-            event.ports[0].postMessage({ type: 'CATEGORY_FILTER_READY', data: categoryFilter });
-            break;
-
-        default:
-            console.warn('Unknown message type:', type);
+// Handle background sync for offline functionality
+self.addEventListener('sync', (event) => {
+    if (event.tag === 'background-sync') {
+        event.waitUntil(doBackgroundSync());
     }
 });
 
-// Helper function to process search index
-function processSearchIndex(items) {
-    const index = new Map();
-
-    items.forEach(item => {
-        const searchableText = item.name.toLowerCase();
-
-        // Create n-gram indices
-        for (let i = 0; i < searchableText.length; i++) {
-            for (let len = 1; len <= Math.min(6, searchableText.length - i); len++) {
-                const ngram = searchableText.substring(i, i + len);
-
-                if (!index.has(ngram)) {
-                    index.set(ngram, []);
-                }
-                index.get(ngram).push(item.id); // Store only ID to reduce memory
-            }
-        }
-    });
-
-    // Convert Map to Object for serialization
-    return Object.fromEntries(index);
+// Background sync function
+async function doBackgroundSync() {
+    try {
+        // Perform any background tasks here
+        console.log('Service Worker: Background sync triggered');
+    } catch (error) {
+        console.error('Service Worker: Background sync failed', error);
+    }
 }
 
-// Helper function to process category filter
-function processCategoryFilter(items) {
-    const categoryMap = {};
+// Handle push notifications if needed
+self.addEventListener('push', (event) => {
+    if (event.data) {
+        const data = event.data.json();
+        
+        event.waitUntil(
+            self.registration.showNotification(data.title, {
+                body: data.body,
+                icon: data.icon || 'assets/img/icon.png',
+                badge: 'assets/img/favicon.png'
+            })
+        );
+    }
+});
 
-    items.forEach(item => {
-        item.handbookCategories.forEach(category => {
-            const categoryName = category.name;
-            if (!categoryMap[categoryName]) {
-                categoryMap[categoryName] = [];
-            }
-            categoryMap[categoryName].push(item.id); // Store only ID to reduce memory
-        });
-    });
-
-    return categoryMap;
-}
+// Handle notification clicks
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    
+    event.waitUntil(
+        clients.openWindow('/')
+    );
+});

@@ -21,12 +21,9 @@ export class ItemSearcher {
         }
 
         try {
-            // Ensure data is loaded
-            let data = this.context.gameDataCache();
-            if (!data) {
-                data = await this.context.preloadGameData();
-            }
-
+            // Ensure data is loaded before searching
+            await this.context.ensureDataLoaded();
+            
             if (this.elements.spinner) {
                 this.elements.spinner.style.display = "none";
             }

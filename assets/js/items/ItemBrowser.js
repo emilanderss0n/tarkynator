@@ -116,7 +116,7 @@ export class ItemBrowser {
 
     init() {
         this.setupBrowseCategories();
-        this.setupInitialCategory();
+        // Don't load initial category data until user actually navigates to browse view
     }
 
     setupBrowseCategories() {
@@ -162,7 +162,7 @@ export class ItemBrowser {
         try {
             // Ensure data is loaded
             if (!this.context.gameDataCache()) {
-                await this.context.preloadGameData();
+                await this.context.ensureDataLoaded();
             }
 
             // Get items for category

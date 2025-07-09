@@ -24,9 +24,13 @@ export class ItemDisplayer {
 
     // Display item by ID
     async displayItemById(itemId) {
+        // Ensure data is loaded before displaying
+        await this.context.ensureDataLoaded();
+        
         let data = this.context.gameDataCache();
         if (!data) {
-            data = await this.context.preloadGameData();
+            console.error("Game data not available");
+            return;
         }
 
         const item = data.items[itemId];

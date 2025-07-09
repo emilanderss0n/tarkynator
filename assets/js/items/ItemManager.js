@@ -8,6 +8,7 @@ import { ItemDependencies } from "./ItemDependencies.js";
 import { ItemBreadcrumb } from "./ItemBreadcrumb.js";
 import { fetchData } from "../core/cache.js";
 import { searchOptimizer } from "../core/searchOptimizer.js";
+import { indexedDBCache } from "../core/indexedDbCache.js";
 import {
     DATA_URL,
     ITEMS_URL,
@@ -32,6 +33,19 @@ export class ItemManager {
         this.searchIndex = null;
         this.categoryFilterMap = null;
         this.localItems = {};
+
+        // Lazy loading state
+        this.isDataLoading = false;
+        this.dataLoadPromise = null;
+        this.loadingCallbacks = [];
+
+        // Web Worker for heavy processing
+        this.searchWorker = null;
+        this.workerReady = false;
+
+        // Streaming state
+        this.streamingProgress = 0;
+        this.streamingTotal = 0;
 
         // DOM elements
         this.elements = {};
@@ -58,10 +72,10 @@ export class ItemManager {
             // Cache DOM elements
             this.cacheDOMElements();
 
-            // Initialize data
-            await this.initializeData();
+            // Initialize Web Worker
+            this.initializeWebWorker();
 
-            // Initialize sub-modules
+            // Initialize sub-modules (without data)
             this.initializeModules();
 
             // Setup global event listeners
@@ -72,12 +86,316 @@ export class ItemManager {
 
             this.isInitialized = true;
 
-            // Handle initial navigation
+            // Handle initial navigation (data will be loaded on demand)
             this.handleInitialNavigation();
+
+            // Start background data loading after initial UI is ready
+            this.startBackgroundDataLoading();
 
         } catch (error) {
             console.error('❌ Failed to initialize ItemManager:', error);
             throw error;
+        }
+    }
+
+    // Start loading data in background after UI is ready
+    startBackgroundDataLoading() {
+        // Use requestIdleCallback to load data when browser is idle
+        if (window.requestIdleCallback) {
+            requestIdleCallback(() => {
+                this.loadDataInBackground();
+            }, { timeout: 2000 }); // Fallback after 2 seconds
+        } else {
+            // Fallback for browsers without requestIdleCallback
+            setTimeout(() => {
+                this.loadDataInBackground();
+            }, 1000);
+        }
+    }
+
+    // Load data in background without blocking UI
+    async loadDataInBackground() {
+        try {
+            // Only load if data isn't already loading or loaded
+            if (!this.gameDataCache && !this.isDataLoading) {
+                await this.ensureDataLoaded();
+            }
+        } catch (error) {
+            // Don't throw error - data will load on-demand when needed
+        }
+    }
+
+    // Initialize Web Worker for heavy processing
+    initializeWebWorker() {
+        try {
+            this.searchWorker = new Worker('assets/js/workers/dataWorker.js');
+            
+            this.searchWorker.onmessage = (event) => {
+                const { type, data, error } = event.data;
+                
+                switch (type) {
+                    case 'SEARCH_INDEX_READY':
+                        this.searchIndex = data;
+                        this.workerReady = true;
+                        break;
+                    case 'CATEGORY_FILTER_READY':
+                        this.categoryFilterMap = data;
+                        break;
+                    case 'SEARCH_RESULTS':
+                        this.handleWorkerSearchResults(data);
+                        break;
+                    case 'ERROR':
+                        console.error('Web Worker error:', error);
+                        break;
+                }
+            };
+
+            this.searchWorker.onerror = (error) => {
+                this.workerReady = false;
+            };
+        } catch (error) {
+            this.workerReady = false;
+        }
+    }
+
+    // Lazy load data only when needed
+    async ensureDataLoaded() {
+        if (this.gameDataCache) {
+            return this.gameDataCache;
+        }
+
+        if (this.isDataLoading) {
+            return this.dataLoadPromise;
+        }
+
+        this.isDataLoading = true;
+        this.showLoadingState();
+
+        this.dataLoadPromise = this.loadDataWithStreaming();
+        
+        try {
+            const result = await this.dataLoadPromise;
+            this.hideLoadingState();
+            
+            // Cache in localStorage for future visits
+            this.cacheDataLocally(result);
+            
+            return result;
+        } catch (error) {
+            this.hideLoadingState();
+            throw error;
+        } finally {
+            this.isDataLoading = false;
+        }
+    }
+
+    // Cache data in IndexedDB for faster subsequent loads
+    async cacheDataLocally(gameData) {
+        try {
+            const cacheData = {
+                gameData: gameData,
+                localItems: this.localItems,
+                timestamp: Date.now(),
+                version: '2.0'
+            };
+            
+            // Store in IndexedDB (no size limits like localStorage)
+            await indexedDBCache.set('TarkynatorCache', cacheData);
+            await indexedDBCache.set('itemsCache', this.localItems);
+        } catch (error) {
+            // Cache failure is non-critical
+        }
+    }
+
+    // Load data from IndexedDB if available and fresh
+    async loadCachedData() {
+        try {
+            // Initialize IndexedDB
+            await indexedDBCache.init();
+            
+            const cacheData = await indexedDBCache.get('TarkynatorCache');
+            if (!cacheData) return null;
+            
+            // Check if cache is fresh (less than 24 hours old)
+            const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+            if (Date.now() - cacheData.timestamp > maxAge) {
+                await this.clearLocalCache();
+                return null;
+            }
+            
+            return cacheData;
+        } catch (error) {
+            await this.clearLocalCache();
+            return null;
+        }
+    }
+
+    // Clear IndexedDB cache
+    async clearLocalCache() {
+        try {
+            await indexedDBCache.delete('TarkynatorCache');
+            await indexedDBCache.delete('itemsCache');
+        } catch (error) {
+            // Cache clear failure is non-critical
+        }
+    }
+
+    // Stream large JSON files in chunks
+    async loadDataWithStreaming() {
+        try {
+            // Check for cached data first
+            const cachedData = await this.loadCachedData();
+            if (cachedData) {
+                this.gameDataCache = cachedData.gameData;
+                this.localItems = cachedData.localItems || {};
+                
+                // Process data in chunks to avoid blocking
+                await this.processDataInChunks();
+                
+                return this.gameDataCache;
+            }
+            
+            // Initialize JSON editor on first load
+            checkJsonEditor();
+            
+            // Load main game data with streaming
+            this.gameDataCache = await this.streamJsonFile(DATA_URL, 'Game Data');
+            
+            // Load local items data
+            try {
+                this.localItems = await this.streamJsonFile(ITEMS_URL, 'Items Data');
+            } catch (error) {
+                this.localItems = {};
+            }
+
+            // Process data in chunks to avoid blocking
+            await this.processDataInChunks();
+
+            return this.gameDataCache;
+        } catch (error) {
+            console.error('❌ Error during data loading:', error);
+            throw error;
+        }
+    }
+
+    // Stream a JSON file in chunks
+    async streamJsonFile(url, label) {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${label}: ${response.statusText}`);
+        }
+
+        const contentLength = response.headers.get('content-length');
+        this.streamingTotal = contentLength ? parseInt(contentLength) : 0;
+        this.streamingProgress = 0;
+
+        const reader = response.body?.getReader();
+        if (!reader) {
+            // Fallback for browsers without streaming support
+            return await response.json();
+        }
+
+        let chunks = [];
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            
+            if (done) break;
+            
+            chunks.push(value);
+            this.streamingProgress += value.length;
+            
+            // Yield control to prevent blocking
+            await this.yieldToMain();
+        }
+
+        // Combine chunks and parse JSON
+        const fullData = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+        let offset = 0;
+        for (const chunk of chunks) {
+            fullData.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const text = new TextDecoder().decode(fullData);
+        return JSON.parse(text);
+    }
+
+    // Process data in chunks to avoid blocking the main thread
+    async processDataInChunks() {
+        if (!this.gameDataCache?.items) return;
+
+        this.itemsArrayCache = Object.values(this.gameDataCache.items);
+        const chunkSize = 500; // Process 500 items at a time
+        
+        // If Web Worker is available, use it for heavy processing
+        if (this.workerReady && this.searchWorker) {
+            this.searchWorker.postMessage({
+                type: 'CREATE_SEARCH_INDEX',
+                data: this.itemsArrayCache
+            });
+            
+            this.searchWorker.postMessage({
+                type: 'CREATE_CATEGORY_FILTER',
+                data: this.itemsArrayCache
+            });
+        } else {
+            // Fallback: process in chunks on main thread
+            for (let i = 0; i < this.itemsArrayCache.length; i += chunkSize) {
+                const chunk = this.itemsArrayCache.slice(i, i + chunkSize);
+                
+                if (i === 0) {
+                    // Initialize on first chunk
+                    this.searchIndex = searchOptimizer.createSearchIndex(chunk);
+                    this.categoryFilterMap = searchOptimizer.createCategoryFilter(chunk);
+                } else {
+                    // Extend existing indexes
+                    searchOptimizer.extendSearchIndex(this.searchIndex, chunk);
+                    searchOptimizer.extendCategoryFilter(this.categoryFilterMap, chunk);
+                }
+                
+                // Yield control between chunks
+                await this.yieldToMain();
+            }
+        }
+    }
+
+    // Yield control to the main thread
+    async yieldToMain() {
+        return new Promise(resolve => setTimeout(resolve, 0));
+    }
+
+    // Show loading state
+    showLoadingState() {
+        if (this.elements.spinner) {
+            this.elements.spinner.style.display = "inline-block";
+        }
+        
+        // Show loading overlay if available
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'flex';
+        }
+    }
+
+    // Hide loading state
+    hideLoadingState() {
+        if (this.elements.spinner) {
+            this.elements.spinner.style.display = "none";
+        }
+        
+        // Hide loading overlay
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    // Handle search results from Web Worker
+    handleWorkerSearchResults(results) {
+        if (this.modules.searcher) {
+            this.modules.searcher.updateSearchResults(results);
         }
     }
 
@@ -123,44 +441,6 @@ export class ItemManager {
         }
     }
 
-    // Initialize data caches and preload game data
-    async initializeData() {
-        // Hide spinner initially
-        if (this.elements.spinner) {
-            this.elements.spinner.style.display = "none";
-        }
-
-        // Initialize JSON editor
-        checkJsonEditor();
-
-        // Preload game data
-        await this.preloadGameData();
-
-        // Load local items data
-        try {
-            const response = await fetch(ITEMS_URL);
-            if (response.ok) {
-                this.localItems = await response.json();
-            }
-        } catch (error) {
-            console.error("Error loading local items:", error);
-        }
-    }
-
-    async preloadGameData() {
-        if (!this.gameDataCache) {
-            try {
-                this.gameDataCache = await fetchData(DATA_URL, { method: "GET" });
-                this.itemsArrayCache = Object.values(this.gameDataCache.items);
-                this.searchIndex = searchOptimizer.createSearchIndex(this.itemsArrayCache);
-                this.categoryFilterMap = searchOptimizer.createCategoryFilter(this.itemsArrayCache);
-            } catch (error) {
-                console.error("Error preloading game data:", error);
-            }
-        }
-        return this.gameDataCache;
-    }
-
     initializeModules() {
         // Initialize sub-modules with shared context
         const sharedContext = {
@@ -171,7 +451,7 @@ export class ItemManager {
             categoryFilterMap: () => this.categoryFilterMap,
             localItems: () => this.localItems,
             categoryNameMapping: this.categoryNameMapping,
-            preloadGameData: () => this.preloadGameData(),
+            ensureDataLoaded: () => this.ensureDataLoaded(),
             manager: this
         };
 
@@ -291,6 +571,8 @@ export class ItemManager {
         switch (view) {
             case "search":
                 if (search) {
+                    // Ensure data is loaded before performing search
+                    await this.ensureDataLoaded();
                     this.elements.itemSearchInput.value = search;
                     await this.modules.searcher.performSearch(search);
                 } else {
@@ -308,14 +590,19 @@ export class ItemManager {
                     }
                 }
                 if (item && item !== previousState?.item) {
+                    // Ensure data is loaded before displaying item
+                    await this.ensureDataLoaded();
                     await this.modules.displayer.displayItemById(item);
                 }
                 break;
 
             case "template":
                 if (item && item !== previousState?.item) {
+                    // Ensure data is loaded before displaying item
+                    await this.ensureDataLoaded();
                     await this.modules.displayer.displayItemById(item);
                 } else if (item) {
+                    await this.ensureDataLoaded();
                     await this.modules.template.loadTemplate(item);
                 }
                 if (item) {
@@ -340,6 +627,8 @@ export class ItemManager {
                 }
 
                 if (category) {
+                    // Ensure data is loaded before browsing categories
+                    await this.ensureDataLoaded();
                     await this.modules.browser.loadCategory(category, page);
                 }
                 break;
@@ -396,8 +685,12 @@ export class ItemManager {
                     element.classList.remove("disabled");
                 } else {
                     element.classList.remove("active");
-                    if (name !== "browse") {
+                    // Only disable template and handbook links when no item is selected
+                    // When an item is selected, both template and handbook should be clickable
+                    if (name !== "browse" && (activeLink === null || activeLink === "browse")) {
                         element.classList.add("disabled");
+                    } else {
+                        element.classList.remove("disabled");
                     }
                 }
             }
@@ -431,7 +724,7 @@ export class ItemManager {
             categoryFilterMap: () => this.categoryFilterMap,
             localItems: () => this.localItems,
             categoryNameMapping: this.categoryNameMapping,
-            preloadGameData: () => this.preloadGameData(),
+            ensureDataLoaded: () => this.ensureDataLoaded(),
             manager: this
         };
     }
@@ -468,6 +761,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         await itemManager.init();
     } catch (error) {
-        console.error('Failed to initialize Item Browser System:', error);
+        console.error('❌ Failed to initialize Item Browser System:', error);
+        
+        // Fallback error display
+        const errorContainer = document.getElementById('handbookContent') || document.body;
+        if (errorContainer) {
+            errorContainer.innerHTML = `
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Initialization Error</h4>
+                    <p>Failed to load the item browser system. Please refresh the page or contact support if the problem persists.</p>
+                    <hr>
+                    <p class="mb-0">Error: ${error.message}</p>
+                </div>
+            `;
+        }
     }
 });

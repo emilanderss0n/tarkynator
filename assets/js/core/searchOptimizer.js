@@ -105,6 +105,41 @@ export class SearchOptimizer {
 
         return categoryMap;
     }
+
+    // Extend existing search index with new items (for chunked processing)
+    extendSearchIndex(existingIndex, newItems) {
+        newItems.forEach(item => {
+            const searchableText = item.name.toLowerCase();
+
+            for (let i = 0; i < searchableText.length; i++) {
+                for (let len = 1; len <= Math.min(6, searchableText.length - i); len++) {
+                    const ngram = searchableText.substring(i, i + len);
+
+                    if (!existingIndex.has(ngram)) {
+                        existingIndex.set(ngram, new Set());
+                    }
+                    existingIndex.get(ngram).add(item);
+                }
+            }
+        });
+
+        return existingIndex;
+    }
+
+    // Extend existing category filter with new items (for chunked processing)
+    extendCategoryFilter(existingCategoryMap, newItems) {
+        newItems.forEach(item => {
+            item.handbookCategories.forEach(category => {
+                const categoryName = category.name;
+                if (!existingCategoryMap.has(categoryName)) {
+                    existingCategoryMap.set(categoryName, []);
+                }
+                existingCategoryMap.get(categoryName).push(item);
+            });
+        });
+
+        return existingCategoryMap;
+    }
 }
 
 // Create a singleton instance

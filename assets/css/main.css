@@ -1248,6 +1248,17 @@ span.global-id.copied::after {
     background-color: var(--main-color-bg) !important;
 }
 
+.search-container #activity {
+    right: 16.5rem;
+}
+
+.search-container #activity .loader {
+    width: 100%;
+    height: 100%;
+    border: 4px solid var(--border-color-weak);
+    border-bottom-color: var(--main-color-bg);
+}
+
 #breadcrumb {
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;;
