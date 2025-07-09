@@ -2078,9 +2078,15 @@ span.global-id.copied::after {
     padding: 1.5rem;
 }
 
-#questsContent .card-body .map {
+#questsContent .card-body .titleLink h4 {
+    font-size: 1.4rem;
+}
+
+#questsContent .card-body .map, #questsContent .card-body .level {
     display: flex;
+    align-items: center;
     position: relative;
+    margin: 0;
 }
 
 #questsContent .card-body .map::before {
@@ -2090,6 +2096,17 @@ span.global-id.copied::after {
     margin-right: 0.3rem;
     transform: translateY(-1px);
     background: url(../img/handbook/icon_maps.png);
+    background-size: cover;
+    background-position: center;
+}
+
+#questsContent .card-body .level::before {
+    content: "";
+    width: 31px;
+    height: 30px;
+    margin-right: 0.3rem;
+    transform: translateY(-1px);
+    background: url(../img/icon_status_unlocked.png);
     background-size: cover;
     background-position: center;
 }
