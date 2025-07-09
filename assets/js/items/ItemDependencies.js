@@ -1,24 +1,15 @@
-/**
- * ItemDependencies - Handles item dependency management
- * Manages dependency display, copying, and related functionality
- */
-
+// ItemDependencies - Handles item dependency management
 export class ItemDependencies {
     constructor(context) {
         this.context = context;
         this.elements = context.elements;
     }
 
-    /**
-     * Initialize the dependencies manager
-     */
     init() {
         // Setup any initial configurations
     }
 
-    /**
-     * Handle copying dependencies to clipboard
-     */
+    // Handle copying dependencies to clipboard
     handleCopyDependencies(copyButton) {
         const depItem = copyButton.closest(".dep-item");
         if (!depItem) return;
@@ -56,9 +47,6 @@ export class ItemDependencies {
         }
     }
 
-    /**
-     * Show copy success state
-     */
     showCopySuccess(copyButton) {
         const originalHTML = copyButton.innerHTML;
         copyButton.innerHTML = '<i class="bi bi-check"></i> Copied!';
@@ -68,9 +56,6 @@ export class ItemDependencies {
         }, 2000);
     }
 
-    /**
-     * Show copy error state
-     */
     showCopyError(copyButton) {
         const originalHTML = copyButton.innerHTML;
         copyButton.innerHTML = '<i class="bi bi-x"></i> Failed';
@@ -80,9 +65,6 @@ export class ItemDependencies {
         }, 2000);
     }
 
-    /**
-     * Generate dependencies HTML for display
-     */
     generateDependenciesHTML(dependencies, assetPath, rarityClass = '') {
         if (!dependencies || !Array.isArray(dependencies) || dependencies.length === 0) {
             return '';
@@ -111,9 +93,6 @@ export class ItemDependencies {
             </div>`;
     }
 
-    /**
-     * Parse dependencies from data
-     */
     parseDependencies(dependenciesData, prefabPath) {
         if (!dependenciesData || !prefabPath) {
             return null;
@@ -136,9 +115,6 @@ export class ItemDependencies {
         return null;
     }
 
-    /**
-     * Extract dependency data from item template
-     */
     extractDependencyData(itemTemplate) {
         if (!itemTemplate || !itemTemplate._props) {
             return null;
@@ -155,9 +131,6 @@ export class ItemDependencies {
         };
     }
 
-    /**
-     * Validate dependency structure
-     */
     validateDependencies(dependencies) {
         if (!Array.isArray(dependencies)) {
             return { valid: false, error: 'Dependencies must be an array' };
@@ -171,9 +144,6 @@ export class ItemDependencies {
         return { valid: true };
     }
 
-    /**
-     * Get dependency statistics
-     */
     getDependencyStats(dependencies) {
         if (!Array.isArray(dependencies)) {
             return { count: 0, unique: 0, duplicates: 0 };
@@ -187,9 +157,6 @@ export class ItemDependencies {
         };
     }
 
-    /**
-     * Filter dependencies by pattern
-     */
     filterDependencies(dependencies, pattern) {
         if (!Array.isArray(dependencies) || !pattern) {
             return dependencies;
@@ -199,9 +166,6 @@ export class ItemDependencies {
         return dependencies.filter(dep => regex.test(dep));
     }
 
-    /**
-     * Sort dependencies
-     */
     sortDependencies(dependencies, sortBy = 'alphabetical') {
         if (!Array.isArray(dependencies)) {
             return dependencies;
@@ -221,9 +185,6 @@ export class ItemDependencies {
         }
     }
 
-    /**
-     * Export dependencies as JSON
-     */
     exportDependencies(assetPath, dependencies, format = 'pretty') {
         const data = {
             key: assetPath,
@@ -241,9 +202,6 @@ export class ItemDependencies {
         return JSON.stringify(data, null, 2);
     }
 
-    /**
-     * Check if dependencies are loaded
-     */
     hasDependencies(dependencyElement) {
         if (!dependencyElement) return false;
         
@@ -251,9 +209,6 @@ export class ItemDependencies {
         return dependencyItems.length > 0;
     }
 
-    /**
-     * Clean up resources
-     */
     destroy() {
         // Clean up any resources if needed
     }

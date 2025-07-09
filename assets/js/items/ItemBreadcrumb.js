@@ -1,8 +1,4 @@
-/**
- * ItemBreadcrumb - Handles breadcrumb navigation for items
- * Manages breadcrumb display and navigation between categories
- */
-
+// ItemBreadcrumb - Handles breadcrumb navigation for items
 import { navigationManager } from "../core/navigationManager.js";
 
 export class ItemBreadcrumb {
@@ -11,16 +7,11 @@ export class ItemBreadcrumb {
         this.elements = context.elements;
     }
 
-    /**
-     * Initialize the breadcrumb manager
-     */
     init() {
         // Setup any initial configurations
     }
 
-    /**
-     * Update breadcrumb display
-     */
+    // Update breadcrumb display
     updateBreadcrumb(itemTypes, itemName) {
         if (!this.elements.breadcrumb || !itemTypes) return;
 
@@ -39,9 +30,6 @@ export class ItemBreadcrumb {
         this.setupBreadcrumbHandlers();
     }
 
-    /**
-     * Generate breadcrumb HTML
-     */
     generateBreadcrumbHTML(types, validCategories, typesEnum, itemName) {
         const breadcrumbParts = types.map((type, index) => {
             const normalizedType = type.trim();
@@ -69,9 +57,6 @@ export class ItemBreadcrumb {
             `<span class="breadcrumb-current">${itemName}</span>`;
     }
 
-    /**
-     * Create browse link for breadcrumb
-     */
     createBrowseLink(normalizedType, typesEnum, displayText) {
         const enumKey = Object.entries(typesEnum).find(
             ([key, value]) => value === normalizedType
@@ -80,9 +65,6 @@ export class ItemBreadcrumb {
         return `<a href="javascript:void(0);" class="breadcrumb-link" data-view="browse" data-category="${enumKey}">${displayText}</a>`;
     }
 
-    /**
-     * Create category link for breadcrumb
-     */
     createCategoryLink(normalizedType, typesEnum, displayText) {
         const enumKey = Object.entries(typesEnum).find(
             ([key, value]) => value === normalizedType
@@ -91,9 +73,6 @@ export class ItemBreadcrumb {
         return `<a href="javascript:void(0);" class="breadcrumb-link" data-category="${enumKey}">${displayText}</a>`;
     }
 
-    /**
-     * Setup breadcrumb link click handlers
-     */
     setupBreadcrumbHandlers() {
         if (!this.elements.breadcrumb) return;
 
@@ -105,9 +84,6 @@ export class ItemBreadcrumb {
         });
     }
 
-    /**
-     * Handle breadcrumb link click
-     */
     handleBreadcrumbClick(link) {
         // Navigate to browse view
         if (this.elements.browseNavLink) {
@@ -142,44 +118,29 @@ export class ItemBreadcrumb {
         }
     }
 
-    /**
-     * Hide breadcrumb
-     */
     hideBreadcrumb() {
         if (this.elements.breadcrumb) {
             this.elements.breadcrumb.style.display = "none";
         }
     }
 
-    /**
-     * Show breadcrumb
-     */
     showBreadcrumb() {
         if (this.elements.breadcrumb) {
             this.elements.breadcrumb.style.display = "block";
         }
     }
 
-    /**
-     * Clear breadcrumb content
-     */
     clearBreadcrumb() {
         if (this.elements.breadcrumb) {
             this.elements.breadcrumb.innerHTML = "";
         }
     }
 
-    /**
-     * Check if breadcrumb is visible
-     */
     isBreadcrumbVisible() {
         return this.elements.breadcrumb && 
                this.elements.breadcrumb.style.display !== "none";
     }
 
-    /**
-     * Get breadcrumb path as array
-     */
     getBreadcrumbPath() {
         if (!this.elements.breadcrumb) return [];
 
@@ -187,9 +148,6 @@ export class ItemBreadcrumb {
         return Array.from(textElements).map(el => el.textContent.trim());
     }
 
-    /**
-     * Generate breadcrumb from category path
-     */
     generateFromCategoryPath(categoryPath, itemName) {
         if (!Array.isArray(categoryPath)) return;
 
@@ -197,9 +155,6 @@ export class ItemBreadcrumb {
         this.updateBreadcrumb(itemTypes, itemName);
     }
 
-    /**
-     * Update breadcrumb with custom path
-     */
     updateWithCustomPath(pathSegments, currentItem) {
         if (!this.elements.breadcrumb || !Array.isArray(pathSegments)) return;
 
@@ -220,9 +175,6 @@ export class ItemBreadcrumb {
         this.setupBreadcrumbHandlers();
     }
 
-    /**
-     * Clean up resources
-     */
     destroy() {
         // Clean up any resources if needed
     }

@@ -1,8 +1,4 @@
-/**
- * ItemDisplayer - Handles item details display in handbook view
- * Manages item information rendering, slots, dependencies, and related data
- */
-
+// ItemDisplayer - Handles item details display in handbook view
 import { fetchData } from "../core/cache.js";
 import { navigationManager } from "../core/navigationManager.js";
 import {
@@ -22,16 +18,11 @@ export class ItemDisplayer {
         this.elements = context.elements;
     }
 
-    /**
-     * Initialize the displayer
-     */
     init() {
         // Setup any initial configurations
     }
 
-    /**
-     * Display item by ID
-     */
+    // Display item by ID
     async displayItemById(itemId) {
         let data = this.context.gameDataCache();
         if (!data) {
@@ -45,9 +36,7 @@ export class ItemDisplayer {
         }
     }
 
-    /**
-     * Create item element from item data
-     */
+    // Create item element from item data
     createItemElement(item) {
         const listItem = document.createElement("li");
         listItem.className = "list-group-item";
@@ -78,9 +67,7 @@ export class ItemDisplayer {
         return listItem;
     }
 
-    /**
-     * Display item details in handbook
-     */
+    // Display item details in handbook
     async displayItemDetails(itemElement, updateHistory = true) {
         const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
 
@@ -120,9 +107,7 @@ export class ItemDisplayer {
         this.context.manager.modules.searcher.hideRecentSearches();
     }
 
-    /**
-     * Generate HTML for tasks that use this item
-     */
+    // Generate HTML for tasks that use this item
     async generateUsedInTasksHTML(usedInTasks, itemId) {
         if (!usedInTasks) return "";
 
@@ -162,9 +147,7 @@ export class ItemDisplayer {
         return "";
     }
 
-    /**
-     * Update handbook content display
-     */
+    // Update handbook content display
     async updateHandbookContent(itemElement, usedInTasksHTML) {
         if (!this.elements.handbookContent) return;
 
@@ -229,9 +212,7 @@ export class ItemDisplayer {
         }
     }
 
-    /**
-     * Generate various item sections (slots, dependencies, etc.)
-     */
+    // Generate various item sections (slots, dependencies, etc.)
     async generateItemSections(itemData, itemId) {
         let fleaBanHTML = "";
         let slotsHTML = "";
@@ -282,9 +263,7 @@ export class ItemDisplayer {
         };
     }
 
-    /**
-     * Generate slots HTML
-     */
+    // Generate slots HTML
     async generateSlotsHTML(properties, itemsData) {
         if (!properties?.Slots) return "";
 
@@ -322,9 +301,7 @@ export class ItemDisplayer {
         }).join("");
     }
 
-    /**
-     * Generate dependencies HTML
-     */
+    // Generate dependencies HTML
     async generateDependenciesHTML(properties) {
         if (!properties?.Prefab?.path) return "";
 
@@ -369,9 +346,7 @@ export class ItemDisplayer {
         return "";
     }
 
-    /**
-     * Generate allowed ammo HTML
-     */
+    // Generate allowed ammo HTML
     generateAllowedAmmoHTML(itemData) {
         if (!itemData.properties?.allowedAmmo?.length) return "";
 
@@ -399,9 +374,7 @@ export class ItemDisplayer {
         return "";
     }
 
-    /**
-     * Generate categories HTML
-     */
+    // Generate categories HTML
     generateCategoriesHTML(categories) {
         return categories
             .map((category) => 
@@ -410,9 +383,7 @@ export class ItemDisplayer {
             .join("");
     }
 
-    /**
-     * Generate barters HTML
-     */
+    // Generate barters HTML
     generateBartersHTML(buyFor) {
         return buyFor
             .map((barter) =>
@@ -423,18 +394,14 @@ export class ItemDisplayer {
             .join("");
     }
 
-    /**
-     * Generate image link
-     */
+    // Generate image link
     generateImageLink(image512pxLink) {
         return image512pxLink
             ? image512pxLink.replace(/^.*\/data\/images\//, "data/images/")
             : "";
     }
 
-    /**
-     * Get handbook and preset data
-     */
+    // Get handbook and preset data
     async getHandbookData(itemId, categories) {
         try {
             const handbookData = await fetchData(HANDBOOK_URL, { method: "GET" });
@@ -472,9 +439,7 @@ export class ItemDisplayer {
         }
     }
 
-    /**
-     * Render the complete handbook content
-     */
+    // Render the complete handbook content
     renderHandbookContent(data) {
         const {
             itemElement, itemData, properties, fleaBanHTML, slotsHTML, dependenciesHTML,
@@ -542,9 +507,7 @@ export class ItemDisplayer {
         }
     }
 
-    /**
-     * Setup interactive elements in the handbook
-     */
+    // Setup interactive elements in the handbook
     setupInteractiveElements() {
         // Setup slot item click handlers
         document.querySelectorAll(".slot-item-thumbnail").forEach((slotItem) => {
@@ -569,9 +532,7 @@ export class ItemDisplayer {
         });
     }
 
-    /**
-     * Clean up resources
-     */
+    // Clean up resources
     destroy() {
         // Clean up any resources if needed
     }

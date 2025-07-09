@@ -1,8 +1,4 @@
-/**
- * ItemManager - Main orchestrator for the item system
- * Coordinates all item-related functionality and manages the overall state
- */
-
+// ItemManager - Main orchestrator for the item system
 import { navigationManager } from "../core/navigationManager.js";
 import { ItemSearcher } from "./ItemSearcher.js";
 import { ItemDisplayer } from "./ItemDisplayer.js";
@@ -54,9 +50,7 @@ export class ItemManager {
         this.handleDependencyCopy = this.handleDependencyCopy.bind(this);
     }
 
-    /**
-     * Initialize the ItemManager and all sub-modules
-     */
+    // Initialize the ItemManager and all sub-modules
     async init() {
         if (this.isInitialized) return;
 
@@ -87,9 +81,7 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Cache frequently used DOM elements
-     */
+    // Cache frequently used DOM elements
     cacheDOMElements() {
         this.elements = {
             // Search elements
@@ -131,9 +123,7 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Initialize data caches and preload game data
-     */
+    // Initialize data caches and preload game data
     async initializeData() {
         // Hide spinner initially
         if (this.elements.spinner) {
@@ -157,9 +147,6 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Preload and cache game data
-     */
     async preloadGameData() {
         if (!this.gameDataCache) {
             try {
@@ -174,9 +161,6 @@ export class ItemManager {
         return this.gameDataCache;
     }
 
-    /**
-     * Initialize all sub-modules
-     */
     initializeModules() {
         // Initialize sub-modules with shared context
         const sharedContext = {
@@ -206,9 +190,6 @@ export class ItemManager {
         });
     }
 
-    /**
-     * Setup global event listeners
-     */
     setupGlobalEventListeners() {
         // Dependency copy button handler
         document.body.addEventListener("click", this.handleDependencyCopy);
@@ -237,9 +218,6 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Handle dependency copy button clicks
-     */
     handleDependencyCopy(e) {
         const copyButton = e.target.closest(".copy-deps");
         if (copyButton) {
@@ -247,9 +225,6 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Handle search input changes
-     */
     handleSearchInput(query) {
         if (query.length > 2) {
             this.modules.searcher.performSearch(query);
@@ -265,9 +240,6 @@ export class ItemManager {
         checkJsonEditorSimple();
     }
 
-    /**
-     * Setup navigation handlers
-     */
     setupNavigation() {
         navigationManager.init();
 
@@ -312,9 +284,7 @@ export class ItemManager {
         });
     }
 
-    /**
-     * Handle navigation state changes
-     */
+    // Handle navigation state changes
     async handleNavigationStateChange(state, previousState) {
         const { view, item, category, search, page } = state;
 
@@ -376,9 +346,6 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Show search view
-     */
     showSearchView() {
         this.toggleContainers(null);
         this.modules.searcher.showRecentSearches();
@@ -396,9 +363,6 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Toggle container visibility
-     */
     toggleContainers(activeContainer) {
         const containers = [
             this.elements.templateContainer,
@@ -418,9 +382,6 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Set active navigation link
-     */
     setActiveNavLink(activeLink) {
         const links = [
             { element: this.elements.templateNavLink, name: "template" },
@@ -443,9 +404,6 @@ export class ItemManager {
         });
     }
 
-    /**
-     * Handle initial navigation on page load
-     */
     handleInitialNavigation() {
         const urlParams = new URLSearchParams(window.location.search);
         if (
@@ -464,9 +422,6 @@ export class ItemManager {
         }
     }
 
-    /**
-     * Get shared context for modules
-     */
     getSharedContext() {
         return {
             elements: this.elements,
@@ -481,16 +436,10 @@ export class ItemManager {
         };
     }
 
-    /**
-     * Get a specific module
-     */
     getModule(name) {
         return this.modules[name];
     }
 
-    /**
-     * Clean up resources
-     */
     destroy() {
         // Clean up modules
         Object.values(this.modules).forEach(module => {
@@ -519,19 +468,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         await itemManager.init();
     } catch (error) {
-        console.error('❌ Failed to initialize Item Browser System:', error);
-        
-        // Fallback error display
-        const errorContainer = document.getElementById('handbookContent') || document.body;
-        if (errorContainer) {
-            errorContainer.innerHTML = `
-                <div class="alert alert-danger" role="alert">
-                    <h4 class="alert-heading">Initialization Error</h4>
-                    <p>Failed to load the item browser system. Please refresh the page or contact support if the problem persists.</p>
-                    <hr>
-                    <p class="mb-0">Error: ${error.message}</p>
-                </div>
-            `;
-        }
+        console.error('Failed to initialize Item Browser System:', error);
     }
 });

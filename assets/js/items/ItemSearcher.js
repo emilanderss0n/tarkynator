@@ -1,8 +1,4 @@
-/**
- * ItemSearcher - Handles item search functionality
- * Manages search input, results display, and recent searches
- */
-
+// ItemSearcher - Handles item search functionality
 import { searchOptimizer } from "../core/searchOptimizer.js";
 import { navigationManager } from "../core/navigationManager.js";
 
@@ -12,16 +8,11 @@ export class ItemSearcher {
         this.elements = context.elements;
     }
 
-    /**
-     * Initialize the searcher
-     */
     init() {
         this.setupRecentSearches();
     }
 
-    /**
-     * Perform item search
-     */
+    // Perform item search
     async performSearch(query) {
         const isId = /^[0-9a-fA-F]{24}$/.test(query);
         
@@ -57,9 +48,7 @@ export class ItemSearcher {
         }
     }
 
-    /**
-     * Perform fast item search using search index
-     */
+    // Perform fast item search using search index
     fastItemSearch(query) {
         const itemsArrayCache = this.context.itemsArrayCache();
         const searchIndex = this.context.searchIndex();
@@ -68,9 +57,7 @@ export class ItemSearcher {
         return searchOptimizer.fastSearch(query, searchIndex, itemsArrayCache);
     }
 
-    /**
-     * Update search results display
-     */
+    // Update search results display
     updateSearchResults(items) {
         if (!this.elements.searchResults) return;
 
@@ -87,9 +74,6 @@ export class ItemSearcher {
         }
     }
 
-    /**
-     * Create a search result item
-     */
     createSearchResultItem(item, index) {
         const listItem = document.createElement("li");
         listItem.className = "list-group-item";
@@ -126,17 +110,11 @@ export class ItemSearcher {
         }, 100 * index);
     }
 
-    /**
-     * Display no results message
-     */
     displayNoResults(message) {
         if (!this.elements.searchResults) return;
         this.elements.searchResults.innerHTML = `<li class="list-group-item">${message}</li>`;
     }
 
-    /**
-     * Clear search results
-     */
     clearResults() {
         if (this.elements.searchResults) {
             this.elements.searchResults.innerHTML = "";
@@ -146,9 +124,6 @@ export class ItemSearcher {
         }
     }
 
-    /**
-     * Setup recent searches functionality
-     */
     setupRecentSearches() {
         this.updateRecentSearches();
 
@@ -167,9 +142,6 @@ export class ItemSearcher {
         }
     }
 
-    /**
-     * Store a recent search
-     */
     storeRecentSearch(itemElement) {
         const recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
         
@@ -201,9 +173,6 @@ export class ItemSearcher {
         this.updateRecentSearches();
     }
 
-    /**
-     * Update recent searches display
-     */
     updateRecentSearches() {
         if (!this.elements.recentSearchesElement) return;
 
@@ -239,31 +208,19 @@ export class ItemSearcher {
         this.elements.recentSearchesElement.appendChild(fragment);
     }
 
-    /**
-     * Toggle recent searches visibility
-     */
     toggleRecentSearchesVisibility(isVisible) {
         if (!this.elements.recentSearchesElement) return;
         this.elements.recentSearchesElement.style.display = isVisible ? "grid" : "none";
     }
 
-    /**
-     * Show recent searches
-     */
     showRecentSearches() {
         this.toggleRecentSearchesVisibility(true);
     }
 
-    /**
-     * Hide recent searches
-     */
     hideRecentSearches() {
         this.toggleRecentSearchesVisibility(false);
     }
 
-    /**
-     * Clean up resources
-     */
     destroy() {
         // Clean up any resources if needed
     }

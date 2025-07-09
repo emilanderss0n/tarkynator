@@ -1,8 +1,4 @@
-/**
- * ItemBrowser - Handles item browsing and category functionality
- * Manages category display, pagination, and filtering
- */
-
+// ItemBrowser - Handles item browsing and category functionality
 import { searchOptimizer } from "../core/searchOptimizer.js";
 import { navigationManager } from "../core/navigationManager.js";
 import { checkJsonEditorSimple } from "../components/checkJsonEditor.js";
@@ -118,17 +114,11 @@ export class ItemBrowser {
         }, 150);
     }
 
-    /**
-     * Initialize the browser
-     */
     init() {
         this.setupBrowseCategories();
         this.setupInitialCategory();
     }
 
-    /**
-     * Setup browse categories in the sidebar
-     */
     setupBrowseCategories() {
         if (!this.elements.browseSidebar) return;
 
@@ -141,9 +131,6 @@ export class ItemBrowser {
         });
     }
 
-    /**
-     * Setup initial category selection
-     */
     setupInitialCategory() {
         const firstCategory = document.querySelector(".browse-category");
         if (firstCategory) {
@@ -153,9 +140,6 @@ export class ItemBrowser {
         }
     }
 
-    /**
-     * Load items for a specific category
-     */
     async loadCategory(itemType, page = 1) {
         if (!this.elements.browseItems) return;
 
@@ -212,9 +196,6 @@ export class ItemBrowser {
         }
     }
 
-    /**
-     * Render browse items with pagination
-     */
     renderBrowseItems() {
         if (this.isRendering || !this.elements.browseItems) return;
         this.isRendering = true;
@@ -286,9 +267,6 @@ export class ItemBrowser {
         this.isRendering = false;
     }
 
-    /**
-     * Render grouped items (for certain categories)
-     */
     renderGroupedItems(paginatedItems, fragment) {
         const groupedItems = paginatedItems.reduce((groups, item) => {
             const firstWord = item.name.split(" ")[0];
@@ -312,9 +290,6 @@ export class ItemBrowser {
         });
     }
 
-    /**
-     * Render regular items (ungrouped)
-     */
     renderRegularItems(paginatedItems, fragment) {
         paginatedItems.forEach((item) => {
             const itemElement = this.createItemElement(item);
@@ -322,9 +297,6 @@ export class ItemBrowser {
         });
     }
 
-    /**
-     * Create item element for browse view
-     */
     createItemElement(item) {
         const itemIconLink = item.iconLink.replace(/^.*\/data\/icons\//, "data/icons/");
         const itemElement = document.createElement("a");
@@ -342,18 +314,12 @@ export class ItemBrowser {
         return itemElement;
     }
 
-    /**
-     * Paginate items
-     */
     paginate(items, currentPage, itemsPerPage) {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         return items.slice(startIndex, endIndex);
     }
 
-    /**
-     * Render pagination controls
-     */
     renderPaginationControls(totalItems, perPage) {
         const totalPages = Math.ceil(totalItems / perPage);
         const isFiltered = this.filteredItemsData.length > 0;
@@ -382,9 +348,6 @@ export class ItemBrowser {
         return paginationHTML;
     }
 
-    /**
-     * Attach event listeners to browse elements
-     */
     attachEventListeners() {
         // Item click handlers
         document.querySelectorAll("#browseItems .browse-item").forEach((itemElement) => {
@@ -426,9 +389,6 @@ export class ItemBrowser {
         });
     }
 
-    /**
-     * Handle browse container activation
-     */
     handleBrowseContainerActivation() {
         const activeCategory = this.context.manager.lastActiveCategory || "Ammo-packs";
         const categoryElement = document.querySelector(
@@ -445,16 +405,10 @@ export class ItemBrowser {
         }
     }
 
-    /**
-     * Get types enum for external use
-     */
     getTypesEnum() {
         return this.typesEnum;
     }
 
-    /**
-     * Clean up resources
-     */
     destroy() {
         // Clean up any resources if needed
     }

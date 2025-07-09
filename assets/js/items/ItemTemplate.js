@@ -1,8 +1,4 @@
-/**
- * ItemTemplate - Handles JSON template loading and display
- * Manages the template editor and template-related functionality
- */
-
+// ItemTemplate - Handles JSON template loading and display
 import { fetchData } from "../core/cache.js";
 import { ITEMS_URL } from "../core/localData.js";
 
@@ -12,16 +8,11 @@ export class ItemTemplate {
         this.elements = context.elements;
     }
 
-    /**
-     * Initialize the template manager
-     */
     init() {
         // Setup any initial configurations
     }
 
-    /**
-     * Load and display item template
-     */
+    // Load and display item template
     async loadTemplate(itemId) {
         if (!itemId) return;
 
@@ -67,36 +58,25 @@ export class ItemTemplate {
         }
     }
 
-    /**
-     * Display template in editor
-     */
+    // Display template in editor
     displayTemplate(itemTemplate) {
         if (typeof editor !== "undefined" && editor) {
             editor.setValue(JSON.stringify(itemTemplate, null, 2));
         }
     }
 
-    /**
-     * Display message when no template found
-     */
     displayNoTemplate() {
         if (typeof editor !== "undefined" && editor) {
             editor.setValue("No JSON template found for this item.");
         }
     }
 
-    /**
-     * Display message for invalid data format
-     */
     displayInvalidData() {
         if (typeof editor !== "undefined" && editor) {
             editor.setValue("Invalid data format.");
         }
     }
 
-    /**
-     * Display message when template is unavailable
-     */
     displayUnavailableTemplate() {
         if (typeof editor !== "undefined" && editor) {
             editor.setValue(
@@ -105,27 +85,18 @@ export class ItemTemplate {
         }
     }
 
-    /**
-     * Enable template navigation link
-     */
     enableTemplateNavLink() {
         if (this.elements.templateNavLink) {
             this.elements.templateNavLink.classList.remove("disabled");
         }
     }
 
-    /**
-     * Disable template navigation link
-     */
     disableTemplateNavLink() {
         if (this.elements.templateNavLink) {
             this.elements.templateNavLink.classList.add("disabled");
         }
     }
 
-    /**
-     * Check if template is available for item
-     */
     async isTemplateAvailable(itemId) {
         try {
             const data = await fetchData(ITEMS_URL, { method: "GET" });
@@ -135,9 +106,6 @@ export class ItemTemplate {
         }
     }
 
-    /**
-     * Get template data for item
-     */
     async getTemplateData(itemId) {
         try {
             const data = await fetchData(ITEMS_URL, { method: "GET" });
@@ -148,9 +116,6 @@ export class ItemTemplate {
         }
     }
 
-    /**
-     * Export template as JSON string
-     */
     exportTemplate(itemTemplate, pretty = true) {
         if (pretty) {
             return JSON.stringify(itemTemplate, null, 2);
@@ -158,9 +123,6 @@ export class ItemTemplate {
         return JSON.stringify(itemTemplate);
     }
 
-    /**
-     * Validate template data
-     */
     validateTemplate(itemTemplate) {
         if (!itemTemplate || typeof itemTemplate !== 'object') {
             return { valid: false, error: 'Template is not a valid object' };
@@ -180,9 +142,6 @@ export class ItemTemplate {
         return { valid: true };
     }
 
-    /**
-     * Get template metadata
-     */
     getTemplateMetadata(itemTemplate) {
         if (!itemTemplate) return null;
 
@@ -196,9 +155,6 @@ export class ItemTemplate {
         };
     }
 
-    /**
-     * Search within template properties
-     */
     searchInTemplate(itemTemplate, searchTerm) {
         if (!itemTemplate || !searchTerm) return [];
 
@@ -239,9 +195,6 @@ export class ItemTemplate {
         return results;
     }
 
-    /**
-     * Refresh template editor
-     */
     refreshEditor() {
         if (typeof editor !== "undefined" && editor) {
             setTimeout(() => {
@@ -250,9 +203,6 @@ export class ItemTemplate {
         }
     }
 
-    /**
-     * Clean up resources
-     */
     destroy() {
         // Clean up any resources if needed
     }
