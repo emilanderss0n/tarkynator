@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <details class="quest-tasks">
                     <summary class="btn">Show Objectives</summary>
-                    <ul class="objectives">
+                    <ul class="objectives inner-list">
                         ${quest.objectives
                             .map(
                                 (obj) =>

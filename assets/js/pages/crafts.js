@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const craftsCategoryToggles = document.querySelectorAll('#craftsContainer .btn');
     const craftsContent = document.getElementById('craftsContent');
 
-    const getActiveCraftNavLink = () => {
+    const getActiveStationId = () => {
         const activeCraftCategory = document.querySelector('#craftsContainer .btn-group .btn.active');
-        return activeCraftCategory ? activeCraftCategory.textContent.trim() : null;
+        return activeCraftCategory ? activeCraftCategory.getAttribute('data-id') : null;
     };
 
     const fetchCraftsData = () => {
@@ -34,7 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     requiredItems {
                         item {
+                            id
                             name
+                            iconLink
                         }
                         count
                     }
@@ -59,8 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Store the crafts data in localStorage
                     localStorage.setItem('craftsData', JSON.stringify(data.data.crafts));
 
-                    const activeStation = getActiveCraftNavLink();
-                    const filteredCrafts = data.data.crafts.filter(craft => craft.station.name === activeStation);
+                    const activeStationId = getActiveStationId();
+                    const filteredCrafts = data.data.crafts.filter(craft => craft.station.id === activeStationId);
                     filteredCrafts.sort((a, b) => a.level - b.level);
                     const craftsHTML = filteredCrafts.map(craft => `
                         <div class="craft-item card" data-item-station="${craft.station.name}">
@@ -78,9 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${Array.isArray(craft.requiredItems) && craft.requiredItems.length > 0 ? `
                                 <details class="required-items">
                                     <summary class="toggle-req-items btn">Required Items</summary>
-                                    <ul class="req-items-list">
+                                    <ul class="inner-list">
                                     ${craft.requiredItems.map(item => `
-                                        <li class="req-item"><div class="req-item-containter"><span class="global-id title">${item.item.name}</span> (${item.count})</div></li>
+                                        <li class="req-item"><div class="req-item-containter"><span class="count">${item.count}x</span><img src="${item.item.iconLink}" alt="${item.item.name}" /><span class="global-id title">${item.item.name}</span></div></li>
                                     `).join('')}
                                     </ul>
                                 </details>

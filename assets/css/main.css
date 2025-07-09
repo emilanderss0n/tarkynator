@@ -489,22 +489,30 @@ ol li {
     color: var(--bright-color);
     padding: 5px;
     border-radius: var(--br-sm);
+}
 
-    @media screen and (max-width: 1000px) {
-    --grid-max-col-count: attr(grid-max-col-count type(<number>), 4);
-    --grid-min-col-size: 200px;
-    --grid-gap: 0.4rem;
-    --grid-gap-vertical: 0.4rem;
+@container header-nav (max-width: 1000px) {
+    .btn-group {
+        --grid-max-col-count: attr(grid-max-col-count type(<number>), 4);
+        --grid-min-col-size: 200px;
+        --grid-gap: 0.4rem;
+        --grid-gap-vertical: 0.4rem;
 
-    --grid-col-size-calc: calc((100% - var(--grid-gap) * var(--grid-max-col-count)) / var(--grid-max-col-count));
-    --grid-col-min-size-calc: min(100%, max(var(--grid-min-col-size), var(--grid-col-size-calc)));
+        --grid-col-size-calc: calc((100% - var(--grid-gap) * var(--grid-max-col-count)) / var(--grid-max-col-count));
+        --grid-col-min-size-calc: min(100%, max(var(--grid-min-col-size), var(--grid-col-size-calc)));
 
-    display: grid;
-    grid-column-gap: var(--grid-gap);
-    grid-row-gap: var(--grid-gap-vertical);
-    grid-template-columns: repeat(auto-fit,
-            minmax(var(--grid-col-min-size-calc), 1fr));
-    padding: 0.5rem;
+        display: grid;
+        grid-column-gap: var(--grid-gap);
+        grid-row-gap: var(--grid-gap-vertical);
+        grid-template-columns: repeat(auto-fit,
+                minmax(var(--grid-col-min-size-calc), 1fr));
+        padding: 0.5rem;
+
+        & .btn {
+            flex-direction: column !important;
+            font-size: 1rem !important;
+            border-radius: var(--br-sm) !important;
+        }
     }
 }
 
@@ -1193,6 +1201,9 @@ span.global-id.copied::after {
 }
 
 .head-nav {
+    container-name: header-nav;
+    container-type: inline-size;
+
     padding: 1.5rem;
     background: var(--toolbar-bg);
 }
@@ -1769,6 +1780,19 @@ span.global-id.copied::after {
     animation-delay: 250ms;
 }
 
+#craftsContainer .head-nav .btn {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+#craftsContainer .head-nav .btn img {
+    width: 28px;
+    height: 28px;
+}
+
 #craftsContainer .card-footer {
     display: flex;
     justify-content: space-between;
@@ -1784,6 +1808,18 @@ span.global-id.copied::after {
 
 #craftsContainer .quest {
     margin: 0;
+}
+
+ul.inner-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    margin: 0;
+    list-style: none;
+    font-weight: bold;
+    background-color: var(--background-color);
+    border-radius: var(--br-med);
 }
 
 #craftsContainer .required-items {
@@ -1833,7 +1869,16 @@ span.global-id.copied::after {
     & .req-item-containter {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.7rem;
+
+        & > span:first-child {
+            min-width: 40px;
+        }
+
+        & img {
+            width: 32px;
+            height: 32px;
+        }
     }
 }
 
@@ -1841,23 +1886,23 @@ span.global-id.copied::after {
     background-color: var(--list-item);
     border-radius: 0.7rem;
     padding: 0;
-}
 
-#craftsContainer .craft-item .main-title {
-    display: flex;
-    gap: 1.3rem;
-    align-items: flex-start;
-    margin-bottom: 1.2rem;
-    padding: 1rem;
-}
+    & .main-title {
+        display: flex;
+        gap: 1.3rem;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+        padding: 1rem;
+    }
 
-#craftsContainer .craft-item h4 {
-    margin-bottom: 0.3rem;
-    font-size: 1.2rem;
-}
+    & .main-title h4 {
+        margin-bottom: 0.3rem;
+        font-size: 1.2rem;
+    }
 
-#craftsContainer .craft-item .item-title p {
-    margin: 0;
+    & .main-title p {
+        margin: 0;
+    }
 }
 
 #commonIdContainer .body {
@@ -2032,6 +2077,13 @@ span.global-id.copied::after {
     gap: 2rem;
 }
 
+@media screen and (max-width: 760px) {
+    .search-filter-container:has(.search-container-quests) {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
 .json-quests {
     display: none;
     padding: 2rem 1.5rem;
@@ -2161,15 +2213,11 @@ span.global-id.copied::after {
     }
 }
 
-.quest-item .objectives {
-    list-style: none;
-    padding: 0;
-}
-
 .quest-item .objectives li {
     position: relative;
     display: flex;
     align-items: center;
+    margin: 0;
 }
 
 .quest-item .objectives li:before {
