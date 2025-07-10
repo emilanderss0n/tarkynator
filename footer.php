@@ -3,14 +3,14 @@
 
     <section id="welcomeMessage">
         <div class="body container-fluid">
-            <p>Search through Escape From Tarkov databases with Tarkov API. This tool is designed to help you
+            <p class="scroll-ani scroll-80">Search through Escape From Tarkov databases with Tarkov API. This tool is designed to help you
                 find items and their information in the game. You can search for items by their name or by their
                 ID. The search results will show you the item's name, ID, and other information. This tool is
                 perfect for modders, developers, and players who want to learn more about the game's items and
                 their properties.</p>
-            This website takes advantage of Local storage and IndexedDB. If you want to clear the data before expiry (2 days), 
+            <p class="scroll-ani scroll-80">This website takes advantage of Local storage and IndexedDB. If you want to clear the data before expiry (2 days), 
             you can do it in your browser settings. When a new SPT version is released and the website is not yet updated, 
-            you can clear Local storage and IndexedDB to get the latest data.
+            you can clear Local storage and IndexedDB to get the latest data.</p>
         </div>
     </section>
 

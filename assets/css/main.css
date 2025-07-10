@@ -497,8 +497,12 @@ ol li {
     animation-duration: 1ms;
 }
 
-.scroll-ani.start-70 {
+.scroll-ani.scroll-70 {
     animation-timeline: view(block 70% 0%);
+}
+
+.scroll-ani.scroll-80 {
+    animation-timeline: view(block 80% 0%);
 }
 
 @keyframes scrollAni {
