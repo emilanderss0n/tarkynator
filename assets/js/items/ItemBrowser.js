@@ -279,7 +279,7 @@ export class ItemBrowser {
 
         Object.keys(groupedItems).forEach((group) => {
             const groupTitle = document.createElement("div");
-            groupTitle.className = "break group-title";
+            groupTitle.className = "break group-title scroll-ani";
             groupTitle.innerHTML = `<h4>${group}</h4>`;
             fragment.appendChild(groupTitle);
 
@@ -301,7 +301,7 @@ export class ItemBrowser {
         const itemIconLink = item.iconLink.replace(/^.*\/data\/icons\//, "data/icons/");
         const itemElement = document.createElement("a");
         itemElement.href = "javascript:void(0);";
-        itemElement.className = "browse-item card-bfx";
+        itemElement.className = "browse-item card-bfx scroll-ani";
         itemElement.dataset.itemId = item.id;
         itemElement.innerHTML = `
             <div class="card-body">

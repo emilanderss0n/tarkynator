@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                         commonIdContent.innerHTML = `
-                            <div class="bosses card">
+                            <div class="bosses card scroll-ani scroll-70">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
                                         <div class="page-top-title">
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="bosses-pagination"></div>
                                 </div>
                             </div>
-                            <div class="hideout-stations card">
+                            <div class="hideout-stations card scroll-ani scroll-70">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
                                         <div class="page-top-title">
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="stations-pagination"></div>
                                 </div>
                             </div>
-                            <div class="traders card">
+                            <div class="traders card scroll-ani scroll-70">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
                                         <div class="page-top-title">
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="traders-pagination"></div>
                                 </div>
                             </div>
-                            <div class="handbook-categories card">
+                            <div class="handbook-categories card scroll-ani scroll-70">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
                                         <div class="page-top-title">
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="handbook-pagination"></div>
                                 </div>
                             </div>
-                            <div class="loot-containers card">
+                            <div class="loot-containers card scroll-ani scroll-70">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
                                         <div class="page-top-title">
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="containers-pagination"></div>
                                 </div>
                             </div>
-                            <div class="maps card">
+                            <div class="maps card scroll-ani scroll-70">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
                                         <div class="page-top-title">

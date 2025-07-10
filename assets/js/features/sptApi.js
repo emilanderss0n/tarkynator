@@ -32,7 +32,7 @@ if (sptReleases) {
 
             // Create HTML for the releases
             const releasesHTML = releases.map(release => `
-                <a href="${release.link}" target="_blank" class="card-bfx ${release.color_class}">
+                <a href="${release.link}" target="_blank" class="card-bfx scroll-ani scroll-70 ${release.color_class}">
                     <div class="card-body spt">
                         <h5 class="card-title"><span class="round-badge ${release.color_class}"></span> ${release.version}</h5>
                         <p class="card-text">Mods: ${release.mod_count}</p>

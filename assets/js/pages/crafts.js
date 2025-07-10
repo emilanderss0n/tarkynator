@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const filteredCrafts = data.data.crafts.filter(craft => craft.station.id === activeStationId);
                     filteredCrafts.sort((a, b) => a.level - b.level);
                     const craftsHTML = filteredCrafts.map(craft => `
-                        <div class="craft-item card" data-item-station="${craft.station.name}">
+                        <div class="craft-item scroll-ani card" data-item-station="${craft.station.name}">
                             <div class="main-title">
                                 ${craft.rewardItems.map(reward => `
                                     <img src="${reward.item.iconLink}" alt="${reward.item.name}" />

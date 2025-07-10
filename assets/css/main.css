@@ -361,6 +361,10 @@ h4 {
 
 .grid-gap-lg {
     --grid-gap: 2rem;
+
+    @media screen and (max-width: 1000px) {
+        --grid-gap: 1rem;
+    }
 }
 
 .grid-gap-xl {
@@ -385,6 +389,10 @@ h4 {
 
 .grid-gap-row-lg {
     --grid-gap-vertical: 2rem;
+
+    @media screen and (max-width: 1000px) {
+        --grid-gap-vertical: 1rem;
+    }
 }
 
 .grid-gap-row-xl {
@@ -480,6 +488,63 @@ h4 {
 ul li,
 ol li {
     margin-bottom: 0.4rem;
+}
+
+.scroll-ani {
+    animation-name: scrollAni;
+    animation-fill-mode: both;
+    animation-timeline: view(block 50% 0%);
+    animation-duration: 1ms;
+}
+
+.scroll-ani.start-70 {
+    animation-timeline: view(block 70% 0%);
+}
+
+@keyframes scrollAni {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+[popover] {
+    left: 0 !important;
+    top: 0 !important;
+    margin: 3rem auto;
+    width: 80%;
+    border: 1px solid var(--border-color-weak);
+    border-radius: var(--br-lg);
+    background-color: var(--dark-bg);
+    padding: 0;
+
+    & .popover-header {
+        display: flex;
+        justify-content: space-between;
+        background-color: var(--content-bg);
+        color: var(--bright-color);
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid var(--border-color-weak);
+        border-radius: var(--br-lg) var(--br-lg) 0 0;
+        align-items: center;
+    }
+
+    & .popover-title {
+        margin: 0;
+    }
+
+    & .popover-close {
+        font-size: 1.6rem;
+        cursor: pointer;
+    }
+
+    ::backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 }
 
 .btn-group {
@@ -971,6 +1036,7 @@ span.global-id.copied::after {
     position: relative;
     background-color: var(--header-bg);
     box-shadow: var(--glow-box-shadow);
+    border-bottom: 1px solid var(--border-color-weak);
     padding: 0;
     white-space: nowrap;
 
@@ -980,6 +1046,7 @@ span.global-id.copied::after {
 
     @media screen and (max-width: 1000px) {
         zoom: 1;
+        padding: 0.5rem 0;
     }
 }
 
@@ -1646,16 +1713,54 @@ span.global-id.copied::after {
     padding: 1rem;
     flex-direction: column;
     border-radius: var(--br-med);
+
+    & .blockquote-footer {
+        margin: 0;
+    }
+
+    & h5 {
+        cursor: pointer;
+    }
 }
 
-.handbook-item .preset-available .blockquote-footer {
-    margin: 0;
+.preset-popover-image {
+    display: flex;
+    padding: 2rem;
+    justify-content: space-between;
+    background-color: var(--header-bg);
+    align-items: center;
 }
 
-.handbook-item .preset-available .preset-items {
+.preset-popover-details {
+    padding: 2rem;
+}
+
+.preset-items-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.preset-items-list .preset-item {
+    display: flex;
+    align-items: center;
     gap: 1rem;
+}
+
+@media screen and (max-width: 1000px) {
+    [popover] {
+        width: 90%;
+    }
+
+    .preset-popover-image {
+        padding: 2rem 1rem;
+        flex-direction: column;
+    }
+
+    .preset-popover-details {
+        padding: 1rem;
+    }
 }
 
 #recentSearches {
@@ -1917,6 +2022,10 @@ ul.inner-list {
 
 #resourcesContainer .links {
     margin-bottom: 2rem;
+}
+
+#resourcesContainer .links .card-bfx {
+    min-height: 120px;
 }
 
 #resourcesContainer .links .card-body.github::before,
@@ -2934,7 +3043,7 @@ footer .text-end {
 
 @keyframes inAni {
     0% {
-        transform: translateY(5px);
+        transform: translateY(10px);
         opacity: 0;
     }
 

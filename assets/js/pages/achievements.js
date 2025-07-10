@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     const disabledClass = hasJsonData ? "" : " disabled";
                                     
                                     return `
-                                    <a href="#" class="achievements-item card ${
+                                    <a href="#" class="achievements-item scroll-ani scroll-70 card ${
                                         achievement.hidden ? "ach-hidden" : ""
                                     } ${achievement.rarity.toLowerCase()}${disabledClass}" data-achievement-id="${achievement.id}">
                                         <img src="${

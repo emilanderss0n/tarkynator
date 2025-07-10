@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const questsHTML = quests
             .map(
                 (quest) => `
-            <div class="quest-item card" data-quest-id="${
+            <div class="quest-item scroll-ani card" data-quest-id="${
                 quest.id
             }" data-quest-map="${
                     quest.map ? quest.map.name : "Any"

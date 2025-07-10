@@ -474,7 +474,10 @@ export class ItemDisplayer {
                                     <div>Base Price: <span class="global-id">${itemData.basePrice}</span></div>
                                 </div>
                             </div>
-                            ${presetId ? `<div class="preset-available"><h5>Default Preset: ${presetName}</h5><figure><figcaption class="blockquote-footer">Preset ID: <span class="global-id">${presetId}</span></figcaption></figure><div class="preset-items">${presetItemsHTML}</div></div>` : ""}
+                            ${presetId ? `<div class="preset-available">
+                                <h5 popovertarget="preset-popover" class="preset-name-clickable" data-preset-id="${presetId}">Default Preset: <span>${presetName}</span></h5>
+                                <figure><figcaption class="blockquote-footer">Preset ID: <span class="global-id">${presetId}</span></figcaption></figure>
+                                <div class="preset-items">${presetItemsHTML}</div></div>` : ""}
                             <p class="desc">${itemData.description}</p>
                             <div class="hb-parent-id">
                                 <figure>
@@ -503,11 +506,123 @@ export class ItemDisplayer {
                     </div>
                 </div>
             </div>
+            <div id="preset-popover" class="popover-custom" popover>
+                <div class="popover-content">
+                    <div class="popover-header">
+                        <h4 class="popover-title">Default Preset</h4>
+                        <span class="popover-close">&times;</span>
+                    </div>
+                    <div class="popover-body">
+                        <div class="popover-loading">Loading...</div>
+                    </div>
+                </div>
+            </div>
         `;
 
         // Remove disabled state from handbook nav link
         if (this.elements.handbookNavLink) {
             this.elements.handbookNavLink.classList.remove("disabled");
+        }
+    }
+
+    // Fetch preset data from GraphQL API
+    async fetchPresetData(presetId) {
+        const query = `
+            query {
+                items(ids: "${presetId}") {
+                    id
+                    image512pxLink
+                    iconLink
+                    name
+                    containsItems {
+                        item {
+                            id
+                            name
+                            iconLink
+                        }
+                    }
+                }
+            }
+        `;
+
+        const url = "https://api.tarkov.dev/graphql";
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept-Encoding": "gzip",
+            },
+            body: JSON.stringify({ query }),
+        };
+
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            return data?.data?.items?.[0] || null;
+        } catch (error) {
+            console.error("Error fetching preset data:", error);
+            return null;
+        }
+    }
+
+    // Show preset popover
+    async showPresetPopover(presetId, clickedElement) {
+        const popover = document.getElementById("preset-popover");
+        const popoverBody = popover.querySelector(".popover-body");
+        
+        if (!popover || !popoverBody) return;
+
+        // Show loading state
+        popoverBody.innerHTML = '<div class="popover-loading">Loading...</div>';
+        
+        popover.style.display = "block";
+
+        // Fetch preset data
+        const presetData = await this.fetchPresetData(presetId);
+        
+        if (presetData) {
+            const containsItemsHTML = presetData.containsItems && presetData.containsItems.length > 0
+                ? presetData.containsItems.map(containsItem => {
+                    const item = containsItem.item;
+                    const iconLink = item.iconLink ? item.iconLink.replace(/^.*\/data\/icons\//, "data/icons/") : "";
+                    return `
+                        <div class="preset-item" data-item-id="${item.id}">
+                            <img src="${iconLink}" alt="${item.name}" class="preset-item-icon">
+                            <span class="preset-item-name">${item.name}</span>
+                        </div>
+                    `;
+                }).join("")
+                : '<div class="preset-no-items">No items found in this preset</div>';
+
+            const presetImageLink = presetData.image512pxLink ? presetData.image512pxLink.replace(/^.*\/data\/images\//, "data/images/") : "";
+            
+            popoverBody.innerHTML = `
+                <div class="preset-popover-main">
+                    <div class="preset-popover-image">
+                        <div>
+                            <h5>${presetData.name}</h5>
+                            <p>ID: <span class="global-id">${presetData.id}</span></p>
+                        </div>
+                        <img src="${presetImageLink}" alt="${presetData.name}" />
+                    </div>
+                    <div class="preset-popover-details">
+                        <h6>Contains Items:</h6>
+                        <div class="preset-items-list">
+                            ${containsItemsHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            popoverBody.innerHTML = '<div class="popover-error">Failed to load preset data</div>';
+        }
+    }
+
+    // Hide preset popover
+    hidePresetPopover() {
+        const popover = document.getElementById("preset-popover");
+        if (popover) {
+            popover.style.display = "none";
         }
     }
 
@@ -533,6 +648,35 @@ export class ItemDisplayer {
                 checkJsonEditorSimple();
                 window.scrollTo({ top: 0, behavior: "smooth" });
             });
+        });
+
+        // Setup preset popover click handlers
+        document.querySelectorAll(".preset-name-clickable").forEach((presetElement) => {
+            presetElement.addEventListener("click", (event) => {
+                event.preventDefault();
+                const presetId = presetElement.dataset.presetId;
+                if (presetId) {
+                    this.showPresetPopover(presetId, presetElement);
+                }
+            });
+        });
+
+        // Setup preset popover close handler
+        const popoverClose = document.querySelector(".popover-close");
+        if (popoverClose) {
+            popoverClose.addEventListener("click", () => {
+                this.hidePresetPopover();
+            });
+        }
+
+        // Setup click outside to close popover
+        document.addEventListener("click", (event) => {
+            const popover = document.getElementById("preset-popover");
+            const presetClickable = event.target.closest(".preset-name-clickable");
+            
+            if (popover && popover.style.display === "block" && !presetClickable && !popover.contains(event.target)) {
+                this.hidePresetPopover();
+            }
         });
     }
 
