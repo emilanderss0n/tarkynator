@@ -1,5 +1,4 @@
-<?php require_once 'path.php'; ?>
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg" role="navigation" aria-label="Main">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?= BASE_URL ?>"><strong>TARKYNATOR</strong></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
