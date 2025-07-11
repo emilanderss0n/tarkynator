@@ -61,6 +61,9 @@
     --border-color-stronger: hsl(0deg 0% 100% / 30%);
     --background-blend-mode: normal;
     --font-family: "Bender", sans-serif;
+
+    --swiper-navigation-color: var(--main-color);
+    --swiper-theme-color: var(--main-color);
 }
 
 [data-theme="modern"] {
@@ -516,14 +519,18 @@ ol li {
 }
 
 [popover] {
-    left: 0 !important;
-    top: 0 !important;
     margin: 3rem auto;
-    width: 80%;
-    border: 1px solid var(--border-color-weak);
-    border-radius: var(--br-lg);
-    background-color: var(--dark-bg);
-    padding: 0;
+    padding: 3rem 6rem;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+
+    & .popover-content {
+        border: 1px solid var(--border-color-weak);
+        border-radius: var(--br-lg);
+        background-color: var(--dark-bg);
+        overflow: hidden;
+    }
 
     & .popover-header {
         display: flex;
@@ -545,10 +552,10 @@ ol li {
         font-size: 1.6rem;
         cursor: pointer;
     }
+}
 
-    ::backdrop {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
+[popover]::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .btn-group {
@@ -1710,20 +1717,54 @@ span.global-id.copied::after {
     margin-top: 1rem;
 }
 
-.handbook-item .preset-available {
+.handbook-item .presets-available {
     display: flex;
-    margin-bottom: 1rem;
+    margin: 2rem 0;
     background-color: var(--content-bg-light);
-    padding: 1rem;
     flex-direction: column;
     border-radius: var(--br-med);
+    padding-bottom: 2rem;
+    position: relative;
 
-    & .blockquote-footer {
+    & > h5 {
+        padding: 1rem;
         margin: 0;
     }
 
-    & h5 {
-        cursor: pointer;
+    & .swiper-pagination {
+        bottom: 6px;
+    }
+
+    & .swiper.presets-list {
+        overflow: hidden;
+        max-width: 100%;
+        padding: 2rem 0;
+        background-color: var(--content-bg-light);
+        margin: 0;
+    }
+
+    & .swiper-slide {
+        width: 100% !important;
+        padding: 0 3rem;
+        height: auto;
+    }
+
+    & .swiper-slide .preset-item-slide {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        height: 100%;
+        max-height: 300px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .handbook-item .presets-available {
+        & .swiper-slide .preset-item-slide {
+            flex-direction: column;
+        }
     }
 }
 

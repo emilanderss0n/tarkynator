@@ -96,6 +96,7 @@
     <?php endif; ?>
 
     <script type="module" src="<?= BASE_URL ?>/assets/js/features/main.js"></script>
+    <script src="<?= BASE_URL ?>/assets/js/components/swiper-bundle.min.js"></script>
     <?php if ($activePage === 'template'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/items/ItemManager.js"></script>
     <?php endif; ?>

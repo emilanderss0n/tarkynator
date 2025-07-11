@@ -326,7 +326,12 @@ export class ItemManager {
     async processDataInChunks() {
         if (!this.gameDataCache?.items) return;
 
-        this.itemsArrayCache = Object.values(this.gameDataCache.items);
+        // Filter out preset items from search and browser
+        const allItems = Object.values(this.gameDataCache.items);
+        this.itemsArrayCache = allItems.filter(item => 
+            !item.types || !item.types.includes("preset")
+        );
+        
         const chunkSize = 500; // Process 500 items at a time
         
         // If Web Worker is available, use it for heavy processing

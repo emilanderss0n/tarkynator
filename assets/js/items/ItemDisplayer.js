@@ -185,7 +185,7 @@ export class ItemDisplayer {
             const image512pxLink = this.generateImageLink(itemData.image512pxLink);
 
             // Get handbook and preset data
-            const { parentId, presetId, presetName, presetItemsHTML } = await this.getHandbookData(itemId, itemData.categories);
+            const { parentId, presets, presetItemsHTML } = await this.getHandbookData(itemId, itemData.categories);
 
             // Render the complete handbook content
             this.renderHandbookContent({
@@ -201,8 +201,7 @@ export class ItemDisplayer {
                 bartersHTML,
                 image512pxLink,
                 parentId,
-                presetId,
-                presetName,
+                presets,
                 presetItemsHTML,
                 armorClassHTML
             });
@@ -412,8 +411,7 @@ export class ItemDisplayer {
             const itemDataHandbook = handbookData.Items.find((item) => item.Id === itemId);
             const parentId = itemDataHandbook ? itemDataHandbook.ParentId : "N/A";
 
-            let presetId = "";
-            let presetName = "";
+            let presets = [];
             let presetItemsHTML = "";
 
             // Check if item qualifies for preset data
@@ -421,25 +419,28 @@ export class ItemDisplayer {
                 ["Weapon", "Chest rig", "Headwear", "Armor"].includes(category.name)
             )) {
                 try {
-                    const globalsData = await fetchData(GLOBALS, { method: "GET" });
+                    // Use local tarkov_data.json instead of globals
+                    let data = this.context.gameDataCache();
+                    if (!data) {
+                        data = await fetchData(DATA_URL, { method: "GET" });
+                    }
 
-                    if (globalsData.ItemPresets) {
-                        const itemPreset = Object.values(globalsData.ItemPresets)
-                            .find((preset) => preset._encyclopedia === itemId);
-                        if (itemPreset) {
-                            presetId = itemPreset._id;
-                            presetName = itemPreset._name;
-                        }
+                    if (data.items) {
+                        // Find all presets that are related to this item
+                        presets = Object.values(data.items).filter(item => 
+                            item.types && item.types.includes("preset") && 
+                            item.wikiLink && item.wikiLink === data.items[itemId]?.wikiLink
+                        );
                     }
                 } catch (error) {
-                    console.error("Error fetching globals data:", error);
+                    console.error("Error fetching preset data:", error);
                 }
             }
 
-            return { parentId, presetId, presetName, presetItemsHTML };
+            return { parentId, presets, presetItemsHTML };
         } catch (error) {
             console.error("Error fetching handbook data:", error);
-            return { parentId: "N/A", presetId: "", presetName: "", presetItemsHTML: "" };
+            return { parentId: "N/A", presets: [], presetItemsHTML: "" };
         }
     }
 
@@ -448,8 +449,43 @@ export class ItemDisplayer {
         const {
             itemElement, itemData, properties, fleaBanHTML, slotsHTML, dependenciesHTML,
             allowedAmmoHTML, usedInTasksHTML, categoriesHTML, bartersHTML,
-            image512pxLink, parentId, presetId, presetName, presetItemsHTML, armorClassHTML
+            image512pxLink, parentId, presets, presetItemsHTML, armorClassHTML
         } = data;
+
+        // Generate presets HTML with async button state check
+        const presetsHTML = presets && presets.length > 0 
+            ? `<div class="presets-available">
+                <h5>Available Presets (${presets.length})</h5>
+                <div class="presets-list swiper">
+                    <div class="swiper-wrapper">
+                        ${presets.map(preset => {
+                            const presetImageLink = preset.image512pxLink ? preset.image512pxLink.replace(/^.*\/data\/images\//, "data/images/") : "";
+                            return `<div class="swiper-slide preset-item-row">
+                                <div class="preset-item-slide">
+                                    <div class="preset-image">
+                                        <img src="${presetImageLink}" width="512" alt="${preset.name}" title="${preset.name}" />
+                                    </div>
+
+                                    <div class="preset-item-details">
+                                        <h6>${preset.name}</h6>
+                                        <p><strong>Short Name:</strong> ${preset.shortName}</p>
+                                        <p><strong>ID:</strong> <span class="global-id">${preset.id}</span></p>
+                                        <p><strong>Base Price:</strong> ${preset.basePrice} RUB</p>
+                                        ${preset.description ? `<p><strong>Description:</strong> ${preset.description}</p>` : ''}
+                                        <button class="btn btn-sm btn-info preset-template-btn" data-preset-id="${preset.id}">
+                                            <i class="bi bi-filetype-json"></i> JSON
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>`
+            : "";
 
         this.elements.handbookContent.innerHTML = `
             <div class="d-flex handbook-item">
@@ -474,10 +510,6 @@ export class ItemDisplayer {
                                     <div>Base Price: <span class="global-id">${itemData.basePrice}</span></div>
                                 </div>
                             </div>
-                            ${presetId ? `<div class="preset-available">
-                                <h5 popovertarget="preset-popover" class="preset-name-clickable" data-preset-id="${presetId}">Default Preset: <span>${presetName}</span></h5>
-                                <figure><figcaption class="blockquote-footer">Preset ID: <span class="global-id">${presetId}</span></figcaption></figure>
-                                <div class="preset-items">${presetItemsHTML}</div></div>` : ""}
                             <p class="desc">${itemData.description}</p>
                             <div class="hb-parent-id">
                                 <figure>
@@ -490,6 +522,7 @@ export class ItemDisplayer {
                             </div>
                         </div>
                     </div>
+                    ${presetsHTML}
                     <div class="slots-filter">
                         ${slotsHTML}
                     </div>
@@ -506,13 +539,13 @@ export class ItemDisplayer {
                     </div>
                 </div>
             </div>
-            <div id="preset-popover" class="popover-custom" popover>
+            <div id="popover" class="preset-popover" popover>
                 <div class="popover-content">
                     <div class="popover-header">
-                        <h4 class="popover-title">Default Preset</h4>
+                        <h4 class="popover-title">Preset Details</h4>
                         <span class="popover-close">&times;</span>
                     </div>
-                    <div class="popover-body">
+                    <div class="preset-popover-body">
                         <div class="popover-loading">Loading...</div>
                     </div>
                 </div>
@@ -525,109 +558,136 @@ export class ItemDisplayer {
         }
     }
 
-    // Fetch preset data from GraphQL API
+    // Fetch preset data from local tarkov_data.json
     async fetchPresetData(presetId) {
-        const query = `
-            query {
-                items(ids: "${presetId}") {
-                    id
-                    image512pxLink
-                    iconLink
-                    name
-                    containsItems {
-                        item {
-                            id
-                            name
-                            iconLink
-                        }
-                    }
-                }
-            }
-        `;
-
-        const url = "https://api.tarkov.dev/graphql";
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept-Encoding": "gzip",
-            },
-            body: JSON.stringify({ query }),
-        };
-
         try {
-            const response = await fetch(url, options);
-            const data = await response.json();
-            return data?.data?.items?.[0] || null;
+            // Fetch globals.json to get the preset template structure
+            const globalsData = await fetchData(GLOBALS, { method: "GET" });
+            
+            if (globalsData && globalsData.ItemPresets && globalsData.ItemPresets[presetId]) {
+                const presetTemplate = globalsData.ItemPresets[presetId];
+                
+                // Also get basic preset info from tarkov_data.json
+                let data = this.context.gameDataCache();
+                if (!data) {
+                    data = await fetchData(DATA_URL, { method: "GET" });
+                }
+                
+                const presetItem = data.items && data.items[presetId] ? data.items[presetId] : null;
+                
+                return {
+                    id: presetId,
+                    name: presetItem?.name || "Unknown Preset",
+                    template: presetTemplate
+                };
+            }
+
+            return null;
         } catch (error) {
-            console.error("Error fetching preset data:", error);
+            console.error("Error fetching preset template data:", error);
             return null;
         }
     }
 
     // Show preset popover
     async showPresetPopover(presetId, clickedElement) {
-        const popover = document.getElementById("preset-popover");
-        const popoverBody = popover.querySelector(".popover-body");
+        const popover = document.getElementById("popover");
+        const popoverBody = popover.querySelector(".preset-popover-body");
         
         if (!popover || !popoverBody) return;
 
         // Show loading state
         popoverBody.innerHTML = '<div class="popover-loading">Loading...</div>';
         
-        popover.style.display = "block";
+        // Show popover using the native Popover API
+        popover.showPopover();
 
-        // Fetch preset data
+        // Fetch preset template data
         const presetData = await this.fetchPresetData(presetId);
         
-        if (presetData) {
-            const containsItemsHTML = presetData.containsItems && presetData.containsItems.length > 0
-                ? presetData.containsItems.map(containsItem => {
-                    const item = containsItem.item;
-                    const iconLink = item.iconLink ? item.iconLink.replace(/^.*\/data\/icons\//, "data/icons/") : "";
-                    return `
-                        <div class="preset-item" data-item-id="${item.id}">
-                            <img src="${iconLink}" alt="${item.name}" class="preset-item-icon">
-                            <span class="preset-item-name">${item.name}</span>
-                        </div>
-                    `;
-                }).join("")
-                : '<div class="preset-no-items">No items found in this preset</div>';
+        if (presetData && presetData.template) {
+            // Update popover title
+            const popoverTitle = popover.querySelector(".popover-title");
+            if (popoverTitle) {
+                popoverTitle.textContent = `${presetData.name} - Template Structure`;
+            }
 
-            const presetImageLink = presetData.image512pxLink ? presetData.image512pxLink.replace(/^.*\/data\/images\//, "data/images/") : "";
-            
+            // Create CodeMirror editor container
+            const editorId = `preset-editor-${presetId}`;
             popoverBody.innerHTML = `
-                <div class="preset-popover-main">
-                    <div class="preset-popover-image">
-                        <div>
-                            <h5>${presetData.name}</h5>
-                            <p>ID: <span class="global-id">${presetData.id}</span></p>
-                        </div>
-                        <img src="${presetImageLink}" alt="${presetData.name}" />
-                    </div>
-                    <div class="preset-popover-details">
-                        <h6>Contains Items:</h6>
-                        <div class="preset-items-list">
-                            ${containsItemsHTML}
-                        </div>
-                    </div>
+                <div class="preset-template-editor">
+                    <div id="${editorId}" class="preset-codemirror"></div>
                 </div>
             `;
+
+            // Initialize CodeMirror editor
+            setTimeout(() => {
+                const editorElement = document.getElementById(editorId);
+                if (editorElement && typeof CodeMirror !== 'undefined') {
+                    const presetEditor = CodeMirror(editorElement, {
+                        value: JSON.stringify(presetData.template, null, 2),
+                        mode: 'application/json',
+                        theme: 'mbo',
+                        lineNumbers: true,
+                        readOnly: true,
+                        foldGutter: true,
+                        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+                        lineWrapping: false,
+                        styleActiveLine: true
+                    });
+                    
+                    // Set editor size
+                    presetEditor.setSize('100%', '70vh');
+                } else {
+                    // Fallback if CodeMirror is not available
+                    editorElement.innerHTML = `<pre style="max-height: 400px; overflow: auto; background: #f5f5f5; padding: 10px; border-radius: 4px;"><code>${JSON.stringify(presetData.template, null, 2)}</code></pre>`;
+                }
+            }, 50);
         } else {
-            popoverBody.innerHTML = '<div class="popover-error">Failed to load preset data</div>';
+            popoverBody.innerHTML = '<div class="popover-error">Failed to load preset template data</div>';
         }
     }
 
     // Hide preset popover
     hidePresetPopover() {
-        const popover = document.getElementById("preset-popover");
+        const popover = document.getElementById("popover");
         if (popover) {
-            popover.style.display = "none";
+            popover.hidePopover();
         }
     }
 
     // Setup interactive elements in the handbook
     setupInteractiveElements() {
+        // Initialize Swiper for presets if present
+        const swiperElement = document.querySelector('.presets-list.swiper');
+        if (swiperElement) {
+            try {
+                new Swiper('.presets-list.swiper', {
+                    direction: 'horizontal',
+                    loop: false,
+                    slidesPerView: 1,
+                    spaceBetween: 0,
+                    grabCursor: true,
+                    longSwipes: false,
+                    
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    }
+                });
+            } catch (error) {
+                console.warn('Swiper initialization failed:', error);
+            }
+        }
+
+        // Check and disable preset buttons that don't have globals data
+        this.checkPresetButtonStates();
+
         // Setup slot item click handlers
         document.querySelectorAll(".slot-item-thumbnail").forEach((slotItem) => {
             slotItem.addEventListener("click", () => {
@@ -651,12 +711,12 @@ export class ItemDisplayer {
         });
 
         // Setup preset popover click handlers
-        document.querySelectorAll(".preset-name-clickable").forEach((presetElement) => {
-            presetElement.addEventListener("click", (event) => {
+        document.querySelectorAll(".preset-template-btn").forEach((presetButton) => {
+            presetButton.addEventListener("click", (event) => {
                 event.preventDefault();
-                const presetId = presetElement.dataset.presetId;
-                if (presetId) {
-                    this.showPresetPopover(presetId, presetElement);
+                const presetId = presetButton.dataset.presetId;
+                if (presetId && !presetButton.disabled) {
+                    this.showPresetPopover(presetId, presetButton);
                 }
             });
         });
@@ -671,13 +731,56 @@ export class ItemDisplayer {
 
         // Setup click outside to close popover
         document.addEventListener("click", (event) => {
-            const popover = document.getElementById("preset-popover");
-            const presetClickable = event.target.closest(".preset-name-clickable");
+            const popover = document.getElementById("popover");
+            const presetButton = event.target.closest(".preset-template-btn");
             
-            if (popover && popover.style.display === "block" && !presetClickable && !popover.contains(event.target)) {
+            if (popover && popover.matches(':popover-open') && !presetButton && !popover.contains(event.target)) {
                 this.hidePresetPopover();
             }
         });
+    }
+
+    // Check preset button states and disable buttons without globals data
+    async checkPresetButtonStates() {
+        try {
+            // Fetch globals.json to check for preset templates
+            const globalsData = await fetchData(GLOBALS, { method: "GET" });
+            
+            if (!globalsData || !globalsData.ItemPresets) {
+                // If no globals data, disable all preset buttons
+                document.querySelectorAll(".preset-template-btn").forEach((button) => {
+                    button.disabled = true;
+                    button.classList.add("disabled");
+                    button.title = "Template data not available";
+                });
+                return;
+            }
+
+            // Check each preset button
+            document.querySelectorAll(".preset-template-btn").forEach((button) => {
+                const presetId = button.dataset.presetId;
+                
+                if (presetId && globalsData.ItemPresets[presetId]) {
+                    // Preset exists in globals - keep button enabled
+                    button.disabled = false;
+                    button.classList.remove("disabled");
+                    button.title = "View template structure";
+                } else {
+                    // Preset doesn't exist in globals - disable button
+                    button.disabled = true;
+                    button.classList.add("disabled");
+                    button.title = "Template data not available";
+                }
+            });
+        } catch (error) {
+            console.error("Error checking preset button states:", error);
+            // On error, disable all preset buttons
+            document.querySelectorAll(".preset-template-btn").forEach((button) => {
+                button.disabled = true;
+                button.classList.add("disabled");
+                button.title = "Template data not available";
+            });
+        }
     }
 
     // Clean up resources
