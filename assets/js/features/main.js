@@ -101,4 +101,52 @@ document.addEventListener("DOMContentLoaded", () => {
     for (var i = 0; i < bubblyButtons.length; i++) {
         bubblyButtons[i].addEventListener("click", animateButton, false);
     }
+
+    // Navbar toggle functionality
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+
+    if (navbarToggler && navbarCollapse) {
+        navbarToggler.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Toggle the collapse state
+            const isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
+            
+            if (isExpanded) {
+                // Hide the navbar
+                navbarCollapse.classList.remove('show');
+                navbarToggler.setAttribute('aria-expanded', 'false');
+                navbarToggler.classList.add('collapsed');
+            } else {
+                // Show the navbar
+                navbarCollapse.classList.add('show');
+                navbarToggler.setAttribute('aria-expanded', 'true');
+                navbarToggler.classList.remove('collapsed');
+            }
+        });
+
+        // Close navbar when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navbarToggler.contains(e.target) && !navbarCollapse.contains(e.target)) {
+                if (navbarCollapse.classList.contains('show')) {
+                    navbarCollapse.classList.remove('show');
+                    navbarToggler.setAttribute('aria-expanded', 'false');
+                    navbarToggler.classList.add('collapsed');
+                }
+            }
+        });
+
+        // Close navbar when clicking on nav links (for mobile)
+        const navLinks = navbarCollapse.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (navbarCollapse.classList.contains('show')) {
+                    navbarCollapse.classList.remove('show');
+                    navbarToggler.setAttribute('aria-expanded', 'false');
+                    navbarToggler.classList.add('collapsed');
+                }
+            });
+        });
+    }
 });

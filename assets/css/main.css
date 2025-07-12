@@ -766,6 +766,13 @@ select {
     gap: 1rem;
 }
 
+@media screen and (max-width: 760px) {
+    .flex-container {
+        flex-direction: column;
+    }
+    
+}
+
 .flex-box {
     display: flex;
     align-items: center;
@@ -2224,6 +2231,22 @@ ul.inner-list {
     }
 }
 
+#achievementsContainer .component-container {
+    margin-top: 3rem;
+}
+
+#achievementsContainer .search-container {
+    flex: 1;
+}
+
+#achievementsContainer .filters {
+    padding: 0;
+}
+
+#achievementsContainer .filters .btn {
+    padding: 4px 12px;
+}
+
 #achievementsContainer .body {
     margin-top: 1rem;
 }
@@ -2237,6 +2260,20 @@ ul.inner-list {
     gap: 1rem;
 }
 
+#achievementsContainer .card:not(.disabled)::after {
+    content: "\F791";
+    position: absolute;
+    right: 1rem;
+    top: 0.5rem;
+    font-family: 'Bootstrap-icons';
+    font-size: 1.4rem;
+    color: var(--brighter-color);
+}
+
+#achievementsContainer .card.ach-hidden.disabled::after {
+    right: 2rem;
+}
+
 #achievementsContainer .card > img {
     height: 100px;
 }
@@ -2245,7 +2282,7 @@ ul.inner-list {
     content: "\F340";
     position: absolute;
     right: 1rem;
-    top: 1rem;
+    top: 0.5rem;
     font-family: 'Bootstrap-icons';
     font-size: 1.4rem;
 }
@@ -2281,7 +2318,6 @@ ul.inner-list {
 
 @media screen and (max-width: 760px) {
     .search-filter-container:has(.search-container-quests) {
-        flex-direction: column;
         gap: 1rem;
     }
 }
