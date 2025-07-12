@@ -613,6 +613,10 @@ export class ItemManager {
                 if (item) {
                     this.toggleContainers(this.elements.templateContainer);
                     this.setActiveNavLink("template");
+                    this.elements.toggleNav?.classList.remove("inactive");
+                    if (this.elements.breadcrumb) {
+                        this.elements.breadcrumb.style.display = "block";
+                    }
 
                     setTimeout(() => {
                         if (typeof editor !== "undefined" && editor) {

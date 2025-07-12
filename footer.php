@@ -38,8 +38,12 @@
         crossorigin="anonymous"></script>
     <script src="<?= BASE_URL ?>/assets/js/core/themeManager.js"></script>
 
-    <?php if ($activePage === 'template' || $activePage === 'quests' || $activePage === 'achievements'): ?>
+    <?php if ($activePage === 'template' || $activePage === 'handbook' || $activePage === 'quests' || $activePage === 'achievements'): ?>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/fold/brace-fold.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/fold/foldgutter.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/fold/foldcode.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
         <script>
             var editor; // Declare editor variable in the global scope
@@ -49,6 +53,13 @@
                     lineNumbers: true,
                     mode: "application/json",
                     theme: "mbo",
+                    lineNumbers: true,
+                    closeBrackets: true,
+                    autoCloseBrackets: true,
+                    foldCode: true,
+                    readOnly: true,
+                    foldGutter: true,
+                    gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
                     readOnly: true
                 });
                 editor.on("renderLine", function (cm, line, element) {

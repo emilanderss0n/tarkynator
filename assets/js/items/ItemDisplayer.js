@@ -1,6 +1,7 @@
 // ItemDisplayer - Handles item details display in handbook view
 import { fetchData } from "../core/cache.js";
 import { navigationManager } from "../core/navigationManager.js";
+import { Popover } from "../components/popover.js";
 import {
     DATA_URL,
     ITEMS_URL,
@@ -16,6 +17,7 @@ export class ItemDisplayer {
     constructor(context) {
         this.context = context;
         this.elements = context.elements;
+        this.presetPopover = null;
     }
 
     init() {
@@ -543,7 +545,7 @@ export class ItemDisplayer {
                 <div class="popover-content">
                     <div class="popover-header">
                         <h4 class="popover-title">Preset Details</h4>
-                        <span class="popover-close">&times;</span>
+                        <span class="popover-close"><i class="bi bi-x-lg"></i></span>
                     </div>
                     <div class="preset-popover-body">
                         <div class="popover-loading">Loading...</div>
@@ -591,34 +593,33 @@ export class ItemDisplayer {
 
     // Show preset popover
     async showPresetPopover(presetId, clickedElement) {
-        const popover = document.getElementById("popover");
-        const popoverBody = popover.querySelector(".preset-popover-body");
-        
-        if (!popover || !popoverBody) return;
+        if (!this.presetPopover || !this.presetPopover.isReady()) {
+            console.error('Preset popover not initialized');
+            return;
+        }
 
         // Show loading state
-        popoverBody.innerHTML = '<div class="popover-loading">Loading...</div>';
+        this.presetPopover.showLoading('Loading preset template...');
         
-        // Show popover using the native Popover API
-        popover.showPopover();
+        // Show popover
+        this.presetPopover.show();
 
         // Fetch preset template data
         const presetData = await this.fetchPresetData(presetId);
         
         if (presetData && presetData.template) {
             // Update popover title
-            const popoverTitle = popover.querySelector(".popover-title");
-            if (popoverTitle) {
-                popoverTitle.textContent = `${presetData.name} - Template Structure`;
-            }
+            this.presetPopover.setTitle(`${presetData.name} - Template Structure`);
 
             // Create CodeMirror editor container
             const editorId = `preset-editor-${presetId}`;
-            popoverBody.innerHTML = `
+            const editorContent = `
                 <div class="preset-template-editor">
                     <div id="${editorId}" class="preset-codemirror"></div>
                 </div>
             `;
+            
+            this.presetPopover.setContent(editorContent);
 
             // Initialize CodeMirror editor
             setTimeout(() => {
@@ -629,11 +630,12 @@ export class ItemDisplayer {
                         mode: 'application/json',
                         theme: 'mbo',
                         lineNumbers: true,
+                        closeBrackets: true,
+                        autoCloseBrackets: true,
+                        foldCode: true,
                         readOnly: true,
                         foldGutter: true,
-                        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-                        lineWrapping: false,
-                        styleActiveLine: true
+                        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
                     });
                     
                     // Set editor size
@@ -644,15 +646,14 @@ export class ItemDisplayer {
                 }
             }, 50);
         } else {
-            popoverBody.innerHTML = '<div class="popover-error">Failed to load preset template data</div>';
+            this.presetPopover.showError('Failed to load preset template data');
         }
     }
 
     // Hide preset popover
     hidePresetPopover() {
-        const popover = document.getElementById("popover");
-        if (popover) {
-            popover.hidePopover();
+        if (this.presetPopover && this.presetPopover.isReady()) {
+            this.presetPopover.hide();
         }
     }
 
@@ -684,6 +685,12 @@ export class ItemDisplayer {
                 console.warn('Swiper initialization failed:', error);
             }
         }
+
+        // Initialize preset popover
+        this.presetPopover = new Popover('popover', {
+            closeOnBackdrop: true,
+            closeOnEscape: true
+        });
 
         // Check and disable preset buttons that don't have globals data
         this.checkPresetButtonStates();
@@ -719,24 +726,6 @@ export class ItemDisplayer {
                     this.showPresetPopover(presetId, presetButton);
                 }
             });
-        });
-
-        // Setup preset popover close handler
-        const popoverClose = document.querySelector(".popover-close");
-        if (popoverClose) {
-            popoverClose.addEventListener("click", () => {
-                this.hidePresetPopover();
-            });
-        }
-
-        // Setup click outside to close popover
-        document.addEventListener("click", (event) => {
-            const popover = document.getElementById("popover");
-            const presetButton = event.target.closest(".preset-template-btn");
-            
-            if (popover && popover.matches(':popover-open') && !presetButton && !popover.contains(event.target)) {
-                this.hidePresetPopover();
-            }
         });
     }
 
