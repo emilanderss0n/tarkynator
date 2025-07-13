@@ -4,6 +4,166 @@
  * Including utilities for asset minification (CSS only)
  */
 
+// Trader ID constants
+define('TRADER_PRAPOR', '54cb50c76803fa8b248b4571');
+define('TRADER_THERAPIST', '54cb57776803fa99248b456e');
+define('TRADER_FENCE', '579dc571d53a0658a154fbec');
+define('TRADER_SKIER', '58330581ace78e27b8b10cee');
+define('TRADER_PEACEKEEPER', '5935c25fb3acc3127c3d8cd9');
+define('TRADER_MECHANIC', '5a7c2eca46aef81a7ca2145d');
+define('TRADER_RAGMAN', '5ac3b934156ae10c4430e83c');
+define('TRADER_JAEGER', '5c0647fdd443bc2504c2d371');
+define('TRADER_LIGHTKEEPER', '638f541a29ffd1183d187f57');
+define('TRADER_REF', '6617beeaa9cfa777ca915b7c');
+
+/**
+ * Get all trader IDs and names
+ * 
+ * @return array Associative array with trader IDs as keys and names as values
+ */
+function get_traders() {
+    return [
+        TRADER_PRAPOR => 'Prapor',
+        TRADER_THERAPIST => 'Therapist',
+        TRADER_FENCE => 'Fence',
+        TRADER_SKIER => 'Skier',
+        TRADER_PEACEKEEPER => 'Peacekeeper',
+        TRADER_MECHANIC => 'Mechanic',
+        TRADER_RAGMAN => 'Ragman',
+        TRADER_JAEGER => 'Jaeger',
+        TRADER_LIGHTKEEPER => 'Lightkeeper',
+        TRADER_REF => 'Ref'
+    ];
+}
+
+/**
+ * Get all trader data including IDs, names, and image paths
+ * 
+ * @return array Associative array with trader IDs as keys and trader data as values
+ */
+function get_traders_data() {
+    return [
+        TRADER_PRAPOR => [
+            'name' => 'Prapor',
+            'image' => 'assets/img/avatar/' . TRADER_PRAPOR . '.png'
+        ],
+        TRADER_THERAPIST => [
+            'name' => 'Therapist',
+            'image' => 'assets/img/avatar/' . TRADER_THERAPIST . '.png'
+        ],
+        TRADER_FENCE => [
+            'name' => 'Fence',
+            'image' => 'assets/img/avatar/' . TRADER_FENCE . '.png'
+        ],
+        TRADER_SKIER => [
+            'name' => 'Skier',
+            'image' => 'assets/img/avatar/' . TRADER_SKIER . '.png'
+        ],
+        TRADER_PEACEKEEPER => [
+            'name' => 'Peacekeeper',
+            'image' => 'assets/img/avatar/' . TRADER_PEACEKEEPER . '.png'
+        ],
+        TRADER_MECHANIC => [
+            'name' => 'Mechanic',
+            'image' => 'assets/img/avatar/' . TRADER_MECHANIC . '.png'
+        ],
+        TRADER_RAGMAN => [
+            'name' => 'Ragman',
+            'image' => 'assets/img/avatar/' . TRADER_RAGMAN . '.png'
+        ],
+        TRADER_JAEGER => [
+            'name' => 'Jaeger',
+            'image' => 'assets/img/avatar/' . TRADER_JAEGER . '.png'
+        ],
+        TRADER_LIGHTKEEPER => [
+            'name' => 'Lightkeeper',
+            'image' => 'assets/img/avatar/' . TRADER_LIGHTKEEPER . '.png'
+        ],
+        TRADER_REF => [
+            'name' => 'Ref',
+            'image' => 'assets/img/avatar/' . TRADER_REF . '.png'
+        ]
+    ];
+}
+
+/**
+ * Get trader name by ID
+ * 
+ * @param string $trader_id The trader ID
+ * @return string|null The trader name or null if not found
+ */
+function get_trader_name($trader_id) {
+    $traders_data = get_traders_data();
+    return isset($traders_data[$trader_id]) ? $traders_data[$trader_id]['name'] : null;
+}
+
+/**
+ * Get trader image path by ID
+ * 
+ * @param string $trader_id The trader ID
+ * @return string|null The trader image path or null if not found
+ */
+function get_trader_image($trader_id) {
+    $traders_data = get_traders_data();
+    return isset($traders_data[$trader_id]) ? $traders_data[$trader_id]['image'] : 'assets/img/avatar/unknown.png';
+}
+
+/**
+ * Get all trader data for a specific trader
+ * 
+ * @param string $trader_id The trader ID
+ * @return array|null The trader data array or null if not found
+ */
+function get_trader_data($trader_id) {
+    $traders_data = get_traders_data();
+    return isset($traders_data[$trader_id]) ? $traders_data[$trader_id] : null;
+}
+
+/**
+ * Get trader ID by name
+ * 
+ * @param string $trader_name The trader name
+ * @return string|null The trader ID or null if not found
+ */
+function get_trader_id($trader_name) {
+    $traders_data = get_traders_data();
+    foreach ($traders_data as $trader_id => $data) {
+        if ($data['name'] === $trader_name) {
+            return $trader_id;
+        }
+    }
+    return null;
+}
+
+/**
+ * Check if a trader ID is valid
+ * 
+ * @param string $trader_id The trader ID to validate
+ * @return bool True if valid, false otherwise
+ */
+function is_valid_trader_id($trader_id) {
+    return array_key_exists($trader_id, get_traders_data());
+}
+
+/**
+ * Generate trader navigation HTML
+ * 
+ * @param string $active_trader_id The currently active trader ID (optional)
+ * @return string HTML for trader navigation
+ */
+function generate_trader_nav($active_trader_id = TRADER_PRAPOR) {
+    $traders_data = get_traders_data();
+    $nav_html = '<nav class="btn-group trader-nav animate-in" id="tradersNav">' . "\n";
+    
+    foreach ($traders_data as $trader_id => $data) {
+        $active_class = ($trader_id === $active_trader_id) ? ' active' : '';
+        $nav_html .= '<a class="btn sm' . $active_class . '" href="javascript:void(0);" data-trader-id="' . $trader_id . '"><img class="trader-img" src="'. $data['image'] .'" alt="' . $data['name'] . '" /><span class="trader-name">' . $data['name'] . '</span></a>' . "\n";
+    }
+    
+    $nav_html .= '</nav>';
+    return $nav_html;
+}
+
 /**
  * Minify CSS content
  * 

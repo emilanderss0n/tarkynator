@@ -1,22 +1,11 @@
 <?php
 $activePage = 'quests';
-include_once('../header.php');
+include_once '../header.php';
 ?>
    
     <div id="questsContainer" class="item-info-item">
         <div class="head-nav component-container" id="traderQuests">
-            <nav class="btn-group filters animate-in">
-                <a class="btn sm active" href="javascript:void(0);">Prapor</a>
-                <a class="btn sm" href="javascript:void(0);">Therapist</a>
-                <a class="btn sm" href="javascript:void(0);">Fence</a>
-                <a class="btn sm" href="javascript:void(0);">Skier</a>
-                <a class="btn sm" href="javascript:void(0);">Peacekeeper</a>
-                <a class="btn sm" href="javascript:void(0);">Mechanic</a>
-                <a class="btn sm" href="javascript:void(0);">Ragman</a>
-                <a class="btn sm" href="javascript:void(0);">Jaeger</a>
-                <a class="btn sm" href="javascript:void(0);">Lightkeeper</a>
-                <a class="btn sm" href="javascript:void(0);">Ref</a>
-            </nav>
+            <?php include_once '../includes/trader-nav.php'; ?>
         </div>
         <div class="json-quests animate-in">
             <div class="json-quests-header">
@@ -52,4 +41,4 @@ include_once('../header.php');
         </div>
     </div>
 
-<?php include_once('../footer.php') ?>
+<?php include_once '../footer.php' ?>
