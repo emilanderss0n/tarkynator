@@ -1,18 +1,14 @@
 @font-face {
     font-family: Bender;
+    font-display: auto;
     src: url("fonts/Bender.otf") format("opentype");
 }
 
 @font-face {
     font-family: Bender;
+    font-display: auto;
     font-weight: bold;
     src: url("fonts/Bender-Bold.otf") format("opentype");
-}
-
-@font-face {
-    font-family: Bender;
-    font-weight: 300;
-    src: url("fonts/Bender-Light.otf") format("opentype");
 }
 
 :root {
@@ -2494,6 +2490,14 @@ ul.inner-list {
 .generate-single .single-body h3 {
     font-weight: bold;
     font-size: 3rem;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    background: linear-gradient(to bottom, oklch(from var(--main-color) calc(1 - 0.1) c h) 0, oklch(from var(--toolbar-bg) calc(1 - 0.7) c h) 100%);
+    background-position: 0;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-size-adjust: none;
 }
 
 .generate-single #idGenOutput {
@@ -2514,99 +2518,93 @@ ul.inner-list {
     top: 0.6rem;
 }
 
-.bubbly-button {
+.fancy-button {
+    --width: 140px;
+
+    height: 50px;
+    width: var(--width);
     display: inline-block;
     font-size: 1rem;
     padding: 0.8rem 1.5rem;
     margin: 2rem 0;
     -webkit-appearance: none;
     appearance: none;
-    background-color: #1b8b73;
+    background: linear-gradient(to bottom, var(--toolbar-bg) 0, var(--darkest-bg) 100%);
     color: #fff;
-    border-radius: 4px;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
     position: relative;
-    transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
-    box-shadow: 0 2px 25px rgba(0, 255, 221, 0.2);
+    transition: all linear 0.2s;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 
-.bubbly-button:focus {
-    outline: 0;
-}
-
-.bubbly-button:before,
-.bubbly-button:after {
-    position: absolute;
+.fancy-button::after {
     content: "";
-    display: block;
-    width: 140%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    left: -20%;
-    z-index: -1000;
-    transition: all ease-in-out 0.5s;
-    background-repeat: no-repeat;
+    background: linear-gradient(to bottom, oklch(from var(--toolbar-bg) calc(1 - 0.77) c h) 0, var(--darkest-bg) 100%);
+    border-radius: inherit;
+    z-index: 1;
+    opacity: 0;
+    transition: all linear 0.2s;
 }
 
-.bubbly-button:before {
-    display: none;
-    top: -75%;
-    background-image: radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, transparent 20%, #1b8b73 20%, transparent 30%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, transparent 10%, #1b8b73 15%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%);
-    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+.fancy-button:hover::after {
+    opacity: 1;
 }
 
-.bubbly-button:after {
-    display: none;
-    bottom: -75%;
-    background-image: radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, transparent 10%, #1b8b73 15%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%), radial-gradient(circle, #1b8b73 20%, transparent 20%);
-    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+.fancy-button:active::after {
+    opacity: 0;
+}
+
+.fancy-button:hover {
+    box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 1);
+}
+ 
+.fancy-button:active {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    transform: scale(0.9);
+}
+
+.fancy-button span {
+    width: calc(var(--width) + 60px);
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to right, #9f9f9f 0, #fff 10%, #868686 20%);
+    background-position: 0;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fancyButtonShine 3s infinite linear;
+    animation-fill-mode: forwards;
+    -webkit-text-size-adjust: none;
+    z-index: 2;
+}
+
+@keyframes fancyButtonShine {
+  0% {
+    background-position: 0;
+  }
+  60% {
+    background-position: 180px;
+  }
+  100% {
+    background-position: 180px;
+  }
+}
+
+.bubbly-button:hover {
+    box-shadow: 0 2px 25px rgba(255, 255, 255, 0.2);
 }
 
 .bubbly-button:active {
-    transform: scale(0.95);
-    background-color: #156d5a;
-    box-shadow: 0 2px 25px rgba(0, 255, 221, 0);
+    box-shadow: 0 2px 15px rgba(255, 255, 255, 0.1);
+    transform: scale(0.9);
 }
 
-.bubbly-button.animate:before {
-    display: block;
-    animation: topBubbles ease-in-out 0.75s forwards;
-}
-
-.bubbly-button.animate:after {
-    display: block;
-    animation: bottomBubbles ease-in-out 0.75s forwards;
-}
-
-@keyframes topBubbles {
-    0% {
-        background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
-    }
-
-    50% {
-        background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
-    }
-
-    100% {
-        background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
-        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
-    }
-}
-
-@keyframes bottomBubbles {
-    0% {
-        background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
-    }
-
-    50% {
-        background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
-    }
-
-    100% {
-        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
-        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
-    }
-}
 
 #bulkContainer .header .input-group {
     margin-bottom: 2rem;

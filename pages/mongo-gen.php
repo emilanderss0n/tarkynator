@@ -9,7 +9,9 @@ include_once('../header.php');
             <div class="cont">
                 <span class="global-id disabled" id="idGenOutput"></span>
             </div>
-            <button type="button" id="genID" class="bubbly-button"><i class="bi bi-stars"></i> Generate</button>
+            <button type="button" id="genID" class="fancy-button">
+                <span><i class="bi bi-stars"></i> Generate</span>
+            </button>
         </div>
     </div>
 
