@@ -697,11 +697,16 @@ ol li {
     font-size: 0.8rem;
 }
 
+.trader-nav {
+    justify-content: center;
+}
+
 .trader-nav .btn {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
     align-items: center;
+    flex: 0;
 }
 
 .trader-nav .btn.active {
@@ -2094,6 +2099,91 @@ span.global-id.copied::after {
     margin: 0;
 }
 
+.search-container:has(#assortSearch) {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 2rem;
+
+    & .btn-group {
+        width: 700px;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+@media screen and (max-width: 760px) {
+    .search-container:has(#assortSearch) {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .search-container:has(#assortSearch) .btn-group {
+        width: 100%;
+    }
+    
+}
+
+#assortContent .barters-list, #assortContent .cashoffers-list {
+    align-self: start;
+}
+
+#assortContent .cashoffers-list {
+    margin-top: 5rem;
+}
+
+#assortContent .card {
+    padding: 0;
+
+    & .card-header {
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    & .card-footer {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    & .quest-unlock {
+        margin-left: auto;
+    }
+
+    & .tag {
+        padding: 0.2rem 0.5rem 0.1rem;
+        font-size: 0.8rem;
+        font-weight: bold;
+        background-color: var(--main-color-bg);
+        color: var(--darkest-bg);
+    }
+
+    & .req-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border-color-weak);
+
+        & > img {
+            width: 42px;
+            height: 42px;
+        }
+    }
+
+    & .price {
+        font-size: 1.2rem;
+
+        & > span {
+            color: var(--main-color);
+            font-weight: bold;
+        }
+    }
+}
+
 #craftsContent {
     animation-delay: 250ms;
 }
@@ -3369,6 +3459,10 @@ footer .text-end {
 
 [data-theme="modern"] .btn:hover, [data-theme="modern"] .btn-group .btn.active {
     background-color: #2e323f !important;
+}
+
+[data-theme="modern"] .trader-nav .btn:hover, [data-theme="modern"] .trader-nav .btn.active {
+    background-color: #4a5783 !important;
 }
 
 [data-theme="modern"] .btn-group {

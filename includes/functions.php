@@ -149,17 +149,20 @@ function is_valid_trader_id($trader_id) {
  * Generate trader navigation HTML
  * 
  * @param string $active_trader_id The currently active trader ID (optional)
+ * @param string $activePage The current active page (optional)
  * @return string HTML for trader navigation
  */
-function generate_trader_nav($active_trader_id = TRADER_PRAPOR) {
+function generate_trader_nav($active_trader_id = TRADER_PRAPOR, $activePage = '') {
     $traders_data = get_traders_data();
+    // Exclude Fence and Lightkeeper on assorts page
+    if ($activePage === 'assorts') {
+        unset($traders_data[TRADER_FENCE], $traders_data[TRADER_LIGHTKEEPER]);
+    }
     $nav_html = '<nav class="btn-group trader-nav animate-in" id="tradersNav">' . "\n";
-    
     foreach ($traders_data as $trader_id => $data) {
         $active_class = ($trader_id === $active_trader_id) ? ' active' : '';
         $nav_html .= '<a class="btn sm' . $active_class . '" href="javascript:void(0);" data-trader-id="' . $trader_id . '"><img class="trader-img" src="'. $data['image'] .'" alt="' . $data['name'] . '" /><span class="trader-name">' . $data['name'] . '</span></a>' . "\n";
     }
-    
     $nav_html .= '</nav>';
     return $nav_html;
 }

@@ -15,6 +15,9 @@
                     <a class="nav-link <?php if ($activePage == 'achievements') { echo 'active'; } ?>" id="achievementsNavLink" href="<?= BASE_URL ?>/achievements">Achievements</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?php if ($activePage == 'assorts') { echo 'active'; } ?>" id="assortsNavLink" href="<?= BASE_URL ?>/assorts">Assorts</a>
+                </li> 
+                <li class="nav-item">
                     <a class="nav-link <?php if ($activePage == 'common-id') { echo 'active'; } ?>" id="commonIdNavLink" href="<?= BASE_URL ?>/common-id">Common IDs</a>
                 </li>
                 <li class="nav-item">
