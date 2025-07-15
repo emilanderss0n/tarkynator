@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
     searchContainer.className = 'component-container search-container';
     searchContainer.innerHTML = `
         <input id="assortSearch" class="form-control" type="text" placeholder="Search barters or cash offers by name or ID...">
-        <nav class="btn-group" id="loyaltyFilterBtns" style="margin-top:8px;">
+        <nav class="btn-group" id="loyaltyFilterBtns">
             <a class="btn sm active" href="javascript:void(0);" data-loyalty="all">All</a>
             <a class="btn sm" href="javascript:void(0);" data-loyalty="1"><img src="assets/img/loyalty_one.png" height="18px" alt="LL 1" /></a>
             <a class="btn sm" href="javascript:void(0);" data-loyalty="2"><img src="assets/img/loyalty_two.png" height="18px" alt="LL 2" /></a>
             <a class="btn sm" href="javascript:void(0);" data-loyalty="3"><img src="assets/img/loyalty_three.png" height="18px" alt="LL 3" /></a>
             <a class="btn sm" href="javascript:void(0);" data-loyalty="4"><img src="assets/img/loyalty_king_new.png" alt="LL 4" /></a>
         </nav>
-        <nav class="btn-group" id="assortTypeBtns" style="margin-top:8px;">
+        <nav class="btn-group" id="assortTypeBtns">
             <a class="btn sm active" href="javascript:void(0);" data-type="all">All</a>
             <a class="btn sm" href="javascript:void(0);" data-type="barters">Barters</a>
             <a class="btn sm" href="javascript:void(0);" data-type="cash">Cash</a>
