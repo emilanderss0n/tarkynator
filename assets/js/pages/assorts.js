@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 barter.requiredItems.forEach(req => {
                     html += `<div class="req-item">${getItemIcon(req.item.iconLink, req.item.name)}${req.item.name} <span class="count tag">x${req.count}</span></div>`;
                 });
-                html += `<div class="assort-id">Assort ID: <span class="global-id">${barter.id}</span></div></div><div class="card-footer">`;
+                html += `<div class="assort-id alert alert-secondary" style="margin: 1rem 0 0;">Assort ID: <span class="global-id">${barter.id}</span></div></div><div class="card-footer">`;
                 if (barter.buyLimit) {
                     html += `<div class="buy-limit">Buy Limit: ${barter.buyLimit}</div>`;
                 }
@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="card-header">${getItemIcon(offer.item.iconLink, offer.item.name)}<h3>${offer.item.name}</h3></div>
                     <div class="card-body">
                     <div class="price">Price: <span>${offer.price}</span> ${formatCurrency(offer.currency)}</div>
-                    <div class="assort-id">Assort ID: <span class="global-id">${offer.id}</span></div>
                     </div>
                     <div class="card-footer">`;
                 if (offer.buyLimit) {
