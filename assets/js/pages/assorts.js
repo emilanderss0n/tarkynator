@@ -24,20 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
     searchContainer.className = 'component-container search-container';
     searchContainer.innerHTML = `
         <input id="assortSearch" class="form-control" type="text" placeholder="Search barters or cash offers by name or ID...">
-        <nav class="btn-group" id="loyaltyFilterBtns">
+        <nav class="btn-group" id="loyaltyFilterBtns" style="margin-top:8px;">
             <a class="btn sm active" href="javascript:void(0);" data-loyalty="all">All</a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="1">LL 1</a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="2">LL 2</a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="3">LL 3</a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="4">LL 4</a>
+            <a class="btn sm" href="javascript:void(0);" data-loyalty="1"><img src="assets/img/loyalty_one.png" height="18px" alt="LL 1" /></a>
+            <a class="btn sm" href="javascript:void(0);" data-loyalty="2"><img src="assets/img/loyalty_two.png" height="18px" alt="LL 2" /></a>
+            <a class="btn sm" href="javascript:void(0);" data-loyalty="3"><img src="assets/img/loyalty_three.png" height="18px" alt="LL 3" /></a>
+            <a class="btn sm" href="javascript:void(0);" data-loyalty="4"><img src="assets/img/loyalty_king_new.png" alt="LL 4" /></a>
+        </nav>
+        <nav class="btn-group" id="assortTypeBtns" style="margin-top:8px;">
+            <a class="btn sm active" href="javascript:void(0);" data-type="all">All</a>
+            <a class="btn sm" href="javascript:void(0);" data-type="barters">Barters</a>
+            <a class="btn sm" href="javascript:void(0);" data-type="cash">Cash</a>
         </nav>
     `;
     assortContainer.insertBefore(searchContainer, assortContent);
     const assortSearch = document.getElementById('assortSearch');
     const loyaltyFilterBtns = document.getElementById('loyaltyFilterBtns');
+    const assortTypeBtns = document.getElementById('assortTypeBtns');
 
     let currentSearchTerm = '';
     let currentLoyaltyFilter = 'all';
+    let currentAssortType = 'all';
 
     const getActiveTraderId = () => {
         const activeTraderAssort = document.querySelector('#assortContainer .trader-nav .btn.active');
@@ -77,66 +84,65 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     };
 
-    const renderBarters = (barters) => {
-        if (!barters || barters.length === 0) return '<div class="alert alert-secondary">No barter offers available</div>';
-        // Sort by loyalty level (ascending, null/undefined last)
-        barters = [...barters].sort((a, b) => {
-            const la = a.level ?? 99;
-            const lb = b.level ?? 99;
-            return la - lb;
-        });
-        let html = '<div class="barters-list grid grid-400">';
-        barters.forEach(barter => {
-            html += `<div class="card barter-item"><div class="card-header">`;
-            barter.rewardItems.forEach(reward => {
-                html += `${getItemIcon(reward.item.iconLink, reward.item.name)}<h3>${reward.item.name}</h3>`;
-            });
-            html += '</div><div class="card-body"><span class="required-title">Required:</span> ';
-            barter.requiredItems.forEach(req => {
-                html += `<div class="req-item">${getItemIcon(req.item.iconLink, req.item.name)}${req.item.name} <span class="count">x${req.count}</span></div>`;
-            });
-            html += '</div><div class="card-footer">';
-            if (barter.buyLimit) {
-                html += `<div class="buy-limit">Buy Limit: ${barter.buyLimit}</div>`;
+    const renderAssortsCombined = (barters, cashOffers) => {
+        const allItems = [
+            ...barters.map(b => ({
+                type: 'barter',
+                name: b.rewardItems && b.rewardItems[0] ? b.rewardItems[0].item.name : '',
+                data: b
+            })),
+            ...cashOffers.map(c => ({
+                type: 'cash',
+                name: c.item ? c.item.name : '',
+                data: c
+            }))
+        ];
+        // Sort by name (case-insensitive)
+        allItems.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+        if (allItems.length === 0) return '<div class="alert alert-secondary">No offers available</div>';
+        let html = '<div class="assorts-list grid grid-400">';
+        allItems.forEach(item => {
+            if (item.type === 'barter') {
+                const barter = item.data;
+                html += `<div class="card barter-item"><div class="card-header">`;
+                barter.rewardItems.forEach(reward => {
+                    html += `${getItemIcon(reward.item.iconLink, reward.item.name)}<div><h3>${reward.item.name}</h3></div>`;
+                });
+                html += '</div><div class="card-body"><span class="required-title">Required:</span> ';
+                barter.requiredItems.forEach(req => {
+                    html += `<div class="req-item">${getItemIcon(req.item.iconLink, req.item.name)}${req.item.name} <span class="count tag">x${req.count}</span></div>`;
+                });
+                html += `<div class="assort-id">Assort ID: <span class="global-id">${barter.id}</span></div></div><div class="card-footer">`;
+                if (barter.buyLimit) {
+                    html += `<div class="buy-limit">Buy Limit: ${barter.buyLimit}</div>`;
+                }
+                if (barter.level) {
+                    html += `<div class="tag" title="Loyalty Level">LL ${barter.level}</div>`;
+                }
+                if (barter.taskUnlock) {
+                    html += `<div class="quest-unlock" data-tooltip="Unlocked From Quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /> ${barter.taskUnlock.name}</div>`;
+                }
+                html += '</div></div>';
+            } else if (item.type === 'cash') {
+                const offer = item.data;
+                html += `<div class="card cash-item">
+                    <div class="card-header">${getItemIcon(offer.item.iconLink, offer.item.name)}<h3>${offer.item.name}</h3></div>
+                    <div class="card-body">
+                    <div class="price">Price: <span>${offer.price}</span> ${formatCurrency(offer.currency)}</div>
+                    <div class="assort-id">Assort ID: <span class="global-id">${offer.id}</span></div>
+                    </div>
+                    <div class="card-footer">`;
+                if (offer.buyLimit) {
+                    html += `<div class="buy-limit">Buy Limit: ${offer.buyLimit}</div>`;
+                }
+                if (offer.minTraderLevel) {
+                    html += `<div class="tag" data-tooltip="Loyalty Level">LL ${offer.minTraderLevel}</div>`;
+                }
+                if (offer.taskUnlock) {
+                    html += `<div class="quest-unlock" title="Unlocked From Quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /> ${offer.taskUnlock.name}</div>`;
+                }
+                html += '</div></div>';
             }
-            if (barter.level) {
-                html += `<div class="tag" title="Loyalty Level">LL ${barter.level}</div>`;
-            }
-            if (barter.taskUnlock) {
-                html += `<div class="quest-unlock" data-tooltip="Unlocked From Quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /> ${barter.taskUnlock.name}</div>`;
-            }
-            html += '</div></div>';
-        });
-        html += '</div>';
-        return html;
-    };
-
-    const renderCashOffers = (offers) => {
-        if (!offers || offers.length === 0) return '<div class="alert alert-secondary">No cash offers available</div>';
-        // Sort by minTraderLevel (ascending, null/undefined last)
-        offers = [...offers].sort((a, b) => {
-            const la = a.minTraderLevel ?? 99;
-            const lb = b.minTraderLevel ?? 99;
-            return la - lb;
-        });
-        let html = '<div class="cashoffers-list grid grid-400">';
-        offers.forEach(offer => {
-            html += `<div class="card cash-item">
-                <div class="card-header">${getItemIcon(offer.item.iconLink, offer.item.name)}<h3>${offer.item.name}</h3></div>
-                <div class="card-body">
-                <div class="price">Price: <span>${offer.price}</span> ${formatCurrency(offer.currency)}</div>
-                </div>
-                <div class="card-footer">`;
-            if (offer.buyLimit) {
-                html += `<div class="buy-limit">Buy Limit: ${offer.buyLimit}</div>`;
-            }
-            if (offer.minTraderLevel) {
-                html += `<div class="tag" data-tooltip="Loyalty Level">LL ${offer.minTraderLevel}</div>`;
-            }
-            if (offer.taskUnlock) {
-                html += `<div class="quest-unlock" title="Unlocked From Quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /> ${offer.taskUnlock.name}</div>`;
-            }
-            html += '</div></div>';
         });
         html += '</div>';
         return html;
@@ -149,8 +155,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const { barters, cashOffers } = filterAssorts(trader.barters, trader.cashOffers, currentSearchTerm, currentLoyaltyFilter);
         let html = '';
-        html += renderBarters(barters);
-        html += renderCashOffers(cashOffers);
+        if (currentAssortType === 'all') {
+            html += renderAssortsCombined(barters, cashOffers);
+        } else if (currentAssortType === 'barters') {
+            html += renderAssortsCombined(barters, []);
+        } else if (currentAssortType === 'cash') {
+            html += renderAssortsCombined([], cashOffers);
+        }
         assortContent.innerHTML = html;
     };
 
@@ -213,6 +224,17 @@ document.addEventListener('DOMContentLoaded', () => {
             loyaltyFilterBtns.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentLoyaltyFilter = btn.getAttribute('data-loyalty');
+            showActiveTrader();
+        }
+    });
+
+    // Assort type btn group handler
+    assortTypeBtns.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn');
+        if (btn && btn.hasAttribute('data-type')) {
+            assortTypeBtns.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentAssortType = btn.getAttribute('data-type');
             showActiveTrader();
         }
     });

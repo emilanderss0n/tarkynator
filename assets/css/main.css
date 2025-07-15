@@ -2109,6 +2109,10 @@ span.global-id.copied::after {
         width: 700px;
         padding: 0;
         margin: 0;
+
+        & .btn.active {
+            font-weight: normal !important;
+        }
     }
 }
 
@@ -2141,6 +2145,11 @@ span.global-id.copied::after {
         display: flex;
         align-items: center;
         gap: 1rem;
+
+        & h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
     }
 
     & .card-footer {
@@ -2161,12 +2170,21 @@ span.global-id.copied::after {
         color: var(--darkest-bg);
     }
 
+    & .tag.count {
+        background-color: var(--darkest-bg);
+        color: var(--bright-color);
+    }
+
     & .req-item {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 0;
         border-bottom: 1px solid var(--border-color-weak);
+
+        &:last-child {
+            border-bottom: none;
+        }
 
         & > img {
             width: 42px;
