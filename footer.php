@@ -45,7 +45,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
     <?php if ($activePage === 'template' || $activePage === 'quests' || $activePage === 'assorts'): ?>
     <script>
-        var editor; // Declare editor variable in the global scope
+        var editor; // Global scope
         document.addEventListener("DOMContentLoaded", function () {
             var jsonEditorElement = document.getElementById("jsoneditor");
             if (jsonEditorElement) {
@@ -68,7 +68,7 @@
                     const copyLink = document.createElement("a");
                     copyLink.href = "#";
                     copyLink.className = "json-edit-btn";
-                    copyLink.innerHTML = "<i class='bi bi-copy'></i>"; // Clipboard icon
+                    copyLink.innerHTML = "<i class='bi bi-copy'></i>";
                     copyLink.onclick = function (event) {
                         event.preventDefault();
                         let jsonText;
