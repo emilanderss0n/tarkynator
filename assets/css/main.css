@@ -2245,15 +2245,12 @@ span.global-id.copied::after {
 /* Assort Creator Styles */
 .item-search-dropdown {
     position: absolute;
-    top: 100%;
+    top: 105%;
     left: 0;
     right: 0;
     background: var(--input-bg);
     border: 1px solid var(--border-color);
-    border-top: none;
-    border-radius: 0 0 var(--br-sm) var(--br-sm);
-    max-height: 200px;
-    overflow-y: auto;
+    border-radius: var(--br-sm);
     z-index: 1000;
     box-shadow: var(--box-shadow);
 }

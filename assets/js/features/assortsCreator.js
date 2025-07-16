@@ -67,19 +67,10 @@ export class AssortsCreator {
             dropdown.id = `${inputId}_dropdown`;
             dropdown.className = 'item-search-dropdown';
             dropdown.style.cssText = `
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                border: 1px solid #ddd;
-                border-top: none;
                 max-height: 200px;
                 overflow-y: auto;
-                z-index: 1000;
-                display: none;
-                border-radius: 0 0 4px 4px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                width: max-content;
+                overflow-x: hidden;
             `;
             input.parentNode.style.position = 'relative';
             input.parentNode.appendChild(dropdown);
@@ -104,7 +95,7 @@ export class AssortsCreator {
                     itemDiv.style.cssText = `
                         padding: 8px 12px;
                         cursor: pointer;
-                        border-bottom: 1px solid #eee;
+                        border-bottom: 1px solid var(--border-color-weak);
                         transition: background-color 0.2s;
                     `;
                     itemDiv.innerHTML = `
