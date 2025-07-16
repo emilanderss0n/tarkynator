@@ -1,7 +1,7 @@
 # Tarkynator
 
 A powerful web toolkit for modding and exploring data in Singleplayer Escape from Tarkov.  
-Visit the live tool: [https://moxopixel.com/tarkynator](https://moxopixel.com/tarkynator)
+Visit the live tool: [https://tarkynator.com](https://tarkynator.com)
 
 ## Features
 
