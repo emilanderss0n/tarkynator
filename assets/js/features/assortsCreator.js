@@ -1,6 +1,7 @@
 import { fetchData } from '../core/cache.js';
 import { DATA_URL } from '../core/localData.js';
 import { Popover } from '../components/popover.js';
+import { slideToggle } from '../core/utils.js';
 
 export class AssortsCreator {
     constructor() {
@@ -140,8 +141,10 @@ export class AssortsCreator {
     createAssortForm(container) {
         const formHTML = `
             <div class="component-container assort-creator-form">
-                <h2>Create Custom Assort</h2>
-                <p>Create a custom assort file with multiple items. Add as many items as you want.</p>
+                <div class="assort-creator-header">
+                    <h2><i class="bi bi-cart-plus"></i> Create Custom Assort</h2>
+                    <p>Create a custom assort file with multiple items. Add as many items as you want.</p>
+                </div>
                 
                 <!-- Created Assorts Summary -->
                 <div id="createdAssortsSummary" class="created-assorts-summary" style="display: none;">
@@ -154,7 +157,7 @@ export class AssortsCreator {
                         <!-- Offer Item -->
                         <div class="form-group">
                             <label for="offerItem">Item to Offer *</label>
-                            <input type="text" id="offerItem" class="form-control" placeholder="Search for item..." required>
+                            <input type="text" id="offerItem" class="form-control" placeholder="Search for item..." autocomplete="off" required>
                         </div>
 
                         <!-- Assort Type -->
@@ -189,7 +192,7 @@ export class AssortsCreator {
                         <div id="barterFields" class="form-group" style="display: none;">
                             <label>Required Items for Barter *</label>
                             <div id="barterItemsList"></div>
-                            <button type="button" id="addBarterItem" class="btn sm">+ Add Required Item</button>
+                            <button type="button" id="addBarterItem" class="btn sm"><i class="bi bi-plus"></i> Add Required Item</button>
                         </div>
 
                         <!-- Common Fields -->
@@ -227,7 +230,7 @@ export class AssortsCreator {
                     <!-- Action Buttons -->
                     <div class="form-group action-buttons">
                         <div class="btn-group">
-                            <button type="button" id="addAssortItem" class="btn sm">+ Add Item</button>
+                            <button type="button" id="addAssortItem" class="btn sm"><i class="bi bi-plus"></i> Add Item</button>
                             <button type="button" id="previewAssort" class="btn sm" style="display: none;">Preview JSON</button>
                             <button type="button" id="downloadAssort" class="btn sm" style="display: none;">Download JSON</button>
                             <button type="button" id="cancelAssort" class="btn sm">Cancel</button>
@@ -310,7 +313,7 @@ export class AssortsCreator {
             <div class="barter-item-fields">
                 <div class="form-group">
                     <label for="barterItemName_${this.barterItemsCount}">Required Item</label>
-                    <input type="text" id="barterItemName_${this.barterItemsCount}" class="form-control" placeholder="Search for item..." required>
+                    <input type="text" id="barterItemName_${this.barterItemsCount}" class="form-control" placeholder="Search for item..." autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="barterItemCount_${this.barterItemsCount}">Count</label>
@@ -678,9 +681,13 @@ export class AssortsCreator {
         // Reset form and hide creator
         const assortCreator = document.getElementById('assortCreator');
         const assortContent = document.getElementById('assortContent');
+        const assortTraderHeader = document.getElementById('traderAssorts');
+        const searchContainer = document.querySelector('.search-container');
         
-        if (assortCreator) assortCreator.style.display = 'none';
-        if (assortContent) assortContent.classList.remove('inactive');
+        slideToggle(assortCreator, 300);
+        slideToggle(assortContent, 300, 300);
+        slideToggle(assortTraderHeader, 300);
+        slideToggle(searchContainer, 300, 600);
         
         // Reset internal state
         this.barterItemsCount = 0;

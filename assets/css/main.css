@@ -2116,10 +2116,27 @@ span.global-id.copied::after {
         width: 500px;
         padding: 0;
         margin: 0;
+        box-shadow: var(--box-shadow);
+        height: 36px;
+
+        & .btn {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
         & .btn.active {
             font-weight: normal !important;
         }
+    }
+
+    & #createAssortBtn {
+        padding: 0 1rem;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 
@@ -2218,6 +2235,10 @@ span.global-id.copied::after {
     display: none;
     padding: 3rem 0;
     background-color: var(--darkest-bg);
+
+    & .assort-creator-header {
+        margin-bottom: 2rem;
+    }
 }
 
 /* Assort Creator Styles */
@@ -2253,74 +2274,26 @@ span.global-id.copied::after {
     border-bottom: none;
 }
 
-.barter-item-group {
-    margin-bottom: 10px;
-    padding: 15px;
-    background: var(--content-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--br-sm);
-}
-
-.barter-item-group .grid {
-    align-items: end;
-}
-
-.barter-item-group .remove-barter-item {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    margin-top: 1.5rem;
-}
-
-.barter-item-group .remove-barter-item:hover {
-    background-color: #c82333;
-}
-
-.preview-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-}
-
-.preview-content {
-    background: var(--background-color);
-    padding: 20px;
-    border-radius: var(--br-lg);
-    max-width: 80%;
-    max-height: 80%;
-    overflow: auto;
-    border: 1px solid var(--border-color);
-}
-
-.preview-content h3 {
-    color: var(--main-color);
-    margin-bottom: 1rem;
-}
-
-.preview-content pre {
-    background: var(--input-bg);
-    padding: 1rem;
-    border-radius: var(--br-sm);
-    overflow-x: auto;
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-}
-
 #createAssortForm {
     position: relative;
+
+    & label {
+        margin-bottom: 0.3rem;
+        color: var(--text-color);
+        opacity: 0.7;
+    }
+
+    & input:invalid, 
+    & select:invalid {
+        border: 1px solid var(--cm-boolean) !important;
+    }
 
     & .assort-form-main {
         padding: 1rem;
         background: var(--toolbar-bg);
         border-radius: var(--br-med);
         border: 1px solid var(--border-color-weak);
+        grid-template-columns: repeat(2, 1fr);
 
         & select {
             border: 1px solid var(--border-color-weak);
@@ -2337,6 +2310,41 @@ span.global-id.copied::after {
 
     & .action-buttons {
         margin-top: 1rem;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    #assortCreator .assort-form-main {
+        grid-template-columns: 1fr;
+    }
+    
+}
+
+#barterItemsList .barter-item-group {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--content-bg);
+    border: 1px solid var(--border-color-weak);
+    border-radius: var(--br-med);
+
+    & .barter-item-fields {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    & .grid {
+        align-items: end;
+    }
+
+    & .remove-barter-item {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        margin-top: 1.5rem;
+    }
+
+    & .remove-barter-item:hover {
+        background-color: #c82333;
     }
 }
 
