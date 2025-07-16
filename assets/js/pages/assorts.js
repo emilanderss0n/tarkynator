@@ -1,10 +1,12 @@
 import { fetchData } from '../core/cache.js';
 import { DATA_URL } from '../core/localData.js';
 import { Popover } from '../components/popover.js';
+import AssortsCreator from '../features/assortsCreator.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const assortContainer = document.getElementById('assortContainer');
     const assortContent = document.getElementById('assortContent');
+    const assortCreator = document.getElementById('assortCreator');
 
     // Insert search and filter UI
     const searchContainer = document.createElement('div');
@@ -23,11 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <a class="btn sm" href="javascript:void(0);" data-type="barters">Barters</a>
             <a class="btn sm" href="javascript:void(0);" data-type="cash">Cash</a>
         </nav>
+        <a class="btn sm" href="javascript:void(0);" id="createAssortBtn"><i class="bi bi-plus"></i> Create Assort</a>
     `;
     assortContainer.insertBefore(searchContainer, assortContent);
     const assortSearch = document.getElementById('assortSearch');
     const loyaltyFilterBtns = document.getElementById('loyaltyFilterBtns');
     const assortTypeBtns = document.getElementById('assortTypeBtns');
+    const createAssortBtn = document.getElementById('createAssortBtn');
 
     let currentSearchTerm = '';
     let currentLoyaltyFilter = 'all';
@@ -35,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let tarkovData = null;
     let currentAssort = null;
     let assortPopover = null;
+    let assortsCreator = null;
 
     // Constants for better performance
     const CURRENCY_TPLS = ['5449016a4bdc2d6f028b456f', '5696686a4bdc2da3298b456a', '569668774bdc2da2298b4568'];
@@ -156,6 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
             closeOnBackdrop: true,
             closeOnEscape: true
         });
+
+        // Make popover globally accessible
+        window.assortPopover = assortPopover;
     };
 
     // Show assort popover with JSON data
@@ -492,6 +500,20 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             renderTraderAssort();
         }
+    });
+    createAssortBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Show assort creator
+        assortCreator.style.display = 'grid';
+        assortContent.classList.add('inactive');
+        
+        // Initialize and create form
+        if (!assortsCreator) {
+            assortsCreator = new AssortsCreator();
+        }
+        
+        assortsCreator.createAssortForm(assortCreator);
     });
 
     // Initial load
