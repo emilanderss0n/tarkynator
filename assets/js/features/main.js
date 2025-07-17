@@ -22,9 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         event.target.innerHTML = '<i class="bi bi-check"></i> Copied';
                         event.target.classList.add("copied");
                         // Show notification toast
-                        const notif = new Notification("globalIdNotification", { autoClose: true });
-                        notif.setType("success");
-                        notif.setContent("Global ID copied to clipboard!");
+                        const notif = new Notification("globalIdNotification", { type: "info", autoClose: true });
+                        notif.setContent("ID copied to clipboard!");
                         notif.show();
                         setTimeout(() => {
                             event.target.innerHTML = originalHTML;
@@ -33,9 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     } else {
                         event.target.classList.add("copied");
                         // Show notification toast
-                        const notif = new Notification("globalIdNotification", { autoClose: true });
-                        notif.setType("success");
-                        notif.setContent("Global ID copied to clipboard!");
+                        const notif = new Notification("globalIdNotification", { type: "info", autoClose: true });
+                        notif.setContent("ID copied to clipboard!");
                         notif.show();
                         setTimeout(() => {
                             event.target.classList.remove("copied");

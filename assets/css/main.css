@@ -1112,8 +1112,7 @@ span.global-id:hover {
 }
 
 span.global-id.copied {
-    background-color: #8a9697;
-    color: var(--darkest-bg)
+    background-color: var(--main-color-btn);
 }
 
 span.global-id:hover::after {

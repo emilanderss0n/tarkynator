@@ -1,4 +1,4 @@
-    </div> <!-- End of main-app div -->
+</div> <!-- End of main-app div -->
     <div class="footer-container">
 
         <section id="welcomeMessage">
@@ -95,6 +95,12 @@
                             setTimeout(() => {
                                 event.target.classList.remove('copied');
                             }, 1400);
+                            // Show notification toast
+                            import('<?= BASE_URL ?>/assets/js/components/notifications.js').then(({ Notification }) => {
+                                const notif = new Notification("jsonCopyNotification", { type: "info", autoClose: true, duration: 5000 });
+                                notif.setContent("Copied to clipboard!");
+                                notif.show();
+                            });
                         }).catch(err => {
                             console.error("Failed to copy text: ", err);
                         });
