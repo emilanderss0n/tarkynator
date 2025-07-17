@@ -62,7 +62,10 @@ try {
     }
 
     // Return the data
-    echo $result;
+    echo json_encode([
+        'success' => true,
+        'data' => $data
+    ]);
 
 } catch (Exception $e) {
     http_response_code(500);
