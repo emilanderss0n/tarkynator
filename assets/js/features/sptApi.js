@@ -16,6 +16,8 @@ if (sptReleases) {
     fetchData(url, options)
     .then(data => {
 
+        console.log("SPT Releases Data:", data);
+
             const releases = data.data.sort((a, b) => {
                 // Compare major version first
                 if (a.version_major !== b.version_major) {
