@@ -5,8 +5,6 @@ const sptReleases = document.getElementById("sptReleases");
 if (sptReleases) {
     const url = "includes/forge-api.php";
 
-    console.log("Fetching SPT releases from:", url);
-
     const options = {
         method: "GET",
         headers: {
@@ -46,7 +44,6 @@ if (sptReleases) {
             sptReleases.innerHTML = releasesHTML;
         } else {
             sptReleases.innerHTML = '<div class="alert alert-secondary">Failed to load SPT releases</div>';
-            console.error('Failed to load SPT releases:', data.error || 'Unknown error');
         }
     })
     .catch(error => {
