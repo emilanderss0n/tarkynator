@@ -40,7 +40,7 @@ try {
         http_response_code(500);
         echo json_encode([
             'success' => false,
-            'error' => 'Failed to fetch data from SPT API'
+            'error' => 'Failed to fetch data from SPT API... '. error_get_last()['message']
         ]);
         exit;
     }
@@ -53,6 +53,11 @@ try {
             'success' => false,
             'error' => 'Invalid JSON response from API'
         ]);
+        exit;
+    }
+
+    if ($result === false) {
+        echo json_encode(['success' => false, 'error' => 'file_get_contents failed: ' . error_get_last()['message']]);
         exit;
     }
 
