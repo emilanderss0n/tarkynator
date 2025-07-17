@@ -8,7 +8,7 @@ include_once '../header.php';
             <?php include_once '../includes/trader-nav.php'; ?>
         </div>
         <div id="assortCreator"></div>
-        <div class="body animate-in container-fluid page" grid-max-col-count="4" id="assortContent">
+        <div class="body animate-in delay-2 container-fluid page" grid-max-col-count="4" id="assortContent">
             <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Insert search and filter UI
     const searchContainer = document.createElement('div');
-    searchContainer.className = 'component-container search-container';
+    searchContainer.className = 'component-container search-container animate-in delay-1';
     searchContainer.innerHTML = `
         <input id="assortSearch" class="form-control" type="text" placeholder="Search barters or cash offers by name or ID...">
         <nav class="btn-group" id="loyaltyFilterBtns">
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isCash = item.type === 'cash' || (item.type === 'barter' && isAllCurrency(item.requiredItems));
             const cardClass = isCash ? 'cash-item' : 'barter-item';
             
-            html += `<div class="card ${cardClass}" data-assort-id="${item.id}" style="cursor: pointer;">`;
+            html += `<div class="card scroll-ani scroll-70 ${cardClass}" data-assort-id="${item.id}" style="cursor: pointer;">`;
             html += `<div class="card-header">${getItemIcon(item.iconLink, item.name)}<div><h3>${item.name}</h3></div></div>`;
             html += '<div class="card-body">';
             

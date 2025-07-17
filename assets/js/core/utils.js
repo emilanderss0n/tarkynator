@@ -5,12 +5,14 @@ export function slideUp(element, { duration = 300, delay = 0 } = {}) {
     element.style.transitionDelay = `${delay}ms`;
     element.offsetHeight; // force reflow
 
-    element.style.overflow = 'hidden';
-    element.style.height = 0;
-    element.style.paddingTop = 0;
-    element.style.paddingBottom = 0;
-    element.style.marginTop = 0;
-    element.style.marginBottom = 0;
+    requestAnimationFrame(() => {
+        element.style.overflow = 'hidden';
+        element.style.height = 0;
+        element.style.paddingTop = 0;
+        element.style.paddingBottom = 0;
+        element.style.marginTop = 0;
+        element.style.marginBottom = 0;
+    });
 
     window.setTimeout(() => {
         element.style.display = 'none';
@@ -37,11 +39,13 @@ export function slideDown(element, { duration = 300, delay = 0 } = {}) {
     element.style.transitionDuration = `${duration}ms`;
     element.style.transitionDelay = `${delay}ms`;
 
-    element.style.height = height + 'px';
-    element.style.removeProperty('padding-top');
-    element.style.removeProperty('padding-bottom');
-    element.style.removeProperty('margin-top');
-    element.style.removeProperty('margin-bottom');
+    requestAnimationFrame(() => {
+        element.style.height = height + 'px';
+        element.style.removeProperty('padding-top');
+        element.style.removeProperty('padding-bottom');
+        element.style.removeProperty('margin-top');
+        element.style.removeProperty('margin-bottom');
+    });
 
     window.setTimeout(() => {
         cleanupStyles(element);

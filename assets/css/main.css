@@ -431,6 +431,18 @@ h4 {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
+.animate-in.delay-1 {
+    animation-delay: 0.25s;
+}
+
+.animate-in.delay-2 {
+    animation-delay: 0.4s;
+}
+
+.animate-in.delay-3 {
+    animation-delay: 0.65s;
+}
+
 .input-control .input-search-icon {
     position: absolute;
     left: 1rem;
