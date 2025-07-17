@@ -46,6 +46,7 @@ if (sptReleases) {
             sptReleases.innerHTML = releasesHTML;
         } else {
             sptReleases.innerHTML = '<div class="alert alert-secondary">Failed to load SPT releases</div>';
+            console.log(data.data);
         }
     })
     .catch(error => {
