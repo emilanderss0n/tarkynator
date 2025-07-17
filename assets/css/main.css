@@ -443,6 +443,75 @@ h4 {
     animation-delay: 0.65s;
 }
 
+.notification-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.notification {
+    margin: 0;
+    position: relative;
+    width: 300px;
+    padding: 0.5rem 1rem 1rem;
+    border-radius: var(--br-med);
+    box-shadow: var(--box-shadow);
+    background-color: var(--content-bg);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    border: 1px solid var(--border-color-weak);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+    &.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &.hide {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    & .notification-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        gap: 0.5rem;
+    }
+    & .notification-header .bi {
+        font-size: 1.2rem;
+    }
+    & .notification-type {
+        flex: 1;
+    }
+    & .notification-close {
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 0.5rem;
+    }
+    & .notification-progress {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 4px;
+        background-color: var(--main-color-btn);
+        width: 100%;
+        transition: width 50s linear;
+    }
+}
+
 .input-control .input-search-icon {
     position: absolute;
     left: 1rem;

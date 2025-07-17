@@ -1,3 +1,5 @@
+import { Notification } from "../components/notifications.js";
+
 document.addEventListener("DOMContentLoaded", () => {
     const cards = document.getElementsByClassName("card-bfx");
 
@@ -19,12 +21,22 @@ document.addEventListener("DOMContentLoaded", () => {
                         const originalHTML = event.target.innerHTML;
                         event.target.innerHTML = '<i class="bi bi-check"></i> Copied';
                         event.target.classList.add("copied");
+                        // Show notification toast
+                        const notif = new Notification("globalIdNotification", { autoClose: true });
+                        notif.setType("success");
+                        notif.setContent("Global ID copied to clipboard!");
+                        notif.show();
                         setTimeout(() => {
                             event.target.innerHTML = originalHTML;
                             event.target.classList.remove("copied");
                         }, 3000);
                     } else {
                         event.target.classList.add("copied");
+                        // Show notification toast
+                        const notif = new Notification("globalIdNotification", { autoClose: true });
+                        notif.setType("success");
+                        notif.setContent("Global ID copied to clipboard!");
+                        notif.show();
                         setTimeout(() => {
                             event.target.classList.remove("copied");
                         }, 1400);
