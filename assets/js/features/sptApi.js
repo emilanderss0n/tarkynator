@@ -5,6 +5,8 @@ const sptReleases = document.getElementById("sptReleases");
 if (sptReleases) {
     const url = "includes/forge-api.php";
 
+    console.log("Fetching SPT releases from:", url);
+
     const options = {
         method: "GET",
         headers: {
@@ -43,11 +45,11 @@ if (sptReleases) {
             // Insert the releases into the sptReleases element
             sptReleases.innerHTML = releasesHTML;
         } else {
-            sptReleases.innerHTML = '<p>Failed to load SPT releases</p>';
+            sptReleases.innerHTML = '<div class="alert alert-secondary">Failed to load SPT releases</div>';
         }
     })
     .catch(error => {
         console.error('Error fetching SPT releases:', error);
-        sptReleases.innerHTML = '<p>Error loading SPT releases</p>';
+        sptReleases.innerHTML = '<div class="alert alert-secondary">Error loading SPT releases</div>';
     });
 }
