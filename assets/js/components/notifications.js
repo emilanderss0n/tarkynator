@@ -53,7 +53,7 @@ export class Notification {
             this.clearAutoCloseTimeout();
             this.autoCloseTimeoutId = setTimeout(() => {
                 this.hide();
-            }, this.options.duration || 7000);
+            }, this.options.duration || 5000);
         }
         // Removed document click listener for outside clicks
     }
@@ -151,7 +151,7 @@ export class Notification {
     animateProgressBar() {
         const progressBar = this.toast.querySelector('.notification-progress');
         if (!progressBar) return;
-        progressBar.style.transition = `width ${this.options.duration || 7000}ms linear`;
+        progressBar.style.transition = `width ${this.options.duration || 5000}ms linear`;
         progressBar.style.width = '100%';
         // Start at 100%, animate to 0%
         setTimeout(() => {
