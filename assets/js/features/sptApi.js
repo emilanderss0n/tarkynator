@@ -15,9 +15,8 @@ if (sptReleases) {
 
     fetchData(url, options)
     .then(data => {
-
-        console.log("SPT Releases Data:", data);
-
+        if (data.success && data.data) {
+            // ...existing code...
             const releases = data.data.sort((a, b) => {
                 // Compare major version first
                 if (a.version_major !== b.version_major) {
@@ -43,7 +42,9 @@ if (sptReleases) {
             
             // Insert the releases into the sptReleases element
             sptReleases.innerHTML = releasesHTML;
-        
+        } else {
+            sptReleases.innerHTML = '<div class="alert alert-secondary">Failed to load SPT releases</div>';
+        }
     })
     .catch(error => {
         console.error('Error fetching SPT releases:', error);
