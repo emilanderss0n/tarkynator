@@ -126,6 +126,7 @@
     <?php endif; ?>
     <?php if ($activePage === 'assorts'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/pages/assorts.js"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
     <?php endif; ?>
     <?php if ($activePage === 'quests'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/pages/quests.js"></script>

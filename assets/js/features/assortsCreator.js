@@ -100,7 +100,7 @@ export class AssortsCreator {
                     `;
                     itemDiv.innerHTML = `
                         <div style="display: flex; align-items: center;">
-                            ${item.iconLink ? `<img src="data/icons/${item.iconLink.split('/').pop()}" alt="${item.name}" style="width: 24px; height: 24px; margin-right: 8px;">` : ''}
+                            ${item.iconLink ? `<img src="data/grid_images/${item.iconLink.split('/').pop().replace('-icon.webp', '-grid-image.webp')}" alt="${item.name}" style="width: 24px; height: 24px; margin-right: 8px;">` : ''}
                             <span>${item.name}</span>
                         </div>
                     `;

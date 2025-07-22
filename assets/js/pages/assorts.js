@@ -1,5 +1,5 @@
 import { fetchData } from '../core/cache.js';
-import { DATA_URL } from '../core/localData.js';
+import { DATA_URL, GLOBALS } from '../core/localData.js';
 import { slideToggle } from '../core/utils.js';
 import { Popover } from '../components/popover.js';
 import AssortsCreator from '../features/assortsCreator.js';
@@ -10,38 +10,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const assortTraderHeader = document.getElementById('traderAssorts');
     const assortCreator = document.getElementById('assortCreator');
 
-    // Insert search and filter UI
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'component-container search-container animate-in delay-1';
-    searchContainer.innerHTML = `
-        <input id="assortSearch" class="form-control" type="text" placeholder="Search barters or cash offers by name or ID...">
-        <nav class="btn-group" id="loyaltyFilterBtns">
-            <a class="btn sm active" href="javascript:void(0);" data-loyalty="all">All</a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="1"><img src="assets/img/loyalty_one.png" height="18px" alt="LL 1" /></a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="2"><img src="assets/img/loyalty_two.png" height="18px" alt="LL 2" /></a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="3"><img src="assets/img/loyalty_three.png" height="18px" alt="LL 3" /></a>
-            <a class="btn sm" href="javascript:void(0);" data-loyalty="4"><img src="assets/img/loyalty_king_new.png" alt="LL 4" /></a>
-        </nav>
-        <nav class="btn-group" id="assortTypeBtns">
-            <a class="btn sm active" href="javascript:void(0);" data-type="all">All</a>
-            <a class="btn sm" href="javascript:void(0);" data-type="barters">Barters</a>
-            <a class="btn sm" href="javascript:void(0);" data-type="cash">Cash</a>
-        </nav>
-        <a class="btn sm" href="javascript:void(0);" id="createAssortBtn"><i class="bi bi-cart-plus-fill"></i> Create Assort</a>
-    `;
-    assortContainer.insertBefore(searchContainer, assortContent);
     const assortSearch = document.getElementById('assortSearch');
     const loyaltyFilterBtns = document.getElementById('loyaltyFilterBtns');
     const assortTypeBtns = document.getElementById('assortTypeBtns');
     const createAssortBtn = document.getElementById('createAssortBtn');
+    const searchContainer = document.querySelector('.search-container');
 
     let currentSearchTerm = '';
     let currentLoyaltyFilter = 'all';
     let currentAssortType = 'all';
     let tarkovData = null;
+    let globalsData = null;
     let currentAssort = null;
     let assortPopover = null;
     let assortsCreator = null;
+    let isotopeInstance = null;
 
     // Constants for better performance
     const CURRENCY_TPLS = ['5449016a4bdc2d6f028b456f', '5696686a4bdc2da3298b456a', '569668774bdc2da2298b4568'];
@@ -57,8 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Utility to format item icons
-    const getItemIcon = (iconLink, name) =>
-        iconLink ? `<img src="data/icons/${iconLink.split('/').pop()}" alt="${name}" class="item-icon">` : '';
+    const getItemIcon = (iconLink, name, isPreset = false) => {
+        if (!iconLink) return '';
+        
+        // Convert icon filename to grid image filename
+        let filename = iconLink.split('/').pop();
+        // Replace -icon.webp suffix with -grid-image.webp
+        if (filename.endsWith('-icon.webp')) {
+            filename = filename.replace('-icon.webp', '-grid-image.webp');
+        }
+        const iconSrc = `data/grid_images/${filename}`;
+        const presetClass = isPreset ? ' preset-icon' : '';
+        
+        // Popover logic disabled:
+        return `<img src="${iconSrc}" alt="${name}" class="item-icon${presetClass}"/>`;
+    };
     
     // Utility to format currency
     const formatCurrency = (currency) => CURRENCY_SYMBOLS[currency] || currency;
@@ -68,10 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return activeTraderAssort ? activeTraderAssort.getAttribute('data-trader-id') : null;
     };
 
-    // Load tarkov_data.json once
+    // Load tarkov_data.json and globals.json once
     async function ensureTarkovDataLoaded() {
         if (!tarkovData) {
             tarkovData = await fetchData(DATA_URL);
+        }
+        if (!globalsData) {
+            globalsData = await fetchData(GLOBALS);
         }
     }
 
@@ -85,6 +84,61 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         }
     }
+
+    // Helper function to get preset information if the item is a preset
+    const getPresetInfo = (assortId, assortItems) => {
+        // Check if this assort has child items (making it a preset)
+        const hasChildItems = assortItems.some(child => child.parentId === assortId);
+        
+        if (!hasChildItems) return null;
+
+        // Get the root item
+        const rootItem = assortItems.find(item => item._id === assortId);
+        if (!rootItem) return null;
+
+        // Get the base item template from the root item
+        const baseItemId = rootItem._tpl;
+        if (!baseItemId) return null;
+
+        // Get the base item info from tarkov_data.json
+        const baseItemData = tarkovData.items[baseItemId];
+        if (!baseItemData) return null;
+
+        // Look up the preset in globals.json (optional - may not exist for all presets)
+        const presetData = globalsData?.ItemPresets?.[assortId];
+
+        // Get all items that are part of this preset
+        const presetItems = assortItems.filter(item => 
+            item._id === assortId || item.parentId === assortId
+        );
+
+        return {
+            isPreset: true,
+            baseItemId: baseItemId,
+            baseItemData: baseItemData,
+            presetData: presetData || null,
+            presetItems: presetItems
+        };
+    };
+
+    // Helper function to format preset name and loyalty level based on context
+    const formatItemName = (baseName, isPreset, loyaltyLevel, allowHtml = true) => {
+        if (!allowHtml) {
+            let result = baseName;
+            if (isPreset) result += ' (Preset)';
+            if (loyaltyLevel && loyaltyLevel > 1) result += ` (LL ${loyaltyLevel})`;
+            return result;
+        }
+        
+        let result = baseName;
+        if (isPreset) {
+            result += ` <span class='tag preset-label' title='This is a preset'>Preset</span>`;
+        }
+        if (loyaltyLevel && loyaltyLevel > 1) {
+            result += ` <span class='tag' title='Loyalty Level'>LL ${loyaltyLevel}</span>`;
+        }
+        return result;
+    };
 
     // Helper function to determine loyalty level
     const getLoyaltyLevel = (itemId, loyaltyMap) => {
@@ -187,7 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (assortData) {
                 // Update popover title
-                assortPopover.setTitle(`${itemName} - Assort Data`);
+                let title = `${itemName} - Assort Data`;
+                assortPopover.setTitle(title);
 
                 // Create CodeMirror editor container
                 const editorId = `assort-editor-${assortId}`;
@@ -320,19 +375,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const barterScheme = currentAssort.barter_scheme || {};
         let barters = rootItems.filter(item => barterScheme[item._id] && barterScheme[item._id].length > 0).map(item => {
             const tpl = item._tpl;
-            const itemData = tarkovData.items[tpl] || {};
+            let itemData = tarkovData.items[tpl] || {};
+            let iconLink = itemData.iconLink || '';
+            let name = itemData.name || tpl;
+            
+            // Check if this is a preset
+            const presetInfo = getPresetInfo(item._id, currentAssort.items);
+            if (presetInfo) {
+                // Use preset base item info and keep base name clean
+                itemData = presetInfo.baseItemData;
+                name = itemData.name; // Store clean name without HTML
+                iconLink = itemData.iconLink || iconLink;
+            }
+
             const level = getLoyaltyLevel(item._id, loyaltyMap);
             const requiredItems = processBarterRequiredItems(barterScheme, item._id, tarkovData);
             
             return {
                 id: item._id,
                 tpl,
-                name: itemData.name || tpl,
-                iconLink: itemData.iconLink || '',
+                name,
+                iconLink,
                 level,
                 buyLimit: item.upd?.BuyRestrictionMax,
                 requiredItems,
-                taskUnlock: null
+                taskUnlock: null,
+                isPreset: !!presetInfo,
+                presetInfo: presetInfo
             };
         });
 
@@ -342,84 +411,86 @@ document.addEventListener('DOMContentLoaded', () => {
             return scheme && scheme.length === 1 && CURRENCY_TPLS.includes(scheme[0]._tpl);
         }).map(item => {
             const tpl = item._tpl;
-            const itemData = tarkovData.items[tpl] || {};
+            let itemData = tarkovData.items[tpl] || {};
+            let iconLink = itemData.iconLink || '';
+            let name = itemData.name || tpl;
+            
+            // Check if this is a preset
+            const presetInfo = getPresetInfo(item._id, currentAssort.items);
+            if (presetInfo) {
+                // Use preset base item info and keep base name clean
+                itemData = presetInfo.baseItemData;
+                name = itemData.name; // Store clean name without formatting
+                iconLink = itemData.iconLink || iconLink;
+            }
+
             const scheme = barterScheme[item._id][0];
             const level = getLoyaltyLevel(item._id, loyaltyMap);
             
             return {
                 id: item._id,
                 tpl,
-                name: itemData.name || tpl,
-                iconLink: itemData.iconLink || '',
+                name,
+                iconLink,
                 minTraderLevel: level,
                 buyLimit: item.upd?.BuyRestrictionMax,
                 price: scheme.count || 1,
                 currency: CURRENCY_MAP[scheme._tpl] || '',
-                taskUnlock: null
+                taskUnlock: null,
+                isPreset: !!presetInfo,
+                presetInfo: presetInfo
             };
         });
-        // Filter and search
-        const filterAssorts = (barters, cashOffers, searchTerm, loyalty) => {
-            let filteredBarters = barters;
-            let filteredCashOffers = cashOffers;
-            if (loyalty && loyalty !== 'all') {
-                const lvl = parseInt(loyalty, 10);
-                filteredBarters = filteredBarters.filter(b => (b.level ?? 1) === lvl);
-                filteredCashOffers = filteredCashOffers.filter(o => (o.minTraderLevel ?? 1) === lvl);
-            }
-            if (!searchTerm) return { barters: filteredBarters, cashOffers: filteredCashOffers };
-            const term = searchTerm.toLowerCase();
-            const filterFn = (item) => {
-                return (
-                    item.name.toLowerCase().includes(term) ||
-                    item.id.toLowerCase().includes(term)
-                );
-            };
-            return {
-                barters: filteredBarters.filter(filterFn),
-                cashOffers: filteredCashOffers.filter(filterFn)
-            };
-        };
-        const { barters: filteredBarters, cashOffers: filteredCashOffers } = filterAssorts(barters, cashOffers, currentSearchTerm, currentLoyaltyFilter);
-        // Combine and sort by name
+        // Combine all items without any filtering - let Isotope handle all filtering
         let allItems = [
-            ...filteredBarters.map(b => {
+            ...barters.map(b => {
                 // Determine if this barter is actually a cash offer (all requiredItems are currency)
                 const isCash = isAllCurrency(b.requiredItems);
                 return { type: isCash ? 'cash' : 'barter', ...b };
             }),
-            ...filteredCashOffers.map(c => ({ type: 'cash', ...c }))
+            ...cashOffers.map(c => {
+                return { type: 'cash', ...c };
+            })
         ];
-        // Filter by currentAssortType
-        if (currentAssortType === 'barters') {
-            allItems = allItems.filter(item => item.type === 'barter');
-        } else if (currentAssortType === 'cash') {
-            allItems = allItems.filter(item => item.type === 'cash');
-        }
         allItems.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
         if (allItems.length === 0) {
             assortContent.innerHTML = '<div class="alert alert-secondary">No offers available</div>';
             return;
         }
-        let html = '<div class="assorts-list grid grid-400">';
+        let html = '<div id="grid-container" class="assorts-list">';
         allItems.forEach(item => {
             // Determine if this is a cash offer (all requiredItems are currency) or barter
             const isCash = item.type === 'cash' || (item.type === 'barter' && isAllCurrency(item.requiredItems));
             const cardClass = isCash ? 'cash-item' : 'barter-item';
             
-            html += `<div class="card scroll-ani scroll-70 ${cardClass}" data-assort-id="${item.id}" style="cursor: pointer;">`;
-            html += `<div class="card-header">${getItemIcon(item.iconLink, item.name)}<div><h3>${item.name}</h3></div></div>`;
-            html += '<div class="card-body">';
+            // Set the correct category for filtering (match the button data-type values)
+            const categoryForFilter = isCash ? 'cash' : 'barters';
             
+            // Get item dimensions from tarkov data for better masonry layout
+            const itemData = tarkovData.items[item.tpl] || {};
+            const itemWidth = itemData.width || 1;
+            const itemHeight = itemData.height || 1;
+            const cellSize = 64; // Each cell is approximately 64px
+            const cardWidth = itemWidth * cellSize;
+            const cardHeight = itemHeight * cellSize;
+            const expandedWidth = cardWidth + 300;
+            
+            // Determine loyalty level for display (use level or minTraderLevel)
+            const loyaltyLevel = item.level || item.minTraderLevel;
+            
+            html += `<div class="card ${cardClass}" data-category="${categoryForFilter}" data-loyalty="${loyaltyLevel}" data-assort-width="${cardWidth}" data-assort-id="${item.id}" data-tpl="${item.tpl}" style="width: ${cardWidth}px; min-height: ${cardHeight}px; --expanded-width: ${expandedWidth}px;">`;
+            html += '<div class="card-body">';
+            html += `<div class="assort-image clickable" style="cursor: pointer;">${getItemIcon(item.iconLink, item.name, item.isPreset)}<div class="assort-item-info"><h3 class="assort-name" style="cursor: pointer;">${formatItemName(item.name, item.isPreset, loyaltyLevel, true)}</h3>`;
             if (item.type === 'barter' && Array.isArray(item.requiredItems) && item.requiredItems.length > 0 && item.requiredItems[0]?.name) {
-                html += '<span class="required-title">Required:</span> ';
+                html += '<div class="required-items">';
+                html += '<p class="required-title">Required:</p> ';
                 item.requiredItems.forEach(req => {
                     if (req?.name) {
                         html += `<div class="req-item">${getItemIcon(req.iconLink, req.name)}${req.name} <span class="count tag">x${req.count}</span></div>`;
                     }
                 });
+                html += '</div>';
             }
-            
             if (isCash) {
                 let price = item.price;
                 let currency = item.currency;
@@ -431,37 +502,134 @@ document.addEventListener('DOMContentLoaded', () => {
                     html += `<div class="price">Price: <span>${price}</span> ${formatCurrency(currency)}</div>`;
                 }
             }
-            
-            html += '</div><div class="card-footer">';
-            
-            if (item.buyLimit) {
-                html += `<div class="buy-limit">Buy Limit: ${item.buyLimit}</div>`;
-            }
-            if (item.level) {
-                html += `<div class="tag" title="Loyalty Level">LL ${item.level}</div>`;
-            }
-            if (item.minTraderLevel) {
-                html += `<div class="tag" data-tooltip="Loyalty Level">LL ${item.minTraderLevel}</div>`;
-            }
-            html += '</div></div>';
+            html += '<div class="assort-actions"><button class="btn btn-sm view-json-btn" data-assort-id="' + item.id + '">View JSON</button></div>';
+            html += '</div></div></div></div>';
         });
         html += '</div>';
         assortContent.innerHTML = html;
 
-        // Add click handlers for assort items
+        // Add click handlers for assort items (only on image and name)
         const assortCards = document.querySelectorAll('.card[data-assort-id]');
         assortCards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                e.preventDefault();
-                const assortId = card.getAttribute('data-assort-id');
-                const itemName = card.querySelector('h3').textContent;
-                showAssortPopover(assortId, itemName);
+            // Add click handlers to clickable elements (image and name) for expand/collapse
+            const clickableElements = card.querySelectorAll('.clickable');
+            clickableElements.forEach(element => {
+                element.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Check if this element is currently expanded
+                    const isCurrentlyExpanded = element.classList.contains('expanded');
+                    
+                    // Remove expanded class from all assort images and reset their card heights
+                    document.querySelectorAll('.assort-image.expanded').forEach(expandedElement => {
+                        expandedElement.classList.remove('expanded');
+                        const expandedCard = expandedElement.closest('.card');
+                        if (expandedCard) {
+                            // Reset to original height
+                            const tpl = expandedCard.getAttribute('data-tpl');
+                            const itemData = tarkovData.items[tpl] || {};
+                            const itemHeight = itemData.height || 1;
+                            const cellSize = 64;
+                            const originalHeight = itemHeight * cellSize;
+                            expandedCard.style.height = 'auto';
+                            expandedCard.style.minHeight = `${originalHeight}px`;
+                        }
+                    });
+                    
+                    // If this element wasn't expanded, expand it
+                    if (!isCurrentlyExpanded) {
+                        element.classList.add('expanded');
+                        
+                        const actualHeight = card.scrollHeight;
+                        card.style.height = `${actualHeight}px`;
+                        card.style.minHeight = `${actualHeight}px`;
+                        isotopeInstance.layout();
+                    } else {
+                        // Reset height for collapsed state
+                        isotopeInstance.layout();
+                    }
+                });
             });
+            
+            // Add click handler for "View JSON" button
+            const viewJsonBtn = card.querySelector('.view-json-btn');
+            if (viewJsonBtn) {
+                viewJsonBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const assortId = viewJsonBtn.getAttribute('data-assort-id');
+                    const itemName = card.querySelector('h3').textContent;
+                    showAssortPopover(assortId, itemName);
+                });
+            }
         });
+        
+        // Initialize or reinitialize Isotope layout
+        const assortsList = document.querySelector('.assorts-list');
+        if (assortsList && typeof Isotope !== 'undefined') {
+            // Destroy previous instance if it exists
+            if (isotopeInstance) {
+                isotopeInstance.destroy();
+            }
+            
+            // Initialize new Isotope instance with cell-based sizing
+            const cellSize = 64; // Each cell is approximately 64px
+            isotopeInstance = new Isotope(assortsList, {
+                itemSelector: '.card',
+                layoutMode: 'masonry',
+                masonry: {
+                    columnWidth: cellSize,
+                    gutter: 10
+                },
+                filter: '*', // Show all items initially
+                transitionDuration: '0.3s'
+            });
+            
+            // Apply current filters after a small delay to ensure Isotope is ready
+            setTimeout(() => {
+                applyIsotopeFilters();
+            }, 100);
+        }
     } catch (error) {
         handleError(error, 'renderTraderAssort');
     }
 }
+
+    // Function to apply filters using Isotope
+    const applyIsotopeFilters = () => {
+        if (!isotopeInstance) return;
+        
+        // Use a function-based filter for complex filtering logic
+        isotopeInstance.arrange({
+            filter: function(itemElem) {
+                const loyaltyLevel = itemElem.getAttribute('data-loyalty');
+                const category = itemElem.getAttribute('data-category');
+                const itemName = itemElem.querySelector('h3')?.textContent?.toLowerCase() || '';
+                const assortId = itemElem.getAttribute('data-assort-id')?.toLowerCase() || '';
+                
+                // Check loyalty filter - convert both to strings for comparison
+                if (currentLoyaltyFilter !== 'all' && String(loyaltyLevel) !== String(currentLoyaltyFilter)) {
+                    return false;
+                }
+                
+                // Check category filter
+                if (currentAssortType !== 'all' && category !== currentAssortType) {
+                    return false;
+                }
+                
+                // Check search filter
+                if (currentSearchTerm) {
+                    const searchTerm = currentSearchTerm.toLowerCase();
+                    if (!itemName.includes(searchTerm) && !assortId.includes(searchTerm)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+        });
+    };
 
     // Debounce function for search input
     function debounce(func, wait) {
@@ -475,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handlers
     assortSearch.addEventListener('input', debounce(() => {
         currentSearchTerm = assortSearch.value.trim();
-        renderTraderAssort();
+        applyIsotopeFilters();
     }, 250));
     loyaltyFilterBtns.addEventListener('click', (e) => {
         const btn = e.target.closest('.btn');
@@ -483,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loyaltyFilterBtns.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentLoyaltyFilter = btn.getAttribute('data-loyalty');
-            renderTraderAssort();
+            applyIsotopeFilters();
         }
     });
     assortTypeBtns.addEventListener('click', (e) => {
@@ -492,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
             assortTypeBtns.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentAssortType = btn.getAttribute('data-type');
-            renderTraderAssort();
+            applyIsotopeFilters();
         }
     });
     assortContainer.addEventListener('click', (e) => {
@@ -500,6 +668,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btn && btn.hasAttribute('data-trader-id')) {
             document.querySelectorAll('#assortContainer .trader-nav .btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            
+            // Reset filters when switching traders
+            currentSearchTerm = '';
+            currentLoyaltyFilter = 'all';
+            currentAssortType = 'all';
+            
+            // Reset UI elements
+            if (assortSearch) assortSearch.value = '';
+            loyaltyFilterBtns.querySelectorAll('.btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-loyalty') === 'all');
+            });
+            assortTypeBtns.querySelectorAll('.btn').forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-type') === 'all');
+            });
+            
+            // Clear any inline display styles that might interfere
+            document.querySelectorAll('.card[data-assort-id]').forEach(card => {
+                card.style.display = '';
+            });
+            
             renderTraderAssort();
         }
     });
@@ -525,4 +713,5 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeAssortPopover(); // Initialize popover
         renderTraderAssort();
     });
+
 });
