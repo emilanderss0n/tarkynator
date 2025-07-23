@@ -2353,7 +2353,10 @@ span.global-id.copied::after {
         gap: 1rem;
 
         & > img {
-            width: fit-content;
+            max-width: 100%;
+            max-height: 300px;
+            place-self: center;
+
         }
 
         & .price {

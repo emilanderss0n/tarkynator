@@ -504,12 +504,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const assortInfoDiv = document.getElementById('assortInfo');
                     if (assortInfoDiv) {
                         let infoHtml = `<div class="info-header"><h3>${formatItemName(item.name, item.isPreset, item.level || item.minTraderLevel, true)}</h3></div>`;
-                        infoHtml += `<div class="info-body">${getItemIcon(item.iconLink, item.name, item.isPreset)}`;
+                        
+                        // Use data/images for main item image in assortInfo (convert -icon.webp to -512.webp)
+                        let mainImageSrc = '';
+                        if (item.iconLink) {
+                            let filename = item.iconLink.split('/').pop();
+                            if (filename.endsWith('-icon.webp')) {
+                                filename = filename.replace('-icon.webp', '-512.webp');
+                            }
+                            mainImageSrc = `data/images/${filename}`;
+                        }
+                        infoHtml += `<div class="info-body"><img src="${mainImageSrc}" alt="${item.name}" class="item-icon${item.isPreset ? ' preset-icon' : ''}"/>`;
+                        
                         if (item.type === 'barter' && Array.isArray(item.requiredItems) && item.requiredItems.length > 0 && item.requiredItems[0]?.name) {
                             infoHtml += '<div class="required-items"><p class="required-title">Required:</p>';
                             item.requiredItems.forEach(req => {
                                 if (req?.name) {
-                                    infoHtml += `<div class="req-item">${getItemIcon(req.iconLink, req.name)}${req.name} <span class="count tag">x${req.count}</span></div>`;
+                                    // Use data/icons for barter required items
+                                    const barterIconSrc = req.iconLink ? `data/icons/${req.iconLink.split('/').pop()}` : '';
+                                    infoHtml += `<div class="req-item"><img src="${barterIconSrc}" alt="${req.name}" class="item-icon"/>${req.name} <span class="count tag">x${req.count}</span></div>`;
                                 }
                             });
                             infoHtml += '</div>';
