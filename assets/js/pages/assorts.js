@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
             assortContent.innerHTML = '<div class="alert alert-secondary">No offers available</div>';
             return;
         }
-        let html = '<div id="grid-container" class="assorts-list">';
+        let html = '<div id="grid-container" class="assorts-list"><div class="assort-items">';
         allItems.forEach(item => {
             // Determine if this is a cash offer (all requiredItems are currency) or barter
             const isCash = item.type === 'cash' || (item.type === 'barter' && isAllCurrency(item.requiredItems));
@@ -480,31 +480,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             html += `<div class="card ${cardClass}" data-category="${categoryForFilter}" data-loyalty="${loyaltyLevel}" data-assort-width="${cardWidth}" data-assort-id="${item.id}" data-tpl="${item.tpl}" style="width: ${cardWidth}px; min-height: ${cardHeight}px; --expanded-width: ${expandedWidth}px;">`;
             html += '<div class="card-body">';
-            html += `<div class="assort-image clickable" style="cursor: pointer;">${getItemIcon(item.iconLink, item.name, item.isPreset)}<div class="assort-item-info"><h3 class="assort-name" style="cursor: pointer;">${formatItemName(item.name, item.isPreset, loyaltyLevel, true)}</h3>`;
-            if (item.type === 'barter' && Array.isArray(item.requiredItems) && item.requiredItems.length > 0 && item.requiredItems[0]?.name) {
-                html += '<div class="required-items">';
-                html += '<p class="required-title">Required:</p> ';
-                item.requiredItems.forEach(req => {
-                    if (req?.name) {
-                        html += `<div class="req-item">${getItemIcon(req.iconLink, req.name)}${req.name} <span class="count tag">x${req.count}</span></div>`;
-                    }
-                });
-                html += '</div>';
-            }
-            if (isCash) {
-                let price = item.price;
-                let currency = item.currency;
-                if ((!price || !currency) && Array.isArray(item.requiredItems) && item.requiredItems.length === 1) {
-                    price = item.requiredItems[0].count;
-                    currency = CURRENCY_MAP[item.requiredItems[0].id];
-                }
-                if (price && currency) {
-                    html += `<div class="price">Price: <span>${price}</span> ${formatCurrency(currency)}</div>`;
-                }
-            }
-            html += '<div class="assort-actions"><button class="btn btn-sm view-json-btn" data-assort-id="' + item.id + '">View JSON</button></div>';
-            html += '</div></div></div></div>';
+            html += `<div class="assort-image clickable" style="cursor: pointer;">${getItemIcon(item.iconLink, item.name, item.isPreset)}`;
+            html += '</div></div></div>';
         });
+        html += '</div><div id="assortInfo" class="assort-info-empty"><div class="assort-info-placeholder">Select an item to view details.</div></div>';
         html += '</div>';
         assortContent.innerHTML = html;
 
@@ -517,37 +496,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
-                    // Check if this element is currently expanded
-                    const isCurrentlyExpanded = element.classList.contains('expanded');
-                    
-                    // Remove expanded class from all assort images and reset their card heights
-                    document.querySelectorAll('.assort-image.expanded').forEach(expandedElement => {
-                        expandedElement.classList.remove('expanded');
-                        const expandedCard = expandedElement.closest('.card');
-                        if (expandedCard) {
-                            // Reset to original height
-                            const tpl = expandedCard.getAttribute('data-tpl');
-                            const itemData = tarkovData.items[tpl] || {};
-                            const itemHeight = itemData.height || 1;
-                            const cellSize = 64;
-                            const originalHeight = itemHeight * cellSize;
-                            expandedCard.style.height = 'auto';
-                            expandedCard.style.minHeight = `${originalHeight}px`;
+                    const assortId = card.getAttribute('data-assort-id');
+                    const item = allItems.find(i => i.id === assortId);
+                    if (!item) return;
+                    // Render info in #assortInfo
+                    const assortInfoDiv = document.getElementById('assortInfo');
+                    if (assortInfoDiv) {
+                        let infoHtml = `<div class="info-header"><h3>${formatItemName(item.name, item.isPreset, item.level || item.minTraderLevel, true)}</h3></div>`;
+                        infoHtml += `<div class="info-body">${getItemIcon(item.iconLink, item.name, item.isPreset)}`;
+                        if (item.type === 'barter' && Array.isArray(item.requiredItems) && item.requiredItems.length > 0 && item.requiredItems[0]?.name) {
+                            infoHtml += '<div class="required-items"><p class="required-title">Required:</p>';
+                            item.requiredItems.forEach(req => {
+                                if (req?.name) {
+                                    infoHtml += `<div class="req-item">${getItemIcon(req.iconLink, req.name)}${req.name} <span class="count tag">x${req.count}</span></div>`;
+                                }
+                            });
+                            infoHtml += '</div>';
                         }
-                    });
-                    
-                    // If this element wasn't expanded, expand it
-                    if (!isCurrentlyExpanded) {
-                        element.classList.add('expanded');
-                        
-                        const actualHeight = card.scrollHeight;
-                        card.style.height = `${actualHeight}px`;
-                        card.style.minHeight = `${actualHeight}px`;
-                        isotopeInstance.layout();
-                    } else {
-                        // Reset height for collapsed state
-                        isotopeInstance.layout();
+                        if (item.type === 'cash' || (item.type === 'barter' && isAllCurrency(item.requiredItems))) {
+                            let price = item.price;
+                            let currency = item.currency;
+                            if ((!price || !currency) && Array.isArray(item.requiredItems) && item.requiredItems.length === 1) {
+                                price = item.requiredItems[0].count;
+                                currency = CURRENCY_MAP[item.requiredItems[0].id];
+                            }
+                            if (price && currency) {
+                                infoHtml += `<div class="price">Price: <span>${price}</span> ${formatCurrency(currency)}</div>`;
+                            }
+                        }
+                        // Add View JSON button
+                        infoHtml += `</div><div class="info-footer"><div class="assort-actions"><button class="btn btn-sm view-json-btn" data-assort-id="${item.id}">View JSON</button></div></div>`;
+                        assortInfoDiv.innerHTML = infoHtml;
+                        // Wire up the button
+                        const jsonBtn = assortInfoDiv.querySelector('.view-json-btn');
+                        if (jsonBtn) {
+                            jsonBtn.addEventListener('click', (ev) => {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                showAssortPopover(item.id, item.name);
+                            });
+                        }
                     }
                 });
             });
@@ -566,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         // Initialize or reinitialize Isotope layout
-        const assortsList = document.querySelector('.assorts-list');
+        const assortsList = document.querySelector('.assort-items');
         if (assortsList && typeof Isotope !== 'undefined') {
             // Destroy previous instance if it exists
             if (isotopeInstance) {
@@ -668,12 +656,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btn && btn.hasAttribute('data-trader-id')) {
             document.querySelectorAll('#assortContainer .trader-nav .btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
             // Reset filters when switching traders
             currentSearchTerm = '';
             currentLoyaltyFilter = 'all';
             currentAssortType = 'all';
-            
             // Reset UI elements
             if (assortSearch) assortSearch.value = '';
             loyaltyFilterBtns.querySelectorAll('.btn').forEach(b => {
@@ -682,12 +668,16 @@ document.addEventListener('DOMContentLoaded', () => {
             assortTypeBtns.querySelectorAll('.btn').forEach(b => {
                 b.classList.toggle('active', b.getAttribute('data-type') === 'all');
             });
-            
             // Clear any inline display styles that might interfere
             document.querySelectorAll('.card[data-assort-id]').forEach(card => {
                 card.style.display = '';
             });
-            
+            // Reset #assortInfo to placeholder
+            const assortInfoDiv = document.getElementById('assortInfo');
+            if (assortInfoDiv) {
+                assortInfoDiv.className = 'assort-info-empty';
+                assortInfoDiv.innerHTML = '<div class="assort-info-placeholder">Select an item to view details.</div>';
+            }
             renderTraderAssort();
         }
     });

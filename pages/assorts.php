@@ -19,8 +19,8 @@ include_once '../header.php';
             </nav>
             <nav class="btn-group" id="assortTypeBtns">
                 <a class="btn sm active" href="javascript:void(0);" data-type="all">All</a>
-                <a class="btn sm" href="javascript:void(0);" data-type="barters"><span class="barter"></span>Barters</a>
-                <a class="btn sm" href="javascript:void(0);" data-type="cash"><span class="cash"></span>Cash</a>
+                <a class="btn sm" href="javascript:void(0);" data-type="barters">Barters</a>
+                <a class="btn sm" href="javascript:void(0);" data-type="cash">Cash</a>
             </nav>
             <a class="btn sm" href="javascript:void(0);" id="createAssortBtn"><i class="bi bi-cart-plus-fill"></i> Create Assort</a>
         </div>
