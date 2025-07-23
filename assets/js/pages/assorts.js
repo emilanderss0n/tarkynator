@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let assortPopover = null;
     let assortsCreator = null;
     let isotopeInstance = null;
+    let allItems = []; // Add allItems to global scope
 
     // Constants for better performance
     const CURRENCY_TPLS = ['5449016a4bdc2d6f028b456f', '5696686a4bdc2da3298b456a', '569668774bdc2da2298b4568'];
@@ -442,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         });
         // Combine all items without any filtering - let Isotope handle all filtering
-        let allItems = [
+        allItems = [
             ...barters.map(b => {
                 // Determine if this barter is actually a cash offer (all requiredItems are currency)
                 const isCash = isAllCurrency(b.requiredItems);
@@ -593,8 +594,11 @@ document.addEventListener('DOMContentLoaded', () => {
             filter: function(itemElem) {
                 const loyaltyLevel = itemElem.getAttribute('data-loyalty');
                 const category = itemElem.getAttribute('data-category');
-                const itemName = itemElem.querySelector('h3')?.textContent?.toLowerCase() || '';
                 const assortId = itemElem.getAttribute('data-assort-id')?.toLowerCase() || '';
+                
+                // Get item name from allItems array instead of DOM
+                const item = allItems.find(i => i.id === itemElem.getAttribute('data-assort-id'));
+                const itemName = item ? item.name.toLowerCase() : '';
                 
                 // Check loyalty filter - convert both to strings for comparison
                 if (currentLoyaltyFilter !== 'all' && String(loyaltyLevel) !== String(currentLoyaltyFilter)) {
