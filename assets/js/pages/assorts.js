@@ -153,10 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
         for (const [presetId, preset] of Object.entries(globalsData.ItemPresets)) {
             if (!preset._items || !Array.isArray(preset._items)) continue;
 
-            // Find the root item of this preset
-            const presetRoot = preset._items.find(item => 
-                !item.parentId || preset._items.every(other => other._id !== item.parentId)
-            );
+            // Find the root item of this preset - try multiple approaches
+            let presetRoot = preset._items.find(item => !item.parentId);
+            if (!presetRoot) {
+                // Fallback: find item whose parentId doesn't exist in the items array
+                presetRoot = preset._items.find(item => 
+                    !preset._items.some(other => other._id === item.parentId)
+                );
+            }
             
             if (!presetRoot || presetRoot._tpl !== baseItemId) continue;
 
@@ -168,10 +172,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Calculate match score (how many assort slots match globals slots)
+            // Calculate match score
             const assortSlots = Object.keys(assortSlotMap);
-            let matchedSlots = 0;
+            const globalsSlots = Object.keys(globalsSlotMap);
             
+            // Handle case where assort has no slots (simple weapon without mods)
+            if (assortSlots.length === 0) {
+                // If globals preset also has no slots, it's a potential match
+                if (globalsSlots.length === 0) {
+                    // Score based on base item match only
+                    bestMatch = presetId;
+                    bestMatchScore = 1.0;
+                    return presetId; // Return immediately for exact base item match with no mods
+                }
+                // If globals has slots but assort doesn't, score lower but still consider
+                const score = 0.5; // Base item matches but structure differs
+                if (score > bestMatchScore) {
+                    bestMatch = presetId;
+                    bestMatchScore = score;
+                }
+                continue;
+            }
+            
+            let matchedSlots = 0;
             for (const slotId of assortSlots) {
                 if (globalsSlotMap[slotId] === assortSlotMap[slotId]) {
                     matchedSlots++;
@@ -179,10 +202,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Calculate score as percentage of assort slots that match
-            const score = assortSlots.length > 0 ? matchedSlots / assortSlots.length : 0;
+            let score = assortSlots.length > 0 ? matchedSlots / assortSlots.length : 0;
             
-            // We want a high match rate (80%+) and prefer exact matches
-            if (score >= 0.8 && score > bestMatchScore) {
+            // Also consider reverse match (how many globals slots are covered)
+            let reverseMatchedSlots = 0;
+            for (const slotId of globalsSlots) {
+                if (assortSlotMap[slotId] === globalsSlotMap[slotId]) {
+                    reverseMatchedSlots++;
+                }
+            }
+            const reverseScore = globalsSlots.length > 0 ? reverseMatchedSlots / globalsSlots.length : 0;
+            
+            // Use the better of the two scores, but prefer exact matches
+            score = Math.max(score, reverseScore);
+            
+            // Lower the threshold to 60% for better matching, but prioritize exact matches
+            if (score >= 0.6 && score > bestMatchScore) {
                 bestMatch = presetId;
                 bestMatchScore = score;
                 
