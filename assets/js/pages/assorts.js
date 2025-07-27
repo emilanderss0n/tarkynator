@@ -105,21 +105,95 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseItemData = tarkovData.items[baseItemId];
         if (!baseItemData) return null;
 
-        // Look up the preset in globals.json (optional - may not exist for all presets)
-        const presetData = globalsData?.ItemPresets?.[assortId];
-
-        // Get all items that are part of this preset
+        // Get all items that are part of this preset (including root)
         const presetItems = assortItems.filter(item => 
             item._id === assortId || item.parentId === assortId
         );
+
+        // Try to find a matching preset in globals.json by comparing structure
+        const matchedPresetId = findMatchingPreset(baseItemId, presetItems);
+        
+        let presetData = null;
+        let presetItemData = null;
+        
+        if (matchedPresetId) {
+            // Get preset data from globals.json
+            presetData = globalsData?.ItemPresets?.[matchedPresetId];
+            // Get preset display info from tarkov_data.json
+            presetItemData = tarkovData.items[matchedPresetId];
+        }
 
         return {
             isPreset: true,
             baseItemId: baseItemId,
             baseItemData: baseItemData,
             presetData: presetData || null,
-            presetItems: presetItems
+            presetItems: presetItems,
+            matchedPresetId: matchedPresetId,
+            presetItemData: presetItemData || null
         };
+    };
+
+    // Helper function to find matching preset in globals.json
+    const findMatchingPreset = (baseItemId, assortPresetItems) => {
+        if (!globalsData?.ItemPresets) return null;
+
+        // Create a map of slotId -> _tpl for the assort preset
+        const assortSlotMap = {};
+        assortPresetItems.forEach(item => {
+            if (item.slotId && item._tpl && item.slotId !== 'hideout') {
+                assortSlotMap[item.slotId] = item._tpl;
+            }
+        });
+
+        let bestMatch = null;
+        let bestMatchScore = 0;
+
+        // Search through all presets in globals.json
+        for (const [presetId, preset] of Object.entries(globalsData.ItemPresets)) {
+            if (!preset._items || !Array.isArray(preset._items)) continue;
+
+            // Find the root item of this preset
+            const presetRoot = preset._items.find(item => 
+                !item.parentId || preset._items.every(other => other._id !== item.parentId)
+            );
+            
+            if (!presetRoot || presetRoot._tpl !== baseItemId) continue;
+
+            // Create a map of slotId -> _tpl for this globals preset
+            const globalsSlotMap = {};
+            preset._items.forEach(item => {
+                if (item.slotId && item._tpl) {
+                    globalsSlotMap[item.slotId] = item._tpl;
+                }
+            });
+
+            // Calculate match score (how many assort slots match globals slots)
+            const assortSlots = Object.keys(assortSlotMap);
+            let matchedSlots = 0;
+            
+            for (const slotId of assortSlots) {
+                if (globalsSlotMap[slotId] === assortSlotMap[slotId]) {
+                    matchedSlots++;
+                }
+            }
+
+            // Calculate score as percentage of assort slots that match
+            const score = assortSlots.length > 0 ? matchedSlots / assortSlots.length : 0;
+            
+            // We want a high match rate (80%+) and prefer exact matches
+            if (score >= 0.8 && score > bestMatchScore) {
+                bestMatch = presetId;
+                bestMatchScore = score;
+                
+                // If we have a perfect match, use it immediately
+                if (score === 1.0) {
+                    return presetId;
+                }
+            }
+        }
+        
+        return bestMatch;
     };
 
     // Helper function to format preset name and loyalty level based on context
@@ -172,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         id: req._tpl,
                         name: itemData?.name || req._tpl,
                         iconLink: itemData?.iconLink || '',
-                        count: req.count || 1
+                        count: Math.round(req.count || 1) // Round to nearest whole number
                     });
                 });
             }
@@ -383,10 +457,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check if this is a preset
             const presetInfo = getPresetInfo(item._id, currentAssort.items);
             if (presetInfo) {
-                // Use preset base item info and keep base name clean
-                itemData = presetInfo.baseItemData;
-                name = itemData.name; // Store clean name without HTML
-                iconLink = itemData.iconLink || iconLink;
+                // If we found a matching preset, use its display data
+                if (presetInfo.presetItemData) {
+                    itemData = presetInfo.presetItemData;
+                    name = itemData.name;
+                    iconLink = itemData.iconLink || iconLink;
+                } else {
+                    // Fallback to base item data but keep the clean name
+                    itemData = presetInfo.baseItemData;
+                    name = itemData.name;
+                    iconLink = itemData.iconLink || iconLink;
+                }
             }
 
             const level = getLoyaltyLevel(item._id, loyaltyMap);
@@ -419,10 +500,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check if this is a preset
             const presetInfo = getPresetInfo(item._id, currentAssort.items);
             if (presetInfo) {
-                // Use preset base item info and keep base name clean
-                itemData = presetInfo.baseItemData;
-                name = itemData.name; // Store clean name without formatting
-                iconLink = itemData.iconLink || iconLink;
+                // If we found a matching preset, use its display data
+                if (presetInfo.presetItemData) {
+                    itemData = presetInfo.presetItemData;
+                    name = itemData.name;
+                    iconLink = itemData.iconLink || iconLink;
+                } else {
+                    // Fallback to base item data but keep the clean name
+                    itemData = presetInfo.baseItemData;
+                    name = itemData.name;
+                    iconLink = itemData.iconLink || iconLink;
+                }
             }
 
             const scheme = barterScheme[item._id][0];
@@ -468,9 +556,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const categoryForFilter = isCash ? 'cash' : 'barters';
             
             // Get item dimensions from tarkov data for better masonry layout
-            const itemData = tarkovData.items[item.tpl] || {};
-            const itemWidth = itemData.width || 1;
-            const itemHeight = itemData.height || 1;
+            // Use preset dimensions if available, otherwise use base item dimensions
+            let dimensionData = tarkovData.items[item.tpl] || {};
+            if (item.isPreset && item.presetInfo?.presetItemData) {
+                dimensionData = item.presetInfo.presetItemData;
+            }
+            const itemWidth = dimensionData.width || 1;
+            const itemHeight = dimensionData.height || 1;
             const cellSize = 64; // Each cell is approximately 64px
             const cardWidth = itemWidth * cellSize;
             const cardHeight = itemHeight * cellSize;
@@ -591,6 +683,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Apply current filters after a small delay to ensure Isotope is ready
             setTimeout(() => {
                 applyIsotopeFilters();
+                // Refresh layout to account for any dimension changes from presets
+                if (isotopeInstance) {
+                    isotopeInstance.layout();
+                }
             }, 100);
         }
     } catch (error) {

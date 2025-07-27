@@ -23669,6 +23669,302 @@
       "_name": "Saiga-12 FA",
       "_parent": "676408beba9ecbb20a005306",
       "_type": "Preset"
+    },
+    "67a328326e3613a197068d05": {
+      "_changeWeaponName": false,
+      "_encyclopedia": "676bf44c5539167c3603e869",
+      "_id": "67a328326e3613a197068d05",
+      "_items": [
+        {
+          "_id": "67a328326e3613a197068d08",
+          "_tpl": "676bf44c5539167c3603e869",
+          "upd": {
+            "Repairable": {
+              "Durability": 100,
+              "MaxDurability": 100
+            }
+          }
+        },
+        {
+          "_id": "67a328326e3613a197068d09",
+          "_tpl": "67446fdd752be02c220f27b3",
+          "parentId": "67a328326e3613a197068d08",
+          "slotId": "patron_in_weapon"
+        }
+      ],
+      "_name": "rshg2_std",
+      "_parent": "67a328326e3613a197068d08",
+      "_type": "Preset"
+    },
+    "67c86f58179c494df00eedf6": {
+      "_changeWeaponName": false,
+      "_encyclopedia": "67ab2f28dafe3b22670c9116",
+      "_id": "67c86f58179c494df00eedf6",
+      "_items": [
+        {
+          "_id": "67c8701892716de04e03a1c2",
+          "_tpl": "67ab2f28dafe3b22670c9116"
+        },
+        {
+          "_id": "67c8701892716de04e03a1c3",
+          "_tpl": "65704de13e7bba58ea0285c8",
+          "parentId": "67c8701892716de04e03a1c2",
+          "slotId": "Soft_armor_front"
+        },
+        {
+          "_id": "67c8701892716de04e03a1c4",
+          "_tpl": "65705c3c14f2ed6d7d0b7738",
+          "parentId": "67c8701892716de04e03a1c2",
+          "slotId": "Soft_armor_back"
+        },
+        {
+          "_id": "67c8701892716de04e03a1c5",
+          "_tpl": "65705c777260e1139e091408",
+          "parentId": "67c8701892716de04e03a1c2",
+          "slotId": "Soft_armor_left"
+        },
+        {
+          "_id": "67c8701892716de04e03a1c6",
+          "_tpl": "65705cb314f2ed6d7d0b773c",
+          "parentId": "67c8701892716de04e03a1c2",
+          "slotId": "soft_armor_right"
+        },
+        {
+          "_id": "67c8701892716de04e03a1c7",
+          "_tpl": "65705cea4916448ae1050897",
+          "parentId": "67c8701892716de04e03a1c2",
+          "slotId": "Collar"
+        },
+        {
+          "_id": "67c8701892716de04e03a1c8",
+          "_tpl": "656f9d5900d62bcd2e02407c",
+          "parentId": "67c8701892716de04e03a1c2",
+          "slotId": "Front_plate"
+        },
+        {
+          "_id": "67c8701892716de04e03a1c9",
+          "_tpl": "656f9d5900d62bcd2e02407c",
+          "parentId": "67c8701892716de04e03a1c2",
+          "slotId": "Back_plate"
+        }
+      ],
+      "_name": "Body armor Kirasa N Green",
+      "_parent": "67c8701892716de04e03a1c2",
+      "_type": "Preset"
+    },
+    "67c86fc392716de04e03a1b6": {
+      "_changeWeaponName": false,
+      "_encyclopedia": "67ab2f94dafe3b22670c912c",
+      "_id": "67c86fc392716de04e03a1b6",
+      "_items": [
+        {
+          "_id": "67c86fe6f8615103060a6926",
+          "_tpl": "67ab2f94dafe3b22670c912c"
+        },
+        {
+          "_id": "67c86fe6f8615103060a6927",
+          "_tpl": "6570e025615f54368b04fcb0",
+          "parentId": "67c86fe6f8615103060a6926",
+          "slotId": "Soft_armor_front"
+        },
+        {
+          "_id": "67c86fe6f8615103060a6928",
+          "_tpl": "6570e0610b57c03ec90b96ef",
+          "parentId": "67c86fe6f8615103060a6926",
+          "slotId": "Soft_armor_back"
+        },
+        {
+          "_id": "67c86fe6f8615103060a6929",
+          "_tpl": "656fad8c498d1b7e3e071da0",
+          "parentId": "67c86fe6f8615103060a6926",
+          "slotId": "Front_plate"
+        },
+        {
+          "_id": "67c86fe6f8615103060a692a",
+          "_tpl": "656fad8c498d1b7e3e071da0",
+          "parentId": "67c86fe6f8615103060a6926",
+          "slotId": "Back_plate"
+        }
+      ],
+      "_name": "Body armor HighCom Trooper Coyote",
+      "_parent": "67c86fe6f8615103060a6926",
+      "_type": "Preset"
+    },
+    "67c87094d05729369306ce76": {
+      "_changeWeaponName": false,
+      "_encyclopedia": "67ab49aab9c7a1e18c095686",
+      "_id": "67c87094d05729369306ce76",
+      "_items": [
+        {
+          "_id": "67c87094d05729369306ce7d",
+          "_tpl": "67ab49aab9c7a1e18c095686"
+        },
+        {
+          "_id": "67c87094d05729369306ce7e",
+          "_tpl": "6570e83223c1f638ef0b0ede",
+          "parentId": "67c87094d05729369306ce7d",
+          "slotId": "Soft_armor_front"
+        },
+        {
+          "_id": "67c87094d05729369306ce7f",
+          "_tpl": "6570e87c23c1f638ef0b0ee2",
+          "parentId": "67c87094d05729369306ce7d",
+          "slotId": "Soft_armor_back"
+        },
+        {
+          "_id": "67c87094d05729369306ce80",
+          "_tpl": "6570e90b3a5689d85f08db97",
+          "parentId": "67c87094d05729369306ce7d",
+          "slotId": "Groin"
+        },
+        {
+          "_id": "67c87094d05729369306ce81",
+          "_tpl": "656f9fa0498d1b7e3e071d98",
+          "parentId": "67c87094d05729369306ce7d",
+          "slotId": "Front_plate"
+        },
+        {
+          "_id": "67c87094d05729369306ce82",
+          "_tpl": "656f9fa0498d1b7e3e071d98",
+          "parentId": "67c87094d05729369306ce7d",
+          "slotId": "Back_plate"
+        }
+      ],
+      "_name": "Vest Crye Precision AVS multicam",
+      "_parent": "67c87094d05729369306ce7d",
+      "_type": "Preset"
+    },
+    "67c870e5da2a209b2a0ed126": {
+      "_changeWeaponName": false,
+      "_encyclopedia": "67ab2eecfe82855dcc0f2af6",
+      "_id": "67c870e5da2a209b2a0ed126",
+      "_items": [
+        {
+          "_id": "67c870e5da2a209b2a0ed12a",
+          "_tpl": "67ab2eecfe82855dcc0f2af6"
+        },
+        {
+          "_id": "67c870e5da2a209b2a0ed12b",
+          "_tpl": "656fae5f7c2d57afe200c0d7",
+          "parentId": "67c870e5da2a209b2a0ed12a",
+          "slotId": "Front_plate"
+        },
+        {
+          "_id": "67c870e5da2a209b2a0ed12c",
+          "_tpl": "656fae5f7c2d57afe200c0d7",
+          "parentId": "67c870e5da2a209b2a0ed12a",
+          "slotId": "Back_plate"
+        }
+      ],
+      "_name": "Body armor Hexatac HPC Multicam",
+      "_parent": "67c870e5da2a209b2a0ed12a",
+      "_type": "Preset"
+    },
+    "67c87145e52edc36aa069ae6": {
+      "_changeWeaponName": false,
+      "_encyclopedia": "67ab4b2d6f7ae4aa550bbcf6",
+      "_id": "67c87145e52edc36aa069ae6",
+      "_items": [
+        {
+          "_id": "67c87145e52edc36aa069aec",
+          "_tpl": "67ab4b2d6f7ae4aa550bbcf6"
+        },
+        {
+          "_id": "67c87145e52edc36aa069aed",
+          "_tpl": "6575bc88c6700bd6b40e8a57",
+          "parentId": "67c87145e52edc36aa069aec",
+          "slotId": "Soft_armor_front"
+        },
+        {
+          "_id": "67c87145e52edc36aa069aee",
+          "_tpl": "6575bca0dc9932aed601c5d7",
+          "parentId": "67c87145e52edc36aa069aec",
+          "slotId": "Soft_armor_back"
+        },
+        {
+          "_id": "67c87145e52edc36aa069aef",
+          "_tpl": "656fae5f7c2d57afe200c0d7",
+          "parentId": "67c87145e52edc36aa069aec",
+          "slotId": "Front_plate"
+        },
+        {
+          "_id": "67c87145e52edc36aa069af0",
+          "_tpl": "656fae5f7c2d57afe200c0d7",
+          "parentId": "67c87145e52edc36aa069aec",
+          "slotId": "Back_plate"
+        }
+      ],
+      "_name": "Vest 5.11 Tactical TacTec Storm",
+      "_parent": "67c87145e52edc36aa069aec",
+      "_type": "Preset"
+    },
+    "67c871b6e0b64a07890a2f36": {
+      "_changeWeaponName": false,
+      "_encyclopedia": "67ab2f5adafe3b22670c911f",
+      "_id": "67c871b6e0b64a07890a2f36",
+      "_items": [
+        {
+          "_id": "67c871b6e0b64a07890a2f41",
+          "_tpl": "67ab2f5adafe3b22670c911f"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f42",
+          "_tpl": "6575dd3e9e27f4a85e081142",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Soft_armor_front"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f43",
+          "_tpl": "6575dd519e27f4a85e081146",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Soft_armor_back"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f44",
+          "_tpl": "6575dd64945bf78edd04c438",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Soft_armor_left"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f45",
+          "_tpl": "6575dd6e9d3a0ddf660b9047",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "soft_armor_right"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f46",
+          "_tpl": "6575dd769d3a0ddf660b904b",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Collar"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f47",
+          "_tpl": "6575dd800546f8b1de093df6",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Groin"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f48",
+          "_tpl": "6575dd94945bf78edd04c43c",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Groin_back"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f49",
+          "_tpl": "65573fa5655447403702a816",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Front_plate"
+        },
+        {
+          "_id": "67c871b6e0b64a07890a2f4a",
+          "_tpl": "65573fa5655447403702a816",
+          "parentId": "67c871b6e0b64a07890a2f41",
+          "slotId": "Back_plate"
+        }
+      ],
+      "_name": "Body armor FORT Redut M Woodland",
+      "_parent": "67c871b6e0b64a07890a2f41",
+      "_type": "Preset"
     }
   },
   "LocationInfection": {
@@ -26931,316 +27227,6 @@
       }
     },
     "AudioSettings": {
-      "AudioGroupPresets": [
-        {
-          "AngleToAllowBinaural": 1000,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 1000,
-          "GroupType": 0,
-          "HeightToAllowBinaural": 1000,
-          "Name": "Gunshots",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 1,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 12,
-          "DisabledBinauralByDistance": true,
-          "DistanceToAllowBinaural": 10,
-          "GroupType": 1,
-          "HeightToAllowBinaural": 2,
-          "Name": "Weaponry",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 0.9,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 2,
-          "HeightToAllowBinaural": 10,
-          "Name": "Impacts",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 0.9,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 3,
-          "HeightToAllowBinaural": 10,
-          "Name": "Character",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 0.9,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 4,
-          "HeightToAllowBinaural": 10,
-          "Name": "Environment",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 0.9,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 12,
-          "DisabledBinauralByDistance": true,
-          "DistanceToAllowBinaural": 10,
-          "GroupType": 5,
-          "HeightToAllowBinaural": 2,
-          "Name": "Collisions",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 1,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 6,
-          "HeightToAllowBinaural": 10,
-          "Name": "Speech",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 0.9,
-          "OverallVolume": 0.7
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 7,
-          "HeightToAllowBinaural": 10,
-          "Name": "Distant",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 1,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 8,
-          "HeightToAllowBinaural": 10,
-          "Name": "NonspatialBypass",
-          "OcclusionEnabled": false,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 1,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 9,
-          "HeightToAllowBinaural": 10,
-          "Name": "Nonspatial",
-          "OcclusionEnabled": false,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 1,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 30,
-          "DisabledBinauralByDistance": false,
-          "DistanceToAllowBinaural": 60,
-          "GroupType": 10,
-          "HeightToAllowBinaural": 10,
-          "Name": "Voip",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 0.9,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 1000,
-          "DisabledBinauralByDistance": true,
-          "DistanceToAllowBinaural": 1000,
-          "GroupType": 11,
-          "HeightToAllowBinaural": 1000,
-          "Name": "Grenades",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 1,
-          "OverallVolume": 1
-        },
-        {
-          "AngleToAllowBinaural": 12,
-          "DisabledBinauralByDistance": true,
-          "DistanceToAllowBinaural": 10,
-          "GroupType": 12,
-          "HeightToAllowBinaural": 2,
-          "Name": "Windows",
-          "OcclusionEnabled": true,
-          "OcclusionIntensity": 1,
-          "OcclusionRolloffScale": 1,
-          "OverallVolume": 1
-        }
-      ],
-      "EnvironmentSettings": {
-        "SnowStepsVolumeMultiplier": 0.35,
-        "SurfaceMultipliers": [
-          {
-            "SurfaceType": "Concrete",
-            "VolumeMult": 0
-          },
-          {
-            "SurfaceType": "Metal",
-            "VolumeMult": 0.4
-          },
-          {
-            "SurfaceType": "Wood",
-            "VolumeMult": 0.5
-          },
-          {
-            "SurfaceType": "Soil",
-            "VolumeMult": 1
-          },
-          {
-            "SurfaceType": "Grass",
-            "VolumeMult": 1
-          },
-          {
-            "SurfaceType": "Asphalt",
-            "VolumeMult": 0.8
-          },
-          {
-            "SurfaceType": "Glass",
-            "VolumeMult": 0.1
-          },
-          {
-            "SurfaceType": "Gravel",
-            "VolumeMult": 1
-          },
-          {
-            "SurfaceType": "MetalThin",
-            "VolumeMult": 0.4
-          },
-          {
-            "SurfaceType": "Puddle",
-            "VolumeMult": 0.2
-          },
-          {
-            "SurfaceType": "Slate",
-            "VolumeMult": 0.3
-          },
-          {
-            "SurfaceType": "Tile",
-            "VolumeMult": 0.1
-          },
-          {
-            "SurfaceType": "WoodThick",
-            "VolumeMult": 0.5
-          },
-          {
-            "SurfaceType": "Swamp",
-            "VolumeMult": 0.5
-          },
-          {
-            "SurfaceType": "Garbage",
-            "VolumeMult": 0.5
-          },
-          {
-            "SurfaceType": "GarbageMetal",
-            "VolumeMult": 0.4
-          },
-          {
-            "SurfaceType": "Plastic",
-            "VolumeMult": 0.3
-          },
-          {
-            "SurfaceType": "WholeGlass",
-            "VolumeMult": 0.1
-          },
-          {
-            "SurfaceType": "WoodThin",
-            "VolumeMult": 0.5
-          }
-        ]
-      },
-      "HeadphonesSettings": {
-        "FadeDuration": 0.7,
-        "FadeIn": "InverseExponential",
-        "FadeOut": "EaseIn"
-      },
-      "MetaXRAudioPluginSettings": {
-        "EnabledPluginErrorChecker": true,
-        "OutputVolumeCheckCooldown": 0.3
-      },
-      "PlayerSettings": {
-        "BaseMaxMovementRolloff": 70,
-        "EnabledOcclusionDynamicRolloff": true,
-        "IndoorRolloffMult": 1,
-        "MinStepSoundRolloffMult": 0.5,
-        "MinStepSoundVolumeMult": 0.15,
-        "MovementRolloffMultipliers": [
-          {
-            "MovementState": "None",
-            "RolloffMultiplier": 1
-          },
-          {
-            "MovementState": "Run",
-            "RolloffMultiplier": 0.85
-          },
-          {
-            "MovementState": "Sprint",
-            "RolloffMultiplier": 0.95
-          },
-          {
-            "MovementState": "Stop",
-            "RolloffMultiplier": 0.85
-          },
-          {
-            "MovementState": "Land",
-            "RolloffMultiplier": 1
-          },
-          {
-            "MovementState": "Turn",
-            "RolloffMultiplier": 0.8
-          },
-          {
-            "MovementState": "Duck",
-            "RolloffMultiplier": 0.4
-          },
-          {
-            "MovementState": "Prone",
-            "RolloffMultiplier": 0.5
-          },
-          {
-            "MovementState": "Drop",
-            "RolloffMultiplier": 0.95
-          },
-          {
-            "MovementState": "Jump",
-            "RolloffMultiplier": 0.5
-          },
-          {
-            "MovementState": "Gear",
-            "RolloffMultiplier": 0.5
-          },
-          {
-            "MovementState": "VaultLand",
-            "RolloffMultiplier": 0.85
-          },
-          {
-            "MovementState": "VaultGeneric",
-            "RolloffMultiplier": 0.5
-          }
-        ],
-        "OutdoorRolloffMult": 0.98
-      },
       "RadioBroadcastSettings": {
         "EnabledBroadcast": false,
         "RadioStations": [
@@ -28060,1182 +28046,1423 @@
             "Savage"
           ],
           "voice": "Zombie_Medium"
+        },
+        {
+          "isNotRandom": true,
+          "side": [
+            "Savage"
+          ],
+          "voice": "BossAgroTagilla"
         }
       ],
       "SavageBody": {
         "DefaultUsecBody": {
           "body": "5cde95d97d6c8b647a3769b0",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_BigPipe": {
           "body": "6287b16b05846043f15a790d",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_Birdeye": {
           "body": "628a6801805c5b6c100cc200",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_Blackknight": {
           "body": "628796f2af0a053a6672c29a",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_Kaban": {
           "body": "648067b8aa32c2049f098463",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_Killa_Xmass": {
           "body": "6756d0d27c4045d8c708a4ea",
           "hands": "5df8ead786f774530571b14b",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_Kolontai": {
           "body": "654b5eb7a29f3736215dd030",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_Sanitar": {
           "body": "5e9975c486f774382b6320cb",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_BOSS_Zryachi": {
           "body": "63628b825c1b30a79d09ccb9",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_Boss_Partizan": {
           "body": "66aa5d36f641b13ad238f8c3",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_security_Gorka4": {
           "body": "5d5e7e8386f774393602d6fa",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Top_security_Husky": {
           "body": "5d5e7e7586f77427997cfb7f",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Tshirt_security_TshirtTatu_01": {
           "body": "5d5e7e4a86f774279a21cc0d",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Tshirt_security_TshirtTatu_02": {
           "body": "5d5e7e5d86f774279b4f4b01",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Wild_Dealmaker_body": {
           "body": "5d28adcb86f77429242fc893",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_top_borey": {
           "body": "5fce3e47fe40296c1d5fd784",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_top_ops_windshirt ": {
           "body": "657058fddf9b3231400e9188",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_tshirt_termo": {
           "body": "5fce3e0cfe40296c1d5fd782",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_OPS_Windshirt_black ": {
           "body": "660440d2c8949a435906e43a",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_SpNa": {
           "body": "6377266693a3b4967208e42b",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_blacklynx": {
           "body": "5d1f566d86f7744bcd13459a",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_contractortshirt ": {
           "body": "5d1f565786f7743f8362bcd5",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_fsbfastresponse ": {
           "body": "5d1f568486f7744bca3f0b98",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_g99": {
           "body": "5f5e401747344c2e4f6c42c5",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_ghostmarksman": {
           "body": "5d1f567786f7744bcc04874f",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_summerfield": {
           "body": "5d1f564b86f7744bcb0acd16",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_tactical_long": {
           "body": "6295e698e9de5e7b3751c47a",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_telnik ": {
           "body": "5e4bb31586f7740695730568",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_tiger": {
           "body": "5e9d9fa986f774054d6b89f2",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_turtleneck_black ": {
           "body": "66043cc27502eca33a08cad0",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_upper_zaslon": {
           "body": "5df89f1f86f77412631087ea",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "scav_kit_upper_meteor": {
           "body": "5df8a10486f77412672a1e3a",
           "hands": "5df8eac086f77412640e2ea7",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "top_bear_sumrak ": {
           "body": "617bca4b4013b06b0b78df2a",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "top_bear_voin ": {
           "body": "6033a31e9ec839204e6a2f3e",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "top_boss_tagilla": {
           "body": "609e86926e8078716f600883",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "top_cultist_01": {
           "body": "5fb53cc97b5d1342ee24bd63",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "top_cultist_02": {
           "body": "5fb53d0b7b5d1342ee24bd64",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "top_security_ment_gorka1": {
           "body": "66bf6769f08c35734d4940c4",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "top_security_ment_jacket": {
           "body": "66bf66f1fb051905704a22d5",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "top_zombie_1": {
           "body": "66fd43dfe7690d4e7b0b1516",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "tshirt_security_ment_tshirt": {
           "body": "66bf67c65d6942454668fd58",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_top_beltstaff": {
           "body": "6033a35f80ae5e2f970ba6bb",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_CryeAC_Alpha_Green": {
           "body": "66043728333907134309d647",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_acu": {
           "body": "5fd3e9f71b735718c25cd9f8",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_aggressor": {
           "body": "5d1f56c686f7744bcd13459c",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_carinthia_softshell ": {
           "body": "637b945722e2a933ed0e33c8",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_cereum": {
           "body": "618109c96d7ca35d076b3363",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_chameleon_softshell": {
           "body": "6295e8c3e08ed747e64aea00",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_commando": {
           "body": "5d4da0cb86f77450fe0a6629",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_flexion": {
           "body": "5d1f56e486f7744bce0ee9ed",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_hoody": {
           "body": "5e9da17386f774054b6f79a3",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_infiltrator": {
           "body": "5d1f56f186f7744bcb0acd1a",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_pcsmulticam": {
           "body": "5d1f56ff86f7743f8362bcd7",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_pcuironsight": {
           "body": "5d1f56a686f7744bce0ee9eb",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_tier3": {
           "body": "5fcf63da5c287f01f22bf245",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_tier_2": {
           "body": "5e4bb35286f77406a511c9bc",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_velocity ": {
           "body": "6571cb0923aa6d72760a7f8f",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_upper_velocity_multicam": {
           "body": "660437e57502eca33a08caca",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "user_upper_NightPatrol": {
           "body": "5f5e4075df4f3100376a8138",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_Gluhar_body": {
           "body": "5d5e7dd786f7744a7a274322",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_Killa_body": {
           "body": "5cdea33e7d6c8b0474535dac",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_Shturman_body": {
           "body": "5d5e7c9186f774393602d6f9",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body": {
           "body": "5cc2e59214c02e000f16684e",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_1": {
           "body": "5cde9f337d6c8b0474535da8",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_2": {
           "body": "5d28ad6986f77429275dba22",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_3": {
           "body": "5d28ad7286f7742926686182",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_bomber": {
           "body": "619238266c614e6d15792bca",
           "hands": "618cf9540a5a59657e5f5677",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_feldparka": {
           "body": "64a2edba08d26f8d62049c06",
           "hands": "64ac23c449d74fd5ec0a124e",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_motocross": {
           "body": "5e9da1d086f774054a667134",
           "hands": "5e9da2dd86f774054e7d0f63",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_rainparka": {
           "body": "5fd1eb3fbe3b7107d66cb645",
           "hands": "5fd78fe9e3bfcf6cab4c9f54",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_russia1": {
           "body": "5e4bb3ee86f77406975c934e",
           "hands": "5e4bb49586f77406a313ec5a",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_underarmour": {
           "body": "5fd22d311add82653b5a704c",
           "hands": "5fd7901bdd870108a754c0e6",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_body_victory": {
           "body": "637df28ac22da5bb8d046935",
           "hands": "6391c6205dbbdb3b1b049840",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_pmcBot_body": {
           "body": "5d28ae4986f7742926686187",
           "hands": "5cc0876314c02e000c6bea6b",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_body_1": {
           "body": "5d28adfd86f774292364a6e5",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_body_2": {
           "body": "5d28ae2986f7742926686185",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_body_bratva_1": {
           "body": "65749b8fe32c4e3f7907bf42",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_body_bratva_2": {
           "body": "65749ba32fdb04fb79092d37",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_top_yellowcoat": {
           "body": "618d1af10a5a59657e5f56f3",
           "hands": "6197aca964ae5436d76c1f98",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_bear_opswindshirt": {
           "body": "670d1928e002387b88029114",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_bear_telnik": {
           "body": "670d19397ca0004a2a022608",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_bear_thermo": {
           "body": "670d19467ca0004a2a02260a",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_boss_tagilla": {
           "body": "670fa21e788477a9ce0549f6",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_civ_class_jacket": {
           "body": "670d1989186ee334e70ee8cd",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_civ_coat": {
           "body": "670d1999d57ec3c3e20e81da",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_civ_jacket": {
           "body": "670d19ab42245e21c30eed24",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_lab_personnal_a": {
           "body": "671654b5f68df05790043128",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_lab_personnal_b": {
           "body": "671654d56ccf4799d007d4b9",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_usec_ac_cry": {
           "body": "670d195519b4a3d9e9057637",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_usec_carinthia_softshell": {
           "body": "670d1966186ee334e70ee702",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_usec_velocity": {
           "body": "670d197632cadb3aad0a49a5",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_bomber": {
           "body": "670d1a053460753f070bb9b3",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_hoody01": {
           "body": "670d1a13e002387b8802950c",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_hoody_victory": {
           "body": "670d1a2be002387b8802950e",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_meteor": {
           "body": "670d1a396f8cc0145f0a0742",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_raincoat": {
           "body": "670d1a4d6f8cc0145f0a0744",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_rainparka": {
           "body": "670d1a5cd2d5ce45140289c3",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_scavelite": {
           "body": "670d1a6f3460753f070bc0d9",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_vest": {
           "body": "670d1a81b7a8f34fce080717",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_top_wild_yellowcoat": {
           "body": "670d1a92d2d5ce4514028b90",
           "hands": "5cc2e68f14c02e28b47de290",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         }
       },
       "SavageFeet": {
         "Pants_BOSS_BigPipe": {
           "NotRandom": false,
           "feet": "6287b14b66bb7d4a3c32bc94",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Birdeye": {
           "NotRandom": false,
           "feet": "628a4645c9327c7587388849",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Blackknight": {
           "NotRandom": false,
           "feet": "628771f70828252c7a28b961",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Glukhar": {
           "NotRandom": false,
           "feet": "5d5e7f2a86f77427997cfb80",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Kaban": {
           "NotRandom": false,
           "feet": "64806edf77c11aeac5078e33",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Killa_Xmass": {
           "NotRandom": false,
           "feet": "6756d0f97c4045d8c708a4ec",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Kolontai": {
           "NotRandom": false,
           "feet": "654a2bc5ee6e547e9f6238e7",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Sanitar": {
           "NotRandom": false,
           "feet": "5e99762586f77466320ff9a9",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Shturman": {
           "NotRandom": false,
           "feet": "5d5e7f3c86f7742797262063",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_BOSS_Zryachi": {
           "NotRandom": false,
           "feet": "6361216278f9ab270a0a48d9",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_Boss_Partizan": {
           "NotRandom": false,
           "feet": "66aa5bba10d2d4006a3c4a84",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_security_Flora": {
           "NotRandom": false,
           "feet": "5d5e7f8986f7742798716582",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Pants_security_Gorka4": {
           "NotRandom": false,
           "feet": "5d5e7f4986f7746956659f8a",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Wild_Dealmaker_feet": {
           "NotRandom": false,
           "feet": "5d28b3a186f7747f7e69ab8c",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Wild_Killa_feet": {
           "NotRandom": false,
           "feet": "5cdea3c47d6c8b0475341734",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_Windshirt_tan ": {
           "NotRandom": false,
           "feet": "66043d7ac8949a435906e434",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_combat": {
           "NotRandom": false,
           "feet": "5e4bb39386f774067f79de05",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_fsburban": {
           "NotRandom": false,
           "feet": "5d1f58cb86f7744bca3f0b9a",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_g99": {
           "NotRandom": false,
           "feet": "5f5e40400bc58666c37e7819",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_gorkakobra": {
           "NotRandom": false,
           "feet": "5d1f58a086f7743f8362bcd9",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_gorkasso ": {
           "NotRandom": false,
           "feet": "5d1f58bd86f7744bce0ee9ef",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_oldschool": {
           "NotRandom": false,
           "feet": "5df89f8f86f77412672a1e38",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_ops_windshirt ": {
           "NotRandom": false,
           "feet": "65707a89f5a6f1412f0c5f7b",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_spna": {
           "NotRandom": false,
           "feet": "6377315993a3b4967208e437",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_srvv_surpat ": {
           "NotRandom": false,
           "feet": "66043cf87502eca33a08cad2",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_summerfield ": {
           "NotRandom": false,
           "feet": "5d1f588e86f7744bcc048753",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_sumrak ": {
           "NotRandom": false,
           "feet": "617be9e4e02b3b3fa50fa8f2",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_triarius": {
           "NotRandom": false,
           "feet": "5fce3e965a9f8c40685693bc",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_voin ": {
           "NotRandom": false,
           "feet": "6033a3d8ed2e0509b15f9031",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_lower_zaslon": {
           "NotRandom": false,
           "feet": "5e9dc97c86f774054c19ac9a",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_boss_tagilla": {
           "NotRandom": false,
           "feet": "609e86c09776a947754429b2",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_cultist_01": {
           "NotRandom": false,
           "feet": "5fb535bd1c69e5198e234125",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_cultist_02": {
           "NotRandom": false,
           "feet": "5fb535cf1c69e5198e234126",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_wild_ment_gorka1": {
           "NotRandom": false,
           "feet": "66bf680aa1b36f497a5d65bd",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_wild_ment_specnaz_kamysh": {
           "NotRandom": false,
           "feet": "66bf6885952b42739a5f2298",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_wild_ment_specnaz_kamysh_b": {
           "NotRandom": false,
           "feet": "66bf68d0f08c35734d4940c6",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_wild_ment_specnaz_kamysh_g": {
           "NotRandom": false,
           "feet": "66bf69195d6942454668fd5d",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "pants_zombie_1": {
           "NotRandom": false,
           "feet": "66fd4407390606b5e106e016",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "scav_kit_lower_sklon": {
           "NotRandom": false,
           "feet": "5df8a15186f77412640e2e6a",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_CryeAC_Alpha_Green": {
           "NotRandom": false,
           "feet": "660436487502eca33a08cac8",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_DeepRecon": {
           "NotRandom": false,
           "feet": "5e9dcadd86f7743e20652f23",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_UrbanResponder ": {
           "NotRandom": false,
           "feet": "5f5e40a06760b4138443b341",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_beltstaff ": {
           "NotRandom": false,
           "feet": "6033a3fee29c9f6c9b14e74e",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_carinthia_softshell": {
           "NotRandom": false,
           "feet": "637ba17aa10a96c2b605dbc2",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_cereum": {
           "NotRandom": false,
           "feet": "617c02e24013b06b0b78df80",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_chameleon_softshell": {
           "NotRandom": false,
           "feet": "6295e944e9de5e7b3751c4da",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_commando ": {
           "NotRandom": false,
           "feet": "5e4bb3b586f77406812bd579",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_gen2khyber": {
           "NotRandom": false,
           "feet": "5d1f591186f7744bcc048755",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_infiltrator": {
           "NotRandom": false,
           "feet": "5d1f592286f7743f8362bcdb",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_jeansranger": {
           "NotRandom": false,
           "feet": "5d1f590486f7744bcd13459e",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_taclifeterrain ": {
           "NotRandom": false,
           "feet": "5d1f58ed86f7744bcb0acd1c",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_tacres ": {
           "NotRandom": false,
           "feet": "5d1f593286f7743014162044",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_tier3": {
           "NotRandom": false,
           "feet": "5fcf940bce1ba36a513bb9cc",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_tier_2": {
           "NotRandom": false,
           "feet": "5df8a08886f7740bfe6df775",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_velocity": {
           "NotRandom": false,
           "feet": "6571cad4c8673f00290f5657",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_lower_velocity_multicam": {
           "NotRandom": false,
           "feet": "660436a810bcdf80ff0e9f78",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet": {
           "NotRandom": false,
           "feet": "5cc2e5d014c02e15d53d9c03",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_1": {
           "NotRandom": false,
           "feet": "5cde9fb87d6c8b0474535da9",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_2": {
           "NotRandom": false,
           "feet": "5d28af3486f774292364a6e7",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_bomber": {
           "NotRandom": false,
           "feet": "6193be546e5968395b260157",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_feldparka": {
           "NotRandom": false,
           "feet": "64a2e970a74bb33d140e6dc5",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_scavelite_taclite": {
           "NotRandom": false,
           "feet": "6033a430ed2e0509b15f9033",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_slimPants": {
           "NotRandom": false,
           "feet": "5f5e41576760b4138443b344",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_sweatpants": {
           "NotRandom": false,
           "feet": "5f5e410c6bdad616ad46d60b",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_victory": {
           "NotRandom": false,
           "feet": "637df25a1e688345e1097bd4",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_feet_wasatch": {
           "NotRandom": false,
           "feet": "5f5e41366760b4138443b343",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_pants_yellowcoat": {
           "NotRandom": false,
           "feet": "61922589bb2cea6f7a22d964",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_pmcBot_feet": {
           "NotRandom": false,
           "feet": "5d28af7886f77429275dba25",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_feet_1": {
           "NotRandom": false,
           "feet": "5d28af5386f774292364a6e8",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_feet_bratva_1": {
           "NotRandom": false,
           "feet": "65749c05e0423b9ebe0c79c7",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_feet_bratva_2": {
           "NotRandom": false,
           "feet": "65749c1fe32c4e3f7907bf47",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_bear_retar": {
           "NotRandom": false,
           "feet": "670fb704b9e6567c8102cf08",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_boss_tagilla": {
           "NotRandom": false,
           "feet": "670fa4b08a2b9e2bde05b751",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_civ_classic": {
           "NotRandom": false,
           "feet": "670d18e2e002387b88029112",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_civ_jeans": {
           "NotRandom": false,
           "feet": "670d18f87ca0004a2a022606",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_civ_slim": {
           "NotRandom": false,
           "feet": "670d1907b7a8f34fce07fdab",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_usec_ac_cry": {
           "NotRandom": false,
           "feet": "670fb76578245f17bb00ad85",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_wild_bomber": {
           "NotRandom": false,
           "feet": "670fb78d5ce1f9ca3b04b6c6",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_wild_fieldparka": {
           "NotRandom": false,
           "feet": "670fb7a4e6040a23520aa5d0",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_wild_scavelite": {
           "NotRandom": false,
           "feet": "670fb7bd2e9d3564120e91c7",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_pants_wild_yellowcoat": {
           "NotRandom": false,
           "feet": "670fb7d425772b9ffb0c7f3a",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         }
       },
       "SavageHead": {
         "DefaultUsecHead": {
           "NotRandom": false,
           "head": "5cde96047d6c8b20b577f016",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_BigPIpe": {
           "NotRandom": false,
           "head": "6287b0d239d8207cb27d66c7",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_Birdeye": {
           "NotRandom": false,
           "head": "628b57d800f171376e7b2634",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_Blackknight": {
           "NotRandom": false,
           "head": "62875ad50828252c7a28b95c",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_Glukhar": {
           "NotRandom": false,
           "head": "5d5e805d86f77439eb4c2d0e",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_Kaban": {
           "NotRandom": false,
           "head": "64809e3077c11aeac5078e3c",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_Kolontai": {
           "NotRandom": false,
           "head": "654b5ed58558fd71f97254f4",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_Sanitar": {
           "NotRandom": false,
           "head": "5e99767c86f7741ac7399393",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_BOSS_Zryachi": {
           "NotRandom": false,
           "head": "636129784aa74b8fe30ab418",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Head_Boss_Partizan": {
           "NotRandom": false,
           "head": "66aa5ca23d22c9416c010be0",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Wild_Dealmaker_head": {
           "NotRandom": false,
           "head": "5d28b01486f77429242fc898",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Wild_Head_nonMesh": {
           "NotRandom": false,
           "head": "5d5f8ba486f77431254e7fd2",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "Wild_Killa_head": {
           "NotRandom": false,
           "head": "5d28b03e86f7747f7e69ab8a",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_head": {
           "NotRandom": false,
           "head": "5cc084dd14c02e000b0550a3",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_head_1": {
           "NotRandom": false,
           "head": "5cc084dd14c02e000b0550a3",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_head_3": {
           "NotRandom": false,
           "head": "5fdb7571e4ed5b5ea251e529",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_head_5 ": {
           "NotRandom": false,
           "head": "619f94f5b90286142b59d45f",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_head_6": {
           "NotRandom": false,
           "head": "62a9e7d15ea3b87d6f642a28",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "bear_head_eug": {
           "NotRandom": false,
           "head": "6574aa9a1b144de18c0fba45",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "head_cultist_01": {
           "NotRandom": false,
           "head": "5fb5297a0359a84b77066e56",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "head_cultist_02": {
           "NotRandom": false,
           "head": "5fb52a3a1c69e5198e234118",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "head_cultist_03": {
           "NotRandom": false,
           "head": "5fb52a537b5d1342ee24bd57",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "head_zombie_1": {
           "NotRandom": false,
           "head": "66fd4372bd170aa3fb012a56",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_head_1": {
           "NotRandom": false,
           "head": "5cc084dd14c02e000b0550a3",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_head_3": {
           "NotRandom": false,
           "head": "5fdb5950f5264a66150d1c6e",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_head_4": {
           "NotRandom": false,
           "head": "60a6aaad42fd2735e4589978",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_head_5": {
           "NotRandom": false,
           "head": "60a6aa8fd559ae040d0d951f",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_head_6": {
           "NotRandom": false,
           "head": "619f9e338858a474c8685cc9",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_head_7": {
           "NotRandom": false,
           "head": "62aca6a1310e67685a2fc2e7",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "usec_head_eric": {
           "NotRandom": false,
           "head": "6574aabee0423b9ebe0c79cf",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_head_1": {
           "NotRandom": false,
           "head": "5cc2e4d014c02e000d0115f8",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_head_2": {
           "NotRandom": false,
           "head": "5cde9ff17d6c8b0474535daa",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_head_3": {
           "NotRandom": false,
           "head": "5d28afe786f774292668618d",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_head_drozd": {
           "NotRandom": false,
           "head": "5f68c4a7c174a17c0f4c8945",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_head_misha": {
           "NotRandom": false,
           "head": "5f68c4c217d579077152a252",
-          "isNotRandom": false
+          "isNotRandom": false,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_head_den": {
           "NotRandom": false,
           "head": "65749be133fdc9c0cf06d3c8",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "wild_security_head_gus": {
           "NotRandom": false,
           "head": "65749bcce32c4e3f7907bf44",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_bear_evg": {
           "NotRandom": false,
           "head": "670d180f0fe9098f0c054642",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_bear_head_1": {
           "NotRandom": false,
           "head": "670d18225eef3711b30ace74",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_bear_slava": {
           "NotRandom": false,
           "head": "670d18320fe9098f0c054644",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_civ_head_1": {
           "NotRandom": false,
           "head": "670d125b7ca0004a2a021eae",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_civ_head_2": {
           "NotRandom": false,
           "head": "670d1749d57ec3c3e20e81a6",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_lab_assistant_1": {
           "NotRandom": false,
           "head": "670d176bb7a8f34fce07fd9d",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_lab_assistant_2": {
           "NotRandom": false,
           "head": "670d17df032591157e0c3538",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_lab_assistant_3": {
           "NotRandom": false,
           "head": "670d17f9d2d5ce4514027e83",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_usec_eric": {
           "NotRandom": false,
           "head": "670d1843186ee334e70ee700",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_usec_head_2": {
           "NotRandom": false,
           "head": "670d1854032591157e0c353a",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_usec_head_6": {
           "NotRandom": false,
           "head": "670d1862b7a8f34fce07fda7",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_wild_drozd": {
           "NotRandom": false,
           "head": "670d18746f8cc0145f0a0314",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_wild_head_1": {
           "NotRandom": false,
           "head": "670d18827ca0004a2a022603",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_wild_head_2": {
           "NotRandom": false,
           "head": "670d1892d2d5ce4514027e8a",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_wild_head_3": {
           "NotRandom": false,
           "head": "670d18a3b7a8f34fce07fda9",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         },
         "zombie_head_wild_misha": {
           "NotRandom": false,
           "head": "670d18b5032591157e0c353e",
-          "isNotRandom": true
+          "isNotRandom": true,
+          "isSupportingSimpleAnimator": false
         }
       }
     },
@@ -29800,6 +30027,7 @@
         }
       },
       "PmcBotKillStandingMultiplier": 1,
+      "ScavEquipmentChancePercentThreshold": 5,
       "paidExitStandingNumerator": 0.2
     },
     "FractureCausedByBulletHit": {
@@ -29816,7 +30044,7 @@
     },
     "GameSearchingTimeout": 45,
     "GlobalItemPriceModifier": 1,
-    "GlobalLootChanceModifier": 0.18,
+    "GlobalLootChanceModifier": 0.2,
     "GlobalLootChanceModifierPvE": 0.2,
     "GraphicSettings": {
       "ExperimentalFogInCity": true
@@ -32459,6 +32687,7 @@
     },
     "LegsOverdamage": 1,
     "LoadTimeSpeedProgress": 1,
+    "MailItemsExpirationTimeLimitWarning": 24,
     "Malfunction": {
       "AllowMalfForBots": false,
       "AmmoFeedWt": 0.2,
@@ -32555,8 +32784,7 @@
           "628a60ae6b1d481ff772e9c8",
           "628b5638ad252a16da6dd245",
           "628b9c37a733087d0d7fe84b",
-          "5beed0f50db834001c062b12",
-          "674d6121c09f69dfb201a888"
+          "5beed0f50db834001c062b12"
         ]
       },
       {
@@ -34041,8 +34269,8 @@
         "TemplateId": "57347ca924597744596b4e71"
       },
       {
-        "MaxInLobby": 4,
-        "MaxInRaid": 4,
+        "MaxInLobby": 10,
+        "MaxInRaid": 10,
         "TemplateId": "5fca138c2a7b221b2852a5c6"
       },
       {
@@ -34729,6 +34957,41 @@
         "MaxInLobby": 0,
         "MaxInRaid": 0,
         "TemplateId": "67b72c64f753cf9f7a0a07aa"
+      },
+      {
+        "MaxInLobby": 0,
+        "MaxInRaid": 0,
+        "TemplateId": "678f84bb9e85556ca60f0362"
+      },
+      {
+        "MaxInLobby": 0,
+        "MaxInRaid": 0,
+        "TemplateId": "679ba90d269ddfea47012159"
+      },
+      {
+        "MaxInLobby": 0,
+        "MaxInRaid": 5,
+        "TemplateId": "67d3ed3271c17ff82e0a5b0b"
+      },
+      {
+        "MaxInLobby": 3,
+        "MaxInRaid": 99,
+        "TemplateId": "679b992329acd1f2f60985a5"
+      },
+      {
+        "MaxInLobby": 2,
+        "MaxInRaid": 5,
+        "TemplateId": "679b9819a2f2dd4da9023512"
+      },
+      {
+        "MaxInLobby": 0,
+        "MaxInRaid": 0,
+        "TemplateId": "67ea616a74f765cefd009fb7"
+      },
+      {
+        "MaxInLobby": 2,
+        "MaxInRaid": 2,
+        "TemplateId": "676bf44c5539167c3603e869"
       }
     ],
     "RunddansSettings": {
@@ -35410,6 +35673,302 @@
       "ScavPriceMod": 0.8,
       "UsecPriceMod": 1.05,
       "active": true
+    },
+    "Triggers": {
+      "HandlerDamage": {
+        "INTERACTIVE_Flametrap_00001_deadly": [
+          {
+            "Amount": 50,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 50,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 50,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 50,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 50,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 50,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Flametrap_00001_soft": [
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Guntrap_00001_deadly": [
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "Eyes"
+          }
+        ],
+        "INTERACTIVE_Guntrap_00001_soft": [
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "Eyes"
+          }
+        ],
+        "INTERACTIVE_Labyrinth_water_01_deadly": [
+          {
+            "Amount": 40,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 40,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 40,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 40,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 40,
+            "BodyPartColliderType": "HeadCommon"
+          },
+          {
+            "Amount": 40,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 40,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Labyrinth_water_01_soft": [
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "HeadCommon"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Lifting_grate_00001_deadly": [
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "HeadCommon"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Lifting_grate_00001_soft": [
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "HeadCommon"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Spikes_00001": [
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "HeadCommon"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Spikes_traps_00001": [
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 2,
+            "BodyPartColliderType": "LeftThigh"
+          },
+          {
+            "Amount": 2,
+            "BodyPartColliderType": "RightThigh"
+          }
+        ],
+        "INTERACTIVE_Valve_00001_deadly": [
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "HeadCommon"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 100,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ],
+        "INTERACTIVE_Valve_00001_soft": [
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightCalf"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "Pelvis"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RibcageUp"
+          },
+          {
+            "Amount": 5,
+            "BodyPartColliderType": "HeadCommon"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "RightUpperArm"
+          },
+          {
+            "Amount": 10,
+            "BodyPartColliderType": "LeftUpperArm"
+          }
+        ]
+      }
     },
     "TripwiresSettings": {
       "CollisionCapsuleCheckCoef": 2,

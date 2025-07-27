@@ -1,7 +1,9 @@
 import { Notification } from "../components/notifications.js";
+import Tooltip from '../components/tooltip.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     const cards = document.getElementsByClassName("card-bfx");
+    new Tooltip();
 
     document.addEventListener("click", function (event) {
         if (event.target.matches("span.global-id") || event.target.matches("a.global-id")) {
