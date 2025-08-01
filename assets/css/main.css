@@ -11,6 +11,18 @@
     src: url("fonts/Bender-Bold.otf") format("opentype");
 }
 
+@property --rotation {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --scale {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 1;
+}
+
 :root {
     interpolate-size: allow-keywords;
 
@@ -131,6 +143,46 @@
     --border-color-strong: hsl(138.93deg 100% 77.58% / 20%);
     --border-color-stronger: hsl(138.93deg 100% 77.58% / 30%);
     --font-family: "Consolas", "SF Mono", "DejaVu Sans Mono", "Roboto Mono", monospace;
+}
+
+::view-transition {
+    background: var(--background-color);
+}
+
+::view-transition-image-pair(root) {
+    perspective: 2500px;
+    perspective-origin: center;
+    transform-style: preserve-3d;
+    transform-origin: 50% 50% 100vw;
+    filter: drop-shadow(0px 0px 6px hsl(165deg 11% 3%)) drop-shadow(0px 0px 25px hsl(165deg 11% 3%/50%));
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: 1.5s linear(0,
+            0.324 9.1%,
+            0.584 18.6%,
+            0.782 28.6%,
+            0.858 33.8%,
+            0.92 39.2%,
+            0.997 49.5%,
+            1.021 55.1%,
+            1.033 61%,
+            1.035 71.7%,
+            1);
+    transform-style: preserve-3d;
+    transform-origin: 50% 50% 0;
+    /*   perspective: 800px; */
+    transform: translateZ(-50vw) scale(var(--scale)) rotatey(var(--rotation)) translatez(50vw);
+    backface-visibility: hidden;
+}
+
+::view-transition-old(root) {
+    animation-name: reveal-out;
+}
+
+::view-transition-new(root) {
+    animation-name: reveal-in;
 }
 
 html,
@@ -648,16 +700,6 @@ details {
 
 .scroll-ani.scroll-80 {
     animation-timeline: view(block 80% 0%);
-}
-
-@keyframes scrollAni {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
 }
 
 [popover] {
@@ -3687,20 +3729,6 @@ ul.inner-list {
     display: none;
 }
 
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
 #customTraderContent .quest-item.editing {
     border: 2px solid var(--main-color);
     background: var(--content-bg-light);
@@ -3809,56 +3837,6 @@ footer .text-end {
     color: var(--cm-boolean);
 }
 
-@keyframes loader {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes inAni {
-    0% {
-        transform: translateY(10px);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes inAniLeft {
-    0% {
-        transform: translateX(-5px);
-        opacity: 0;
-    }
-
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes rainbow-border {
-    0% {
-        background-position: 0% 50%;
-        transform: rotate(0deg);
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 200% 50%;
-        transform: rotate(360deg);
-    }
-}
-
 @media screen and (min-width: 1500px) {
     .container-fluid {
         padding-left: 3rem;
@@ -3953,4 +3931,122 @@ footer .text-end {
     font-size: 0.75rem;
     font-weight: bold;
     margin: 0 0 0.8rem;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes reveal-in {
+    from {
+        --rotation: -90deg;
+        animation-timing-function: ease-in-out;
+    }
+
+    15% {
+        --scale: 0.8;
+        --rotation: -90deg;
+    }
+
+    85% {
+        --scale: 0.8;
+        --rotation: 0deg;
+        animation-timing-function: ease-in-out;
+    }
+
+    to {
+        --rotation: 0deg;
+    }
+}
+
+@keyframes reveal-out {
+    from {
+        --rotation: 0deg;
+        animation-timing-function: ease-in-out;
+    }
+
+    15% {
+        --scale: 0.8;
+        --rotation: 0deg;
+    }
+
+    85% {
+        --scale: 0.8;
+        --rotation: 90deg;
+        animation-timing-function: ease-in-out;
+    }
+
+    to {
+        --rotation: 90deg;
+    }
+}
+
+@keyframes loader {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes inAni {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes inAniLeft {
+    0% {
+        transform: translateX(-5px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes rainbow-border {
+    0% {
+        background-position: 0% 50%;
+        transform: rotate(0deg);
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes scrollAni {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

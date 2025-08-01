@@ -80,7 +80,16 @@ class ThemeManager {
             
             // Listen for changes
             this.themeSelect.addEventListener('change', (e) => {
-                this.changeTheme(e.target.value);
+
+                if (!document.startViewTransition) {
+                    this.changeTheme(e.target.value);
+                return;
+                }
+
+                document.startViewTransition(() => {
+                    this.changeTheme(e.target.value);
+                });
+
             });
         }
     }
@@ -96,7 +105,6 @@ class ThemeManager {
     changeTheme(newTheme) {
         if (newTheme === this.currentTheme) return;
         
-        console.log(`Changing theme from ${this.currentTheme} to ${newTheme}`);
         this.applyTheme(newTheme);
     }
 
