@@ -2046,19 +2046,15 @@ span.global-id.copied::after {
 .handbook-item .presets-available {
     display: flex;
     margin: 2rem 0 0;
-    background-color: var(--content-bg-light);
+    background-color: var(--background-color);
     flex-direction: column;
     border-radius: var(--br-med);
-    padding: 2rem 0;
+    padding: 3rem 0 2rem;
     position: relative;
-    background-image: url(../img/weaponarsenal_bg.webp);
-    background-size: cover;
-    background-repeat: no-repeat;
 
     & > h5 {
         padding: 1rem;
         margin: 0;
-        text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.9);
         position: absolute;
         font-size: 1rem;
         top: 0.5rem;
@@ -2076,10 +2072,7 @@ span.global-id.copied::after {
         overflow: hidden;
         max-width: 100%;
         padding: 2rem 0;
-        background-color: var(--content-bg);
         margin: 0;
-        backdrop-filter: blur(10px);
-        mask: linear-gradient(180deg, #00000000 0%, #000000 25%, #000 50%, #000000 75%, #00000000 100%);
     }
 
     & .swiper-slide {
@@ -2097,8 +2090,17 @@ span.global-id.copied::after {
         height: 100%;
         max-height: 300px;
 
-        & .preset-image img {
-            filter: drop-shadow(10px 40px 10px rgba(0, 0, 0, 0.3));
+        & .preset-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            max-width: 300px;
+            
+            & img {
+                max-width: 100%;
+                width: 300px;
+                height: auto;
+            }
         }
 
         & .preset-item-details h6 {

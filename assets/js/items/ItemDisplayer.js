@@ -465,13 +465,13 @@ export class ItemDisplayer {
                             return `<div class="swiper-slide preset-item-row">
                                 <div class="preset-item-slide">
                                     <div class="preset-image">
-                                        <img src="${presetImageLink}" width="512" alt="${preset.name}" title="${preset.name}" />
+                                        <img src="${presetImageLink}" alt="${preset.name}" title="${preset.name}" />
                                     </div>
 
                                     <div class="preset-item-details">
                                         <h6>${preset.name}</h6>
                                         <p><strong>Short Name:</strong> ${preset.shortName}</p>
-                                        <p><strong>ID:</strong> <span class="global-id">${preset.id}</span></p>
+                                        <p><strong>Preset ID:</strong> <span class="global-id">${preset.id}</span></p>
                                         <p><strong>Base Price:</strong> ${preset.basePrice} RUB</p>
                                         ${preset.description ? `<p><strong>Description:</strong> ${preset.description}</p>` : ''}
                                         <button class="btn btn-sm btn-info preset-template-btn" data-preset-id="${preset.id}">
