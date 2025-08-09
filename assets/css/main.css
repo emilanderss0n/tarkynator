@@ -26,6 +26,7 @@
 :root {
     interpolate-size: allow-keywords;
 
+    --grid-max-col-count: 3;
     --main-color: #998766;
     --main-color-hover: #a08e6e;
     --main-color-bg: #998766;
@@ -353,8 +354,11 @@ h4 {
     font-size: calc(0.9rem + .2vw);
 }
 
+html[grid-max-col-count] {
+  --grid-max-col-count: attr(grid-max-col-count number);
+}
+
 .grid {
-    --grid-max-col-count: attr(grid-max-col-count type(<number>), 4);
     --grid-min-col-size: 300px;
     --grid-gap: 1rem;
     --grid-gap-vertical: 1rem;
