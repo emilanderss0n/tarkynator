@@ -133,10 +133,6 @@ include_once('../header.php');
                 </a>
             </div>
 
-            <h5 class="title">SPT Releases</h5>
-            <div class="links grid grid-300" grid-max-col-count="4" id="sptReleases">
-
-            </div>
         </div>
     </div>
     

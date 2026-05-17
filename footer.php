@@ -14,6 +14,16 @@
             </div>
         </section>
 
+        <section id="latestModsSection">
+            <div class="body container-fluid">
+                <div class="latest-mods-header">
+                    <h5 class="title">Latest SPT Mods</h5>
+                    <p>Browse the newest Forge uploads. Scroll sideways to see more.</p>
+                </div>
+                <div id="sptReleases" class="latest-mods-strip" aria-label="Latest SPT mods"></div>
+            </div>
+        </section>
+
         <footer>
             <div class="container-fluid">
                 <div class="row">
@@ -137,9 +147,7 @@
     <?php if ($activePage === 'common-id'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/pages/commonIds.js"></script>
     <?php endif; ?>
-    <?php if ($activePage === 'resources'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/features/sptApi.js"></script>
-    <?php endif; ?>
     <?php if ($activePage === 'custom-trader'): ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script type="module" src="<?= BASE_URL ?>/assets/js/features/customTraderEdit.js"></script>

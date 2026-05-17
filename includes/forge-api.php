@@ -13,7 +13,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 ob_clean();
 
 try {
-    $url = "https://forge.sp-tarkov.com/api/v0/spt/versions";
+    $url = "https://forge.sp-tarkov.com/api/v0/mods?sort=-published_at&per_page=12";
 
     $context = stream_context_create([
         'http' => [
