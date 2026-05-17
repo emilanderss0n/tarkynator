@@ -18,9 +18,11 @@
             <div class="body container-fluid">
                 <div class="latest-mods-header">
                     <h5 class="title">Latest SPT Mods</h5>
-                    <p>Browse the newest Forge uploads. Scroll sideways to see more.</p>
+                    <p>Browse the newest Forge uploads</p>
                 </div>
-                <div id="sptReleases" class="latest-mods-strip" aria-label="Latest SPT mods"></div>
+                <section class="slider-wrap latest-mods-slider-wrap">
+                    <div id="sptReleases" class="moxo-swipe fluid latest-mods-strip" aria-label="Latest SPT mods" aria-roledescription="carousel" tabindex="0"></div>
+                </section>
             </div>
         </section>
 

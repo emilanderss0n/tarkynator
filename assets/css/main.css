@@ -2957,7 +2957,6 @@ ul.inner-list {
     height: 100%;
     display: block;
     object-fit: cover;
-    transition: transform 0.24s ease, filter 0.24s ease;
 }
 
 #sptReleases .spt-mod-card .spt-mod-thumbnail-placeholder {
@@ -3080,11 +3079,6 @@ ul.inner-list {
 
 #sptReleases .spt-mod-card .spt-mod-date {
     white-space: nowrap;
-}
-
-#sptReleases .spt-mod-card:hover .spt-mod-thumbnail {
-    filter: saturate(1.08) contrast(1.03);
-    transform: scale(1.02);
 }
 
 @media (max-width: 576px) {
@@ -3551,60 +3545,70 @@ ul.inner-list {
     text-align: right;
 }
 
+#latestModsSection .latest-mods-slider-wrap {
+    margin-bottom: 0;
+}
+
 #latestModsSection .latest-mods-strip {
-    --mods-gap: 0.9rem;
-    display: grid;
-    gap: var(--mods-gap);
-    grid-auto-flow: column;
-    grid-auto-columns: calc((100% - (var(--mods-gap) * 3)) / 4);
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x proximity;
-    overscroll-behavior-x: contain;
-    padding-bottom: 0.35rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-color-strong) transparent;
+    --gap: 0.9rem;
+    --edge-fade-left: clamp(0.4rem, 1.6vw, 1.4rem);
+    --edge-fade-right: clamp(0.8rem, 2.6vw, 2.4rem);
+    grid-auto-columns: calc((100% - (var(--gap) * 3)) / 4);
+    padding-block: 0.2rem 0.8rem;
 }
 
-#latestModsSection .latest-mods-strip::-webkit-scrollbar {
-    height: 8px;
+#latestModsSection .latest-mods-strip.fluid .moxo-swipe-slide {
+    inline-size: 100%;
+    block-size: auto;
+    min-block-size: 0;
+    aspect-ratio: auto;
+    animation: none;
 }
 
-#latestModsSection .latest-mods-strip::-webkit-scrollbar-thumb {
-    background-color: var(--border-color-strong);
-    border-radius: 999px;
+#latestModsSection .latest-mods-strip .moxo-spacer {
+    inline-size: 1px;
 }
 
-#latestModsSection .latest-mods-strip > .spt-mod-card {
-    scroll-snap-align: start;
+#latestModsSection .latest-mods-strip::scroll-button(*) {
+    --buttons-inset-x: 0.8rem;
+    --buttons-scale: 44px;
 }
 
-#latestModsSection #sptReleases .spt-mod-card .card-body.spt.spt-mod-body {
+#latestModsSection .latest-mods-strip::scroll-marker-group {
+    padding-top: 1.4rem;
+    top: anchor(--moxo-swipe 100%);
+}
+
+#latestModsSection .spt-mod-card .card-body.spt.spt-mod-body {
     flex-direction: row;
 }
 
-#latestModsSection #sptReleases .spt-mod-card .spt-mod-media {
-    width: clamp(96px, 34%, 146px);
-    height: auto;
+#latestModsSection .spt-mod-card .spt-mod-media {
+    width: clamp(122px, 40%, 182px);
+    min-width: 122px;
     align-self: stretch;
     display: flex;
-    border-right: 1px solid var(--border-color);
-    border-bottom: none;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+
+    .spt-mod-card:hover & {
+        opacity: 1;
+    }
 }
 
-#latestModsSection #sptReleases .spt-mod-card .spt-mod-content {
+#latestModsSection .spt-mod-card .spt-mod-content {
     min-height: 0;
 }
 
 @media (max-width: 1199px) {
     #latestModsSection .latest-mods-strip {
-        grid-auto-columns: calc((100% - (var(--mods-gap) * 2)) / 3);
+        grid-auto-columns: calc((100% - (var(--gap) * 2)) / 3);
     }
 }
 
 @media (max-width: 991px) {
     #latestModsSection .latest-mods-strip {
-        grid-auto-columns: calc((100% - var(--mods-gap)) / 2);
+        grid-auto-columns: calc((100% - var(--gap)) / 2);
     }
 
     #latestModsSection .latest-mods-header {
@@ -3619,21 +3623,21 @@ ul.inner-list {
 
 @media (max-width: 640px) {
     #latestModsSection .latest-mods-strip {
-        grid-auto-columns: minmax(82vw, 82vw);
+        grid-auto-columns: 82vw;
     }
 
-    #latestModsSection #sptReleases .spt-mod-card .card-body.spt.spt-mod-body {
+    #latestModsSection .spt-mod-card .card-body.spt.spt-mod-body {
         flex-direction: column;
     }
 
-    #latestModsSection #sptReleases .spt-mod-card .spt-mod-media {
+    #latestModsSection .spt-mod-card .spt-mod-media {
         width: 100%;
         height: clamp(118px, 9vw, 152px);
         border-right: none;
         border-bottom: 1px solid var(--border-color);
     }
 
-    #latestModsSection #sptReleases .spt-mod-card .spt-mod-content {
+    #latestModsSection .spt-mod-card .spt-mod-content {
         min-height: 175px;
     }
 }
@@ -4352,4 +4356,222 @@ footer .text-end {
     100% {
         opacity: 1;
     }
+}
+
+.slider-wrap {
+  position: relative;
+  margin-bottom: 5rem;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0.35;
+    scale: 0.7;
+  }
+
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.moxo-swipe {
+  --slide-size: 280px;
+  --gap: clamp(1rem, 3cqi, 1.5rem);
+  --edge-fade-right: clamp(1.5rem, 7cqi, 5rem);
+  --edge-fade-left: clamp(1rem, 2cqi, 2rem);
+  anchor-name: --moxo-swipe;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--slide-size);
+  gap: var(--gap);
+  padding-block: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: calc((34cqi - var(--slide-size)) / 2);
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scroll-marker-group: after;
+  user-select: none;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, white var(--edge-fade-left), white calc(100% - var(--edge-fade-right)), transparent);
+
+  &.fluid {
+     --slide-size: auto;
+    scroll-padding-inline: var(--gap);
+  }
+
+  @media (max-width: 42rem) {
+    --edge-fade-right: 1.5rem;
+    
+    &.fluid {
+       mask-image: linear-gradient(to right, white calc(100% - var(--edge-fade-right)), transparent);
+    }
+  }
+}
+
+.moxo-spacer {
+  inline-size: calc(50vw - (var(--slide-size) / 2));
+  pointer-events: none;
+
+  .fluid & {
+    inline-size: 100%;
+  }
+
+  @media (max-width: 42rem) {
+    .fluid & {
+      display: none;
+    }
+  }
+}
+
+.moxo-swipe-slide {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  inline-size: 100%;
+  block-size: 100%;
+  aspect-ratio: 1;
+  border-radius: 1rem;
+  animation: fadeInScale 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-timeline: view(inline);
+  animation-range: entry 0% exit 80%;
+  will-change: scale, opacity;
+
+  .fluid & {
+    aspect-ratio: 16 / 9;
+    min-block-size: 300px;
+  }
+
+  @media (max-width: 42rem) {
+    scroll-snap-align: center;
+
+    .fluid & {
+      scroll-snap-align: start;
+      animation: none;
+      scroll-snap-stop: normal;
+      min-block-size: 240px;
+    }
+  }
+}
+
+.moxo-swipe-slide-content {
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: inherit;
+  padding: clamp(1rem, 7cqi, 1.5rem);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.5rem;
+  background-color: var(--slide-bg);
+  color: var(--muted);
+  transition: background-color 0.2s, box-shadow 0.2s;
+
+  @media (min-width: 42.1rem) {
+    &:hover {
+      background-color: color-mix(in srgb, var(--slide-bg), white);
+      box-shadow: 0 0 0 2px var(--brand);
+    }
+  }
+
+  h2 {
+    color: currentColor;
+    font-size: clamp(1.55rem, 11cqi, 2.35rem);
+  }
+}
+
+.moxo-swipe-slide-kicker {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  opacity: 0.58;
+}
+
+.moxo-swipe::scroll-marker-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 3rem;
+  position: absolute;
+  position-anchor: --moxo-swipe;
+  top: anchor(--moxo-swipe 95%);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.moxo-swipe-slide::scroll-marker {
+  content: "";
+  width: 16px;
+  height: 7px;
+  border-radius: 4px;
+  opacity: 1;
+  background-color: var(--slide-bg);
+  transition: width 0.4s, background-color 0.4s, opacity 0.4s;
+  will-change: width, background-color, opacity;
+}
+
+.moxo-swipe-slide::scroll-marker:target-current {
+  background-color: var(--brand);
+  width: 46px;
+}
+
+.moxo-swipe-slide::scroll-marker:target-before,
+.moxo-swipe-slide::scroll-marker:target-after {
+  background-color: var(--slide-bg);
+  opacity: 1;
+}
+
+.moxo-swipe::scroll-button(*) {
+  --buttons-inset-x: 2.4rem;
+  --buttons-scale: 50px;
+  
+  position: absolute;
+  position-anchor: --moxo-swipe;
+  top: anchor(--moxo-swipe 50%);
+  transform: translateY(-50%) scale(1);
+  z-index: 3;
+  font-family: "bootstrap-icons";
+  font-size: calc(var(--buttons-scale) * 0.5);
+  opacity: 0.7;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: #0000008f;
+  backdrop-filter: blur(5px);
+  color: var(--main-color);
+  box-shadow: 0px 24.7928px 24px -15px light-dark(rgb(33 55 85 / 7%),rgb(33 55 85 / 0%)),0px 15.32523px 10.64212px -8px light-dark(rgb(100 120 172 / 8%),rgb(100 120 172 / 0%)),0px 6.04819px 3.59618px -3px light-dark(rgb(24 34 65 / 10%),rgb(24 34 65 / 0%));
+  border: none;
+  width: var(--buttons-scale);
+  height: var(--buttons-scale);
+  transition: transform 0.3s, opacity 0.3s;
+
+  @media (max-width: 42rem) {
+    --buttons-inset-x: 1.4rem;
+  }
+}
+
+.moxo-swipe::scroll-button(*):hover,
+.moxo-swipe::scroll-button(*):focus {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.moxo-swipe::scroll-button(*):active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+.moxo-swipe::scroll-button(*):disabled {
+  opacity: 0.2;
+  cursor: unset;
+}
+
+.moxo-swipe::scroll-button(left) {
+  content: "\F284";
+  left: var(--buttons-inset-x);
+}
+
+.moxo-swipe::scroll-button(right) {
+  content: "\F285";
+  right: var(--buttons-inset-x);
 }

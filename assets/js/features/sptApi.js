@@ -82,7 +82,8 @@ if (sptReleases) {
                 return;
             }
 
-            const releasesHTML = latestMods.map((mod) => {
+            const totalMods = latestMods.length;
+            const releasesHTML = latestMods.map((mod, index) => {
                 const modName = escapeHtml(mod.name);
                 const modTeaser = escapeHtml(truncate(mod.teaser));
                 const modAuthor = escapeHtml(mod.owner?.name || "Unknown author");
@@ -98,29 +99,31 @@ if (sptReleases) {
                     : '<div class="spt-mod-thumbnail spt-mod-thumbnail-placeholder" aria-hidden="true"></div>';
 
                 return `
-                    <a href="${modLink}" target="_blank" rel="noopener noreferrer" class="card-bfx scroll-ani scroll-70 spt-mod-card">
-                        <div class="card-body spt spt-mod-body">
-                            <div class="spt-mod-media">
-                                ${thumbnailHtml}
-                            </div>
-                            <div class="spt-mod-content">
-                                <h5 class="card-title">${modName}</h5>
-                                <div class="spt-mod-meta">
-                                    <span class="spt-mod-pill spt-mod-category">${modCategory}</span>
-                                    <span class="spt-mod-pill">${downloadCount} downloads</span>
+                    <article class="moxo-swipe-slide" aria-label="Slide ${index + 1} of ${totalMods}">
+                        <a href="${modLink}" target="_blank" rel="noopener noreferrer" class="card-bfx spt-mod-card">
+                            <div class="card-body spt spt-mod-body">
+                                <div class="spt-mod-media">
+                                    ${thumbnailHtml}
                                 </div>
-                                <p class="card-text spt-mod-teaser">${modTeaser}</p>
-                                <div class="spt-mod-footer">
-                                    <span class="spt-mod-author">By ${modAuthor}</span>
-                                    <span class="spt-mod-date">Released ${modDate}</span>
+                                <div class="spt-mod-content">
+                                    <h5 class="card-title">${modName}</h5>
+                                    <div class="spt-mod-meta">
+                                        <span class="spt-mod-pill spt-mod-category">${modCategory}</span>
+                                        <span class="spt-mod-pill">${downloadCount} downloads</span>
+                                    </div>
+                                    <p class="card-text spt-mod-teaser">${modTeaser}</p>
+                                    <div class="spt-mod-footer">
+                                        <span class="spt-mod-author">By ${modAuthor}</span>
+                                        <span class="spt-mod-date">Released ${modDate}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </article>
                 `;
             }).join("");
 
-            sptReleases.innerHTML = releasesHTML;
+            sptReleases.innerHTML = `<div class="moxo-spacer" aria-hidden="true"></div>${releasesHTML}<div class="moxo-spacer" aria-hidden="true"></div>`;
         } else {
             sptReleases.innerHTML = '<div class="alert alert-secondary">Failed to load latest mods</div>';
         }
