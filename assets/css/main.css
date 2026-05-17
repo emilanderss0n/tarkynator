@@ -110,7 +110,7 @@
     --glow-box-shadow: none;
     --small-glow-box-shadow: none;
     --background-blend-mode: luminosity;
-    --font-family: 'Inter', 'Open Sans', 'Roboto', 'SF Pro', "Segoe UI", sans-serif;
+    --font-family: 'Open Sans', 'Roboto', 'SF Pro', system-ui, sans-serif;
 }
 
 [data-theme="hacker"] {
