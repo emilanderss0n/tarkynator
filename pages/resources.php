@@ -15,9 +15,9 @@ include_once('../header.php');
                             people over there.</p>
                     </div>
                 </a>
-                <a href="https://hub.sp-tarkov.com/" target="_blank" class="card-bfx scroll-ani scroll-70">
+                <a href="https://forge.sp-tarkov.com/" target="_blank" class="card-bfx scroll-ani scroll-70">
                     <div class="card-body web">
-                        <h5 class="card-title">SPT Hub</h5>
+                        <h5 class="card-title">SPT Forge</h5>
                         <p class="card-text">The place where all SPT mods are officially available. Navigate
                             a massive collection of community-made mods.</p>
                     </div>
@@ -62,11 +62,10 @@ include_once('../header.php');
                             to effortlessly streamline your weapon creation workflow.</p>
                     </div>
                 </a>
-                <a href="https://github.com/sp-tarkov/mod-examples" target="_blank" class="card-bfx scroll-ani scroll-70">
+                <a href="https://github.com/sp-tarkov" target="_blank" class="card-bfx scroll-ani scroll-70">
                     <div class="card-body web">
-                        <h5 class="card-title">Server Mod Examples</h5>
-                        <p class="card-text">A lot of mod examples for helping you make the server mod you
-                            want for SPT. Made by Chomp, the founder of SPT.</p>
+                        <h5 class="card-title">SPT Official Github</h5>
+                        <p class="card-text">Find official SPT resources and examples on GitHub.</p>
                     </div>
                 </a>
                 <a href="https://github.com/SeriousCache/UABE/releases" target="_blank" class="card-bfx scroll-ani scroll-70">
@@ -77,12 +76,12 @@ include_once('../header.php');
                         </p>
                     </div>
                 </a>
-                <a href="https://hub.sp-tarkov.com/doc/entry/89-client-modding-quick-start-guide/"
+                <a href="https://wiki.sp-tarkov.com/"
                     target="_blank" class="card-bfx scroll-ani scroll-70">
                     <div class="card-body web">
-                        <h5 class="card-title">Client Modding For SPT</h5>
-                        <p class="card-text">Use this as a starting point to create your own client mods for
-                            SPT.</p>
+                        <h5 class="card-title">SPT Wiki</h5>
+                        <p class="card-text">Find official SPT resources and documentation on the wiki. 
+                            Great way to start learning about SPT and modding.</p>
                     </div>
                 </a>
                 <a href="https://drakiaxyz.github.io/spt-profile-fix/"
