@@ -3554,7 +3554,21 @@ ul.inner-list {
     --edge-fade-left: clamp(0.4rem, 1.6vw, 1.4rem);
     --edge-fade-right: clamp(0.8rem, 2.6vw, 2.4rem);
     grid-auto-columns: calc((100% - (var(--gap) * 3)) / 4);
+    scroll-padding-inline: 0;
     padding-block: 0.2rem 0.8rem;
+}
+
+#latestModsSection .latest-mods-strip.is-at-start {
+    mask-image: linear-gradient(to right, white calc(100% - var(--edge-fade-right)), transparent);
+}
+
+#latestModsSection .latest-mods-strip.is-at-end {
+    mask-image: linear-gradient(to right, transparent, white var(--edge-fade-left));
+}
+
+#latestModsSection .latest-mods-strip.is-at-start.is-at-end,
+#latestModsSection .latest-mods-strip.is-not-scrollable {
+    mask-image: none;
 }
 
 #latestModsSection .latest-mods-strip.fluid .moxo-swipe-slide {
@@ -3563,10 +3577,6 @@ ul.inner-list {
     min-block-size: 0;
     aspect-ratio: auto;
     animation: none;
-}
-
-#latestModsSection .latest-mods-strip .moxo-spacer {
-    inline-size: 1px;
 }
 
 #latestModsSection .latest-mods-strip::scroll-button(*) {

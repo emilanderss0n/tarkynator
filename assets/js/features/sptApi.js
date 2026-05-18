@@ -1,6 +1,39 @@
-import { fetchData } from "../core/cache.js";
-
 const sptReleases = document.getElementById("sptReleases");
+const LATEST_MODS_CACHE_KEY = "latest-mods-feed-v1";
+const LATEST_MODS_CACHE_TTL = 1000 * 60 * 60 * 3; // 3 hours
+
+function getCachedLatestMods() {
+    try {
+        const rawEntry = localStorage.getItem(LATEST_MODS_CACHE_KEY);
+        if (!rawEntry) {
+            return null;
+        }
+
+        const entry = JSON.parse(rawEntry);
+        if (!entry || !entry.expiry || Date.now() > entry.expiry) {
+            localStorage.removeItem(LATEST_MODS_CACHE_KEY);
+            return null;
+        }
+
+        return entry.data ?? null;
+    } catch (error) {
+        console.warn("Failed to read latest mods cache:", error);
+        return null;
+    }
+}
+
+function setCachedLatestMods(data) {
+    try {
+        const entry = {
+            data,
+            expiry: Date.now() + LATEST_MODS_CACHE_TTL
+        };
+
+        localStorage.setItem(LATEST_MODS_CACHE_KEY, JSON.stringify(entry));
+    } catch (error) {
+        console.warn("Failed to write latest mods cache:", error);
+    }
+}
 
 function escapeHtml(value) {
     const stringValue = String(value ?? "");
@@ -42,8 +75,37 @@ function truncate(text, maxLength = 120) {
     return `${safeText.slice(0, maxLength).trimEnd()}...`;
 }
 
+function updateSliderEdgeState(sliderElement) {
+    const maxScrollLeft = Math.max(0, sliderElement.scrollWidth - sliderElement.clientWidth);
+    const threshold = 2;
+    const atStart = sliderElement.scrollLeft <= threshold;
+    const atEnd = sliderElement.scrollLeft >= maxScrollLeft - threshold;
+    const notScrollable = maxScrollLeft <= threshold;
+
+    sliderElement.classList.toggle("is-at-start", atStart);
+    sliderElement.classList.toggle("is-at-end", atEnd);
+    sliderElement.classList.toggle("is-not-scrollable", notScrollable);
+}
+
+function setupSliderEdgeState(sliderElement) {
+    const syncState = () => updateSliderEdgeState(sliderElement);
+
+    sliderElement.addEventListener("scroll", syncState, { passive: true });
+    window.addEventListener("resize", syncState, { passive: true });
+
+    requestAnimationFrame(syncState);
+
+    const thumbnails = sliderElement.querySelectorAll("img");
+    thumbnails.forEach((img) => {
+        if (!img.complete) {
+            img.addEventListener("load", syncState, { once: true });
+            img.addEventListener("error", syncState, { once: true });
+        }
+    });
+}
+
 if (sptReleases) {
-    const url = new URL("../../../includes/forge-api.php?feed=latest-release-v4", import.meta.url).toString();
+    const url = new URL("../../../includes/forge-api.php?feed=latest-release-v6", import.meta.url).toString();
 
     const options = {
         method: "GET",
@@ -53,7 +115,26 @@ if (sptReleases) {
         }
     };
 
-    fetchData(url, options)
+    const cachedData = getCachedLatestMods();
+    const dataPromise = cachedData
+        ? Promise.resolve(cachedData)
+        : fetch(url, {
+            ...options,
+            cache: "no-store"
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .then((data) => {
+                setCachedLatestMods(data);
+                return data;
+            });
+
+    dataPromise
     .then((data) => {
         if (data.success && Array.isArray(data.data)) {
             const latestMods = [...data.data]
@@ -123,7 +204,8 @@ if (sptReleases) {
                 `;
             }).join("");
 
-            sptReleases.innerHTML = `<div class="moxo-spacer" aria-hidden="true"></div>${releasesHTML}<div class="moxo-spacer" aria-hidden="true"></div>`;
+            sptReleases.innerHTML = releasesHTML;
+            setupSliderEdgeState(sptReleases);
         } else {
             sptReleases.innerHTML = '<div class="alert alert-secondary">Failed to load latest mods</div>';
         }
