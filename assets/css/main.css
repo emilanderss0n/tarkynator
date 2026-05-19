@@ -3197,6 +3197,10 @@ ul.inner-list {
     display: flex;
     flex-direction: row;
     gap: 1rem;
+
+    &:hover {
+        color: #fff;
+    }
 }
 
 #achievementsContainer .card:not(.disabled)::after {
@@ -3215,6 +3219,18 @@ ul.inner-list {
 
 #achievementsContainer .card > img {
     height: 100px;
+}
+
+#achievementsContainer .card .achievement-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.4rem;
+}
+
+#achievementsContainer .card .achievement-title .modded-missing-tag {
+    margin: 0;
+    flex-shrink: 0;
 }
 
 #achievementsContainer .card.ach-hidden::before {

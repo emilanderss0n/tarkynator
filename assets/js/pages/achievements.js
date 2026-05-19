@@ -7,6 +7,7 @@ import {
 import { Popover } from "../components/popover.js";
 
 let achievementsLocalData = []; // Store local achievements data
+let localAchievementIdSet = new Set();
 let originalAchievementsHTML = ''; // Store original achievements HTML
 let achievementPopover = null; // Store popover instance
 
@@ -174,8 +175,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             achievementsLocalData = await response.json();
+            localAchievementIdSet = new Set(
+                achievementsLocalData.map((achievement) => achievement.id)
+            );
         } catch (error) {
             console.error("Error loading local achievements data:", error);
+            localAchievementIdSet = new Set();
         }
     };
 
@@ -342,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const achievementsHTML = achievements
             .map((achievement) => {
                 // Check if achievement has corresponding JSON data
-                const hasJsonData = achievementsLocalData.some(ach => ach.id === achievement.id);
+                const hasJsonData = localAchievementIdSet.has(achievement.id);
                 const disabledClass = hasJsonData ? "" : " disabled";
                 
                 return `
@@ -351,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } ${achievement.rarity.toLowerCase()}${disabledClass}" data-achievement-id="${achievement.id}">
                     <img src="${achievement.imageLink}" alt="${achievement.name}">
                     <div class="content">
-                        <h4>${highlightSearchTerms(achievement.name, searchTerm)}</h4>
+                        <h4 class="achievement-title">${!hasJsonData ? '<span class="modded-missing-tag">Live Only</span>' : ''}<span>${highlightSearchTerms(achievement.name, searchTerm)}</span></h4>
                         <p>${highlightSearchTerms(achievement.description, searchTerm)}</p>
                         <span class="global-id">${highlightSearchTerms(achievement.id, searchTerm)}</span>
                     </div>

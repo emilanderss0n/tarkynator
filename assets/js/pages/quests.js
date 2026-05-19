@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let allQuests = [];
     let localQuestsData = null;
     let currentSearchTerm = "";
+    let listScrollPositionBeforeJsonOpen = null;
+    let shouldRestoreListScrollOnNextRender = false;
 
     navigationManager.init();
 
@@ -153,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeButtons = document.querySelectorAll(".json-quests .close-btn");
     closeButtons.forEach((button) => {
         button.addEventListener("click", () => {
+            shouldRestoreListScrollOnNextRender = true;
             updateQuestState({
                 view: "list",
                 questId: null,
@@ -225,6 +228,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (quests.length === 0) {
             questsContent.innerHTML =
                 '<div class="no-results">No quests match your search criteria</div>';
+
+            if (shouldRestoreListScrollOnNextRender) {
+                requestAnimationFrame(() => {
+                    window.scrollTo({
+                        top: listScrollPositionBeforeJsonOpen || 0,
+                        behavior: "auto",
+                    });
+                });
+                shouldRestoreListScrollOnNextRender = false;
+            }
             return;
         }
 
@@ -238,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 quest.id
             }" data-quest-map="${
                     quest.map ? quest.map.name : "Any"
-                }" data-quest-level="${quest.minPlayerLevel || 0}">
+                }" data-quest-level="${quest.minPlayerLevel || 0}" data-has-local-json="${!isMissingInModdedData}">
                 <div class="card-body">
                     <a href="javascript:void(0);" class="image">
                         <img src="data/quest-images/${quest.id}.webp" alt="${
@@ -259,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 ? `<p class="level">Level ${quest.minPlayerLevel}</p>`
                                 : ""
                         }
-                        ${isMissingInModdedData ? '<p class="modded-missing-tag">Missing in SPT data</p>' : ""}
+                        ${isMissingInModdedData ? '<p class="modded-missing-tag">Live Only</p>' : ""}
                     </div>
                 </div>
                 <details class="quest-tasks">
@@ -284,9 +297,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         )}</span>
                     </div>
                     <div class="quest-buttons">
-                        <a href="?questId=${
+                        ${!isMissingInModdedData ? `<a href="?questId=${
                             quest.id
-                        }&view=json" class="btn sm btn-outline json-link" title="View JSON template"><i class="bi bi-filetype-json"></i> JSON</a>
+                        }&view=json" class="btn sm btn-outline json-link" title="View JSON template"><i class="bi bi-filetype-json"></i> JSON</a>` : ""}
                         <a href="${
                             quest.wikiLink || "#"
                         }" target="_blank" class="btn sm ${
@@ -301,6 +314,16 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("");
 
         questsContent.innerHTML = questsHTML;
+
+        if (shouldRestoreListScrollOnNextRender) {
+            requestAnimationFrame(() => {
+                window.scrollTo({
+                    top: listScrollPositionBeforeJsonOpen || 0,
+                    behavior: "auto",
+                });
+            });
+            shouldRestoreListScrollOnNextRender = false;
+        }
     };
     const fetchQuestsData = async () => {
         questsContent.innerHTML =
@@ -405,6 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const questItem = event.target.closest(".quest-item");
         if (questItem) {
             const questId = questItem.getAttribute("data-quest-id");
+            const hasLocalJson = questItem.getAttribute("data-has-local-json") === "true";
 
             const isJsonLink =
                 event.target.classList.contains("json-link") ||
@@ -412,10 +436,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 (event.target.tagName === "I" &&
                     event.target.closest(".json-link"));
 
-            if (
+            const isTitleOrImageClick =
                 event.target.tagName === "IMG" ||
                 event.target.tagName === "H4" ||
-                event.target.closest(".titleLink") ||
+                event.target.closest(".titleLink");
+
+            if (
+                (isTitleOrImageClick && hasLocalJson) ||
                 isJsonLink
             ) {
                 // Check if Ctrl/Cmd key is pressed for opening in new tab
@@ -428,6 +455,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     // Normal click - prevent default and update current tab
                     event.preventDefault();
+
+                    if (isJsonLink) {
+                        listScrollPositionBeforeJsonOpen =
+                            window.scrollY || window.pageYOffset || 0;
+                    }
+
                     updateQuestState({
                         questId: questId,
                         view: "json",

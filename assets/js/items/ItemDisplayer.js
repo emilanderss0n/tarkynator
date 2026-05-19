@@ -527,7 +527,7 @@ export class ItemDisplayer {
                             <div class="handbook-item-header">
                                 <div class="handbook-item-title ${properties?.RarityPvE ? `${properties.RarityPvE.toLowerCase()}` : ''} ${isMissingInModdedData ? "not_exist" : ""}">
                                     <h3 class="title">${itemElement.textContent}</h3>
-                                    ${isMissingInModdedData ? '<span class="modded-missing-tag">Missing in SPT data</span>' : ''}
+                                    ${isMissingInModdedData ? '<span class="modded-missing-tag">Live Only</span>' : ''}
                                 </div>
                                 <div class="handbook-item-meta">
                                     <div>Short Name: <span class="global-id">${itemData.shortName}</span></div>

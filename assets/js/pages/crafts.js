@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${craft.taskUnlock ? `
                                 <p class="quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /><a href="#" data-id="${craft.taskUnlock.id}" class="global-id">${craft.taskUnlock.name}</a></p>
                                 ` : ''}
-                                ${isMissingInModdedData ? '<p class="modded-missing-tag">Missing in SPT data</p>' : ''}
+                                ${isMissingInModdedData ? '<p class="modded-missing-tag">Live Only</p>' : ''}
                             </div>
                         </div>
                     `;
