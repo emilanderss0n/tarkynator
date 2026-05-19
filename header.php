@@ -1,6 +1,8 @@
 <?php
 include_once 'path.php';
 include_once 'includes/functions.php';
+
+$headerSptVersion = '4.0.13';
 ?>
 
 <!DOCTYPE html>

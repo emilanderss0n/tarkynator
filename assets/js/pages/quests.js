@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const questNameSpan = document.getElementById("questName");
     const questSearch = document.getElementById("questSearch");
     let allQuests = [];
+    let localQuestsData = null;
     let currentSearchTerm = "";
 
     navigationManager.init();
@@ -210,6 +211,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return filteredQuests;
     };
+
+    const ensureLocalQuestsLoaded = async () => {
+        if (localQuestsData) {
+            return localQuestsData;
+        }
+
+        localQuestsData = await fetchData(QUESTS_URL);
+        return localQuestsData;
+    };
+
     const renderQuests = (quests) => {
         if (quests.length === 0) {
             questsContent.innerHTML =
@@ -220,7 +231,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const searchTerm = currentSearchTerm.toLowerCase().trim();
         const questsHTML = quests
             .map(
-                (quest) => `
+                (quest) => {
+                    const isMissingInModdedData = Boolean(localQuestsData) && !localQuestsData[quest.id];
+                    return `
             <div class="quest-item scroll-ani card" data-quest-id="${
                 quest.id
             }" data-quest-map="${
@@ -246,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 ? `<p class="level">Level ${quest.minPlayerLevel}</p>`
                                 : ""
                         }
+                        ${isMissingInModdedData ? '<p class="modded-missing-tag">Missing in SPT data</p>' : ""}
                     </div>
                 </div>
                 <details class="quest-tasks">
@@ -281,29 +295,31 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
             </div>
-        `
+        `;
+                }
             )
             .join("");
 
         questsContent.innerHTML = questsHTML;
     };
-    const fetchQuestsData = () => {
+    const fetchQuestsData = async () => {
         questsContent.innerHTML =
             '<div class="loading-container"><span class="loader"></span></div>';
 
-        fetchData(TASKS_URL)
-            .then((data) => {
-                if (data && data.tasks) {
-                    allQuests = Object.values(data.tasks); // Convert tasks object to array
-                    processQuestData();
-                } else {
-                    questsContent.innerHTML = "No quests data found.";
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching quests data:", error);
-                questsContent.innerHTML = "Error fetching quests data.";
-            });
+        try {
+            await ensureLocalQuestsLoaded();
+            const data = await fetchData(TASKS_URL);
+
+            if (data && data.tasks) {
+                allQuests = Object.values(data.tasks); // Convert tasks object to array
+                processQuestData();
+            } else {
+                questsContent.innerHTML = "No quests data found.";
+            }
+        } catch (error) {
+            console.error("Error fetching quests data:", error);
+            questsContent.innerHTML = "Error fetching quests data.";
+        }
     };
 
     const processQuestData = () => {
@@ -420,58 +436,57 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-    function loadQuestTemplate(questId) {
-        fetch(QUESTS_URL)
-            .then((response) => response.json())
-            .then((data) => {
-                const questData = data[questId];
-                if (questData) {
-                    if (typeof editor !== "undefined" && editor) {
-                        editor.setValue(JSON.stringify(questData, null, 2));
-                        editor.refresh();
-                        checkJsonEditorSimple();
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                    } else {
-                        const jsonTextarea =
-                            document.getElementById("jsoneditor");
-                        if (jsonTextarea) {
-                            jsonTextarea.value = JSON.stringify(
-                                questData,
-                                null,
-                                2
-                            );
-                        }
-                        console.warn(
-                            "Editor not available, using textarea fallback"
+    async function loadQuestTemplate(questId) {
+        try {
+            const data = await ensureLocalQuestsLoaded();
+            const questData = data[questId];
+
+            if (questData) {
+                if (typeof editor !== "undefined" && editor) {
+                    editor.setValue(JSON.stringify(questData, null, 2));
+                    editor.refresh();
+                    checkJsonEditorSimple();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                } else {
+                    const jsonTextarea =
+                        document.getElementById("jsoneditor");
+                    if (jsonTextarea) {
+                        jsonTextarea.value = JSON.stringify(
+                            questData,
+                            null,
+                            2
                         );
                     }
-                    questNameSpan.textContent = questData.QuestName;
-                } else {
-                    console.error("Quest data not found for ID:", questId);
-                    questNameSpan.textContent = "Quest not found";
-                    if (typeof editor !== "undefined" && editor) {
-                        editor.setValue("{}");
-                    } else {
-                        const jsonTextarea =
-                            document.getElementById("jsoneditor");
-                        if (jsonTextarea) {
-                            jsonTextarea.value = "{}";
-                        }
-                    }
+                    console.warn(
+                        "Editor not available, using textarea fallback"
+                    );
                 }
-            })
-            .catch((error) => {
-                console.error("Error fetching quest data:", error);
-                questNameSpan.textContent = "Error loading quest";
+                questNameSpan.textContent = questData.QuestName;
+            } else {
+                console.error("Quest data not found for ID:", questId);
+                questNameSpan.textContent = "Quest not found";
                 if (typeof editor !== "undefined" && editor) {
                     editor.setValue("{}");
                 } else {
-                    const jsonTextarea = document.getElementById("jsoneditor");
+                    const jsonTextarea =
+                        document.getElementById("jsoneditor");
                     if (jsonTextarea) {
                         jsonTextarea.value = "{}";
                     }
                 }
-            });
+            }
+        } catch (error) {
+            console.error("Error fetching quest data:", error);
+            questNameSpan.textContent = "Error loading quest";
+            if (typeof editor !== "undefined" && editor) {
+                editor.setValue("{}");
+            } else {
+                const jsonTextarea = document.getElementById("jsoneditor");
+                if (jsonTextarea) {
+                    jsonTextarea.value = "{}";
+                }
+            }
+        }
     }
 
     const highlightSearchTerms = (text, searchTerm) => {

@@ -462,6 +462,22 @@ h4 {
     font-size: 0.9rem;
 }
 
+.modded-missing-tag {
+    margin: 0;
+    display: inline-block;
+    width: fit-content;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--br-sm);
+    background-color: #6b1b2b;
+    color: #ffe8ee;
+    border: 1px solid #a63f58;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
 .animate-in {
     animation-name: inAni;
     animation-duration: 0.5s;
@@ -1404,6 +1420,29 @@ span.global-id.copied::after {
     font-size: 1.5rem;
     padding: 0;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    & .spt-local-version {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.2rem 0.45rem;
+        border-radius: var(--br-sm);
+        border: 1px solid var(--border-color-weak);
+        background-color: var(--content-bg-light);
+        color: var(--main-color);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        line-height: 1.2;
+    }
+
+    & .spt-local-version.unknown {
+        opacity: 0.75;
+    }
 }
 
 .dropdown-item:focus,
@@ -1749,6 +1788,10 @@ span.global-id.copied::after {
 
     & .title {
         margin: 0;
+    }
+
+    & .modded-missing-tag {
+        margin-top: 0.2rem;
     }
 }
 
@@ -2395,6 +2438,10 @@ span.global-id.copied::after {
         & h3 {
             margin: 0;
         }
+
+        & .modded-missing-tag {
+            margin-top: 0.5rem;
+        }
     }
 
     & .info-body {
@@ -2753,6 +2800,10 @@ span.global-id.copied::after {
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
+}
+
+#craftsContainer .card-footer .modded-missing-tag {
+    margin-left: auto;
 }
 
 #craftsContainer .craft-id {
@@ -3349,6 +3400,7 @@ ul.inner-list {
     margin-top: 1rem;
     background: linear-gradient(to bottom, oklch(from var(--main-color) calc(1 - 0.1) c h) 0, oklch(from var(--toolbar-bg) calc(1 - 0.7) c h) 100%);
     background-position: 0;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     -webkit-text-size-adjust: none;
@@ -3430,6 +3482,7 @@ ul.inner-list {
     transform: translate(-50%, -50%);
     background: linear-gradient(to right, #9f9f9f 0, #fff 10%, #868686 20%);
     background-position: 0;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: fancyButtonShine 3s infinite linear;
@@ -4565,4 +4618,8 @@ footer .text-end {
 .moxo-swipe::scroll-button(right) {
   content: "\F285";
   right: var(--buttons-inset-x);
+}
+
+.quest-item .details .modded-missing-tag {
+    margin-top: 0.4rem;
 }

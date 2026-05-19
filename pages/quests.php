@@ -36,7 +36,7 @@ include_once '../header.php';
                 </div>
             </div>
         </div>
-        <div class="body animate-in grid grid-550 container-fluid page" grid-max-col-count="4" id="questsContent">
+        <div class="body animate-in grid grid-500 container-fluid page" grid-max-col-count="4" id="questsContent">
             <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>

@@ -172,6 +172,8 @@ export class ItemDisplayer {
                 return;
             }
 
+            const { isMissingInModdedData } = await this.checkItemModdedAvailability(itemId);
+
             // Generate all HTML sections
             const {
                 fleaBanHTML,
@@ -205,7 +207,8 @@ export class ItemDisplayer {
                 parentId,
                 presets,
                 presetItemsHTML,
-                armorClassHTML
+                armorClassHTML,
+                isMissingInModdedData
             });
 
             // Setup interactive elements
@@ -214,6 +217,25 @@ export class ItemDisplayer {
         } catch (error) {
             console.error("Error fetching item data:", error);
             this.elements.handbookContent.innerHTML = "<p>Error fetching item data.</p>";
+        }
+    }
+
+    async checkItemModdedAvailability(itemId) {
+        try {
+            const [itemsData, globalsData] = await Promise.all([
+                fetchData(ITEMS_URL, { method: "GET" }),
+                fetchData(GLOBALS, { method: "GET" })
+            ]);
+
+            const existsInItems = Boolean(itemsData?.[itemId]);
+            const existsInGlobalsPresets = Boolean(globalsData?.ItemPresets?.[itemId]);
+
+            return {
+                isMissingInModdedData: !(existsInItems || existsInGlobalsPresets)
+            };
+        } catch (error) {
+            console.warn("Could not verify local SPT item availability:", error.message);
+            return { isMissingInModdedData: false };
         }
     }
 
@@ -451,7 +473,7 @@ export class ItemDisplayer {
         const {
             itemElement, itemData, properties, fleaBanHTML, slotsHTML, dependenciesHTML,
             allowedAmmoHTML, usedInTasksHTML, categoriesHTML, bartersHTML,
-            image512pxLink, parentId, presets, presetItemsHTML, armorClassHTML
+            image512pxLink, parentId, presets, presetItemsHTML, armorClassHTML, isMissingInModdedData
         } = data;
 
         // Generate presets HTML with async button state check
@@ -503,8 +525,9 @@ export class ItemDisplayer {
                         </div>
                         <div class="right">
                             <div class="handbook-item-header">
-                                <div class="handbook-item-title ${properties?.RarityPvE ? `${properties.RarityPvE.toLowerCase()}` : ''}">
+                                <div class="handbook-item-title ${properties?.RarityPvE ? `${properties.RarityPvE.toLowerCase()}` : ''} ${isMissingInModdedData ? "not_exist" : ""}">
                                     <h3 class="title">${itemElement.textContent}</h3>
+                                    ${isMissingInModdedData ? '<span class="modded-missing-tag">Missing in SPT data</span>' : ''}
                                 </div>
                                 <div class="handbook-item-meta">
                                     <div>Short Name: <span class="global-id">${itemData.shortName}</span></div>

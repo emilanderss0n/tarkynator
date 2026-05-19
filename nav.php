@@ -1,6 +1,12 @@
 <nav class="navbar navbar-expand-lg" role="navigation" aria-label="Main">
     <div class="container-fluid">
-        <a class="navbar-brand" href="<?= BASE_URL ?>"><strong>TARKYNATOR</strong></a>
+        <?php $localSptVersion = isset($headerSptVersion) ? trim((string) $headerSptVersion) : ''; ?>
+        <a class="navbar-brand" href="<?= BASE_URL ?>">
+            <strong>TARKYNATOR</strong>
+            <span class="spt-local-version<?php if (!$localSptVersion) { echo ' unknown'; } ?>" title="SPT version for local data">
+                SPT <?= htmlspecialchars($localSptVersion ?: 'Unknown', ENT_QUOTES, 'UTF-8') ?>
+            </span>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">

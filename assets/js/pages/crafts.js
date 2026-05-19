@@ -1,17 +1,42 @@
 import { fetchData } from '../core/cache.js';
+import { ITEMS_URL } from '../core/localData.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const craftsContainer = document.getElementById('craftsContainer');
     const craftsCategoryToggles = document.querySelectorAll('#craftsContainer .btn');
     const craftsContent = document.getElementById('craftsContent');
+    let moddedItemsData = null;
+
+    const ensureModdedDataLoaded = async () => {
+        if (moddedItemsData) {
+            return;
+        }
+
+        moddedItemsData = (await fetchData(ITEMS_URL)) || {};
+    };
+
+    const isCraftMissingInModdedData = (craft) => {
+        const rewardIds = Array.isArray(craft.rewardItems)
+            ? craft.rewardItems.map(reward => reward?.item?.id).filter(Boolean)
+            : [];
+
+        const requiredIds = Array.isArray(craft.requiredItems)
+            ? craft.requiredItems.map(req => req?.item?.id).filter(Boolean)
+            : [];
+
+        const allItemIds = [...rewardIds, ...requiredIds];
+        const hasMissingItems = allItemIds.some(itemId => !moddedItemsData?.[itemId]);
+
+        return hasMissingItems;
+    };
 
     const getActiveStationId = () => {
         const activeCraftCategory = document.querySelector('#craftsContainer .btn-group .btn.active');
         return activeCraftCategory ? activeCraftCategory.getAttribute('data-id') : null;
     };
 
-    const fetchCraftsData = () => {
+    const fetchCraftsData = async () => {
         const query = `
             query {
                 crafts {
@@ -55,16 +80,20 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({ query })
         };
 
-        fetchData(url, options)
-            .then(data => {
-                if (data && data.data && data.data.crafts) {
-                    // Store the crafts data in localStorage
-                    localStorage.setItem('craftsData', JSON.stringify(data.data.crafts));
+        try {
+            await ensureModdedDataLoaded();
+            const data = await fetchData(url, options);
 
-                    const activeStationId = getActiveStationId();
-                    const filteredCrafts = data.data.crafts.filter(craft => craft.station.id === activeStationId);
-                    filteredCrafts.sort((a, b) => a.level - b.level);
-                    const craftsHTML = filteredCrafts.map(craft => `
+            if (data && data.data && data.data.crafts) {
+                // Store the crafts data in localStorage
+                localStorage.setItem('craftsData', JSON.stringify(data.data.crafts));
+
+                const activeStationId = getActiveStationId();
+                const filteredCrafts = data.data.crafts.filter(craft => craft.station.id === activeStationId);
+                filteredCrafts.sort((a, b) => a.level - b.level);
+                const craftsHTML = filteredCrafts.map(craft => {
+                    const isMissingInModdedData = isCraftMissingInModdedData(craft);
+                    return `
                         <div class="craft-item scroll-ani card" data-item-station="${craft.station.name}">
                             <div class="main-title">
                                 ${craft.rewardItems.map(reward => `
@@ -92,18 +121,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${craft.taskUnlock ? `
                                 <p class="quest"><img src="assets/img/notification_icon_quest.png" width="36" height="34" /><a href="#" data-id="${craft.taskUnlock.id}" class="global-id">${craft.taskUnlock.name}</a></p>
                                 ` : ''}
+                                ${isMissingInModdedData ? '<p class="modded-missing-tag">Missing in SPT data</p>' : ''}
                             </div>
                         </div>
-                    `).join('');
-                    craftsContent.innerHTML = craftsHTML;
-                } else {
-                    craftsContent.innerHTML = 'No crafts data found.';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching crafts data:', error);
-                craftsContent.innerHTML = 'Error fetching crafts data.';
-            });
+                    `;
+                }).join('');
+                craftsContent.innerHTML = craftsHTML;
+            } else {
+                craftsContent.innerHTML = 'No crafts data found.';
+            }
+        } catch (error) {
+            console.error('Error fetching crafts data:', error);
+            craftsContent.innerHTML = 'Error fetching crafts data.';
+        }
     };
 
     fetchCraftsData();
