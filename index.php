@@ -65,7 +65,7 @@ include_once('header.php');
             </div>
         </div>
 
-        <div id="recentSearches" class="grid animate-in"></div>
+        <div id="recentSearches" class="grid animate-in" grid-max-col-count="4"></div>
 
     </section> <!-- /.itemInfo -->
 

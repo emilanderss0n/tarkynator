@@ -94,6 +94,7 @@ function setupSliderEdgeState(sliderElement) {
     window.addEventListener("resize", syncState, { passive: true });
 
     requestAnimationFrame(syncState);
+    setTimeout(syncState, 80);
 
     const thumbnails = sliderElement.querySelectorAll("img");
     thumbnails.forEach((img) => {

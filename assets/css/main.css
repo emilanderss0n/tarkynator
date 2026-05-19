@@ -354,12 +354,9 @@ h4 {
     font-size: calc(0.9rem + .2vw);
 }
 
-html[grid-max-col-count] {
-  --grid-max-col-count: attr(grid-max-col-count number);
-}
-
 .grid {
-    --grid-min-col-size: 300px;
+    --grid-max-col-count: 4;
+    --grid-min-col-size: 18.75rem;
     --grid-gap: 1rem;
     --grid-gap-vertical: 1rem;
 
@@ -369,50 +366,41 @@ html[grid-max-col-count] {
     display: grid;
     grid-column-gap: var(--grid-gap);
     grid-row-gap: var(--grid-gap-vertical);
-    grid-template-columns: repeat(auto-fit,
-            minmax(var(--grid-col-min-size-calc), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(var(--grid-col-min-size-calc), 1fr));
 
-    & .grid-inline-text {
+    .grid-inline-text {
         grid-column: 1 / -1;
     }
 
-    & .break {
+    .break {
         grid-column: 1 / -1;
     }
-
-    & .search-filter {
-        grid-column: 1 / -1;
-    }
-}
-
-.grid-550 {
-    --grid-min-col-size: 550px;
 }
 
 .grid-500 {
-    --grid-min-col-size: 500px;
+    --grid-min-col-size: 31.25rem;
 }
 
 .grid-400 {
-    --grid-min-col-size: 400px;
+    --grid-min-col-size: 25rem;
 }
 
 .grid-300 {
-    --grid-min-col-size: 300px;
+    --grid-min-col-size: 18.75rem;
 }
 
 .grid-200 {
-    --grid-min-col-size: 200px;
+    --grid-min-col-size: 12.5rem;
 }
 
 .grid-150 {
-    --grid-min-col-size: 150px;
+    --grid-min-col-size: 9.375rem;
 }
 
 .grid-gap-sm {
     --grid-gap: 0.5rem;
 
-    @media screen and (max-width: 1000px) {
+    @media (max-width: 62.5rem) {
         --grid-gap: 1rem;
     }
 }
@@ -423,16 +411,12 @@ html[grid-max-col-count] {
 
 .grid-gap-lg {
     --grid-gap: 2rem;
-
-    @media screen and (max-width: 1000px) {
-        --grid-gap: 1rem;
-    }
 }
 
 .grid-gap-xl {
     --grid-gap: 3rem;
 
-    @media screen and (max-width: 1000px) {
+    @media (max-width: 62.5rem) {
         --grid-gap: 2rem;
     }
 }
@@ -440,7 +424,7 @@ html[grid-max-col-count] {
 .grid-gap-row-sm {
     --grid-gap-vertical: 0.5rem;
 
-    @media screen and (max-width: 1000px) {
+    @media (max-width: 62.5rem) {
         --grid-gap-vertical: 1rem;
     }
 }
@@ -451,16 +435,12 @@ html[grid-max-col-count] {
 
 .grid-gap-row-lg {
     --grid-gap-vertical: 2rem;
-
-    @media screen and (max-width: 1000px) {
-        --grid-gap-vertical: 1rem;
-    }
 }
 
 .grid-gap-row-xl {
     --grid-gap-vertical: 3rem;
 
-    @media screen and (max-width: 1000px) {
+    @media (max-width: 62.5rem) {
         --grid-gap-vertical: 2rem;
     }
 }
@@ -3556,6 +3536,7 @@ ul.inner-list {
     grid-auto-columns: calc((100% - (var(--gap) * 3)) / 4);
     scroll-padding-inline: 0;
     padding-block: 0.2rem 0.8rem;
+    mask-image: linear-gradient(to right, transparent, white var(--edge-fade-left), white calc(100% - var(--edge-fade-right)), transparent);
 }
 
 #latestModsSection .latest-mods-strip.is-at-start {
