@@ -2516,10 +2516,6 @@ span.global-id.copied::after {
             background-color: var(--bs-warning-bg-subtle);
             border: 1px solid var(--border-color-weak);
             font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-            padding: 0.2rem 0.45rem;
         }
     }
 }
@@ -3597,15 +3593,6 @@ ul.inner-list {
     padding: 0;
     padding-bottom: 5rem;
     flex: 1;
-}
-
-#welcomeMessage {
-    background-color: var(--medium-bg);
-    padding: 2rem 0;
-}
-
-#welcomeMessage .blockquote-footer {
-    margin: 0;
 }
 
 #latestModsSection {

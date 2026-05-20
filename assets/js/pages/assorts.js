@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const assortInfoDiv = document.getElementById('assortInfo');
                     if (assortInfoDiv) {
                         const questLockTagInfo = item.taskUnlock
-                            ? `<span class="tag quest-lock-tag-info" data-tooltip="${escapeHtmlAttr(item.taskUnlock.questName)}">Quest Locked</span>`
+                            ? `<a href="#" class="tag quest-lock-tag-info global-id" data-id="${escapeHtmlAttr(item.taskUnlock.questId)}" data-tooltip="${escapeHtmlAttr(item.taskUnlock.questName)}">Quest Locked</a>`
                             : '';
                         let infoHtml = `<div class="info-header"><h3>${formatItemName(item.name, item.isPreset, item.level || item.minTraderLevel, true)}</h3></div>`;
                         
