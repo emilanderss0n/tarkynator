@@ -36,80 +36,8 @@
 
     <script src="<?= BASE_URL ?>/assets/js/core/themeManager.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/fold/brace-fold.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/fold/foldgutter.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/fold/foldcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
-    <?php if ($activePage === 'template' || $activePage === 'quests' || $activePage === 'assorts'): ?>
-    <script>
-        var editor; // Global scope
-        document.addEventListener("DOMContentLoaded", function () {
-            var jsonEditorElement = document.getElementById("jsoneditor");
-            if (jsonEditorElement) {
-                editor = CodeMirror.fromTextArea(jsonEditorElement, {
-                lineNumbers: true,
-                mode: "application/json",
-                theme: "mbo",
-                lineNumbers: true,
-                closeBrackets: true,
-                autoCloseBrackets: true,
-                foldCode: true,
-                readOnly: true,
-                foldGutter: true,
-                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-                readOnly: true
-            });
-            editor.on("renderLine", function (cm, line, element) {
-                const lineText = line.text.trim();
-                if (lineText.endsWith("{") || lineText.includes(":")) {
-                    const copyLink = document.createElement("a");
-                    copyLink.href = "#";
-                    copyLink.className = "json-edit-btn";
-                    copyLink.innerHTML = "<i class='bi bi-copy'></i>";
-                    copyLink.onclick = function (event) {
-                        event.preventDefault();
-                        let jsonText;
-                        if (lineText.endsWith("{")) {
-                            const startLine = line.lineNo();
-                            let endLine = startLine;
-                            let openBraces = 1;
-                            while (openBraces > 0 && endLine < cm.lineCount()) {
-                                endLine++;
-                                const lineContent = cm.getLine(endLine).trim();
-                                if (lineContent.includes("{")) openBraces++;
-                                if (lineContent.includes("}")) openBraces--;
-                            }
-                            jsonText = cm.getRange(
-                                { line: startLine, ch: line.text.indexOf("{") },
-                                { line: endLine, ch: cm.getLine(endLine).length }
-                            ).trim();
-                        } else {
-                            const valueMatch = lineText.match(/:\s*(.*),?$/);
-                            jsonText = valueMatch ? valueMatch[1].replace(/,$/, '') : lineText;
-                        }
-                        navigator.clipboard.writeText(jsonText).then(() => {
-                            event.target.classList.add('copied');
-                            setTimeout(() => {
-                                event.target.classList.remove('copied');
-                            }, 1400);
-                            // Show notification toast
-                            import('<?= BASE_URL ?>/assets/js/components/notifications.js').then(({ Notification }) => {
-                                const notif = new Notification("jsonCopyNotification", { type: "info", autoClose: true, duration: 5000 });
-                                notif.setContent("Copied to clipboard!");
-                                notif.show();
-                            });
-                        }).catch(err => {
-                            console.error("Failed to copy text: ", err);
-                        });
-                    };
-                    element.appendChild(copyLink);
-                }
-            });
-            }
-        });
-    </script>
+    <?php if ($activePage === 'template' || $activePage === 'quests' || $activePage === 'assorts' || $activePage === 'achievements' || $activePage === 'custom-trader'): ?>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/components/jsonEditorBootstrap.js"></script>
     <?php endif; ?>
 
     <script type="module" src="<?= BASE_URL ?>/assets/js/features/main.js"></script>
@@ -145,3 +73,5 @@
 </body>
 
 </html>
+
+<?php flush_html_output_cleanup(); ?>

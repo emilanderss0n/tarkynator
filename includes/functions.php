@@ -282,3 +282,123 @@ function css_tag($css_file) {
     $min_css = get_minified_css($css_file);
     return '<link rel="stylesheet" type="text/css" href="' . $min_css . '" />';
 }
+
+/**
+ * Normalize rendered HTML source for cleaner view-source output.
+ * Preserves formatting inside script/style/pre/textarea blocks.
+ *
+ * @param string $output Full buffered HTML output
+ * @return string Cleaned output
+ */
+function normalize_html_source_output($output) {
+    if (!is_string($output) || $output === '') {
+        return $output;
+    }
+
+    // Only process full HTML documents.
+    if (stripos($output, '<!DOCTYPE html') === false && stripos($output, '<html') === false) {
+        return $output;
+    }
+
+    $preserved_blocks = [];
+    $block_index = 0;
+
+    $output = preg_replace_callback('/<(script|style|pre|textarea)\\b[^>]*>.*?<\\/\\1>/is', function ($matches) use (&$preserved_blocks, &$block_index) {
+        $placeholder = "__HTML_PRESERVE_BLOCK_{$block_index}__";
+        $preserved_blocks[$placeholder] = $matches[0];
+        $block_index++;
+        return $placeholder;
+    }, $output);
+
+    $output = str_replace(["\r\n", "\r"], "\n", $output);
+    $output = ltrim($output, "\xEF\xBB\xBF\n\r\t "); // Remove BOM/leading whitespace before doctype.
+    $output = preg_replace('/>\s+</', ">\n<", $output);      // Put sibling tags on separate lines.
+    $output = preg_replace('/\n{3,}/', "\n\n", $output);    // Collapse excessive blank lines.
+
+    $void_tags = [
+        'area', 'base', 'br', 'col', 'embed', 'hr', 'img',
+        'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'
+    ];
+
+    $indent_level = 0;
+    $formatted_lines = [];
+    $lines = explode("\n", $output);
+
+    foreach ($lines as $raw_line) {
+        $line = trim($raw_line);
+        if ($line === '') {
+            continue;
+        }
+
+        $is_placeholder = preg_match('/^__HTML_PRESERVE_BLOCK_\d+__$/', $line) === 1;
+        $is_declaration = preg_match('/^<![^>]*>$/', $line) === 1;
+        $is_comment = preg_match('/^<!--/', $line) === 1;
+        $is_php_tag = preg_match('/^<\?/', $line) === 1;
+        $is_closing_tag = preg_match('/^<\/[a-zA-Z0-9:-]+>$/', $line) === 1;
+
+        if ($is_closing_tag) {
+            $indent_level = max(0, $indent_level - 1);
+        }
+
+        $formatted_lines[] = str_repeat('  ', $indent_level) . $line;
+
+        if ($is_placeholder || $is_declaration || $is_comment || $is_php_tag || $is_closing_tag) {
+            continue;
+        }
+
+        if (preg_match('/^<([a-zA-Z0-9:-]+)\b[^>]*>$/', $line, $match)) {
+            $tag_name = strtolower($match[1]);
+            $is_self_closing = preg_match('/\/>$/', $line) === 1;
+
+            if (!$is_self_closing && !in_array($tag_name, $void_tags, true)) {
+                $indent_level++;
+            }
+        }
+    }
+
+    $output = implode("\n", $formatted_lines);
+
+    if (!empty($preserved_blocks)) {
+        $output = strtr($output, $preserved_blocks);
+    }
+
+    return $output . "\n";
+}
+
+/**
+ * Start output buffering with HTML source normalization.
+ */
+function start_html_output_cleanup() {
+    static $started = false;
+
+    if ($started) {
+        return;
+    }
+
+    if (PHP_SAPI === 'cli') {
+        return;
+    }
+
+    ob_start();
+    $started = true;
+}
+
+/**
+ * Flush buffered output through HTML source normalization.
+ */
+function flush_html_output_cleanup() {
+    if (PHP_SAPI === 'cli') {
+        return;
+    }
+
+    if (ob_get_level() === 0) {
+        return;
+    }
+
+    $output = ob_get_clean();
+    if ($output === false) {
+        return;
+    }
+
+    echo normalize_html_source_output($output);
+}

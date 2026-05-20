@@ -2,6 +2,8 @@
 include_once 'path.php';
 include_once 'includes/functions.php';
 
+start_html_output_cleanup();
+
 $headerSptVersion = '4.0.13';
 ?>
 
