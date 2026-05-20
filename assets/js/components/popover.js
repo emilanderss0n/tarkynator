@@ -73,11 +73,6 @@ export class Popover {
         }
     }
 
-    isOpen() {
-        if (!this.popover || !this.isInitialized) return false;
-        return this.popover.matches(':popover-open');
-    }
-
     setTitle(title) {
         if (!this.popover) return;
         
@@ -114,12 +109,4 @@ export class Popover {
         return this.isInitialized && this.popover !== null;
     }
 
-    // Clean up method
-    destroy() {
-        if (this.popover) {
-            // Remove event listeners if needed
-            this.popover = null;
-        }
-        this.isInitialized = false;
-    }
 }

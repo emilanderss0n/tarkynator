@@ -3,7 +3,7 @@ import { DATA_URL } from '../core/localData.js';
 import { Popover } from '../components/popover.js';
 import { slideToggle } from '../core/utils.js';
 
-export class AssortsCreator {
+class AssortsCreator {
     constructor() {
         this.tarkovData = null;
         this.currentAssortData = {

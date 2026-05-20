@@ -5,6 +5,7 @@ import {
     checkJsonEditor,
     checkJsonEditorSimple,
 } from "../components/checkJsonEditor.js";
+import { debounce, highlightSearchTerms } from "../core/utils.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const questsContainer = document.getElementById("questsContainer");
@@ -46,14 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const handleNavigationChange = (state, previousState) => {
         const urlParams = new URLSearchParams(window.location.search);
-
-        const newQuestState = {
-            trader: urlParams.get("trader") || questDefaultState.trader,
-            map: urlParams.get("map") || questDefaultState.map,
-            search: urlParams.get("search") || questDefaultState.search,
-            questId: urlParams.get("questId") || questDefaultState.questId,
-            view: urlParams.get("view") || questDefaultState.view,
-        };
+        const newQuestState = getQuestStateFromParams(urlParams, questDefaultState);
 
         // Only update if state actually changed
         if (
@@ -94,13 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const restoreStateFromURL = () => {
         const urlParams = new URLSearchParams(window.location.search);
 
-        const restoredState = {
-            trader: urlParams.get("trader") || questDefaultState.trader,
-            map: urlParams.get("map") || questDefaultState.map,
-            search: urlParams.get("search") || questDefaultState.search,
-            questId: urlParams.get("questId") || questDefaultState.questId,
-            view: urlParams.get("view") || questDefaultState.view,
-        };
+        const restoredState = getQuestStateFromParams(urlParams, questDefaultState);
 
         currentQuestState = { ...restoredState };
         applyQuestState(currentQuestState);
@@ -392,13 +380,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function debounce(func, wait) {
-        let timeout;
-        return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
     questsCategoryToggles.forEach((questCategory) => {
         questCategory.addEventListener(
             "click",
@@ -522,17 +503,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const highlightSearchTerms = (text, searchTerm) => {
-        if (!searchTerm || searchTerm === "") {
-            return text;
-        }
-
-        const regex = new RegExp(
-            `(${searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`,
-            "gi"
-        );
-        return text.replace(regex, '<span class="highlight-search">$1</span>');
-    };
+    function getQuestStateFromParams(urlParams, defaultState) {
+        return {
+            trader: urlParams.get("trader") || defaultState.trader,
+            map: urlParams.get("map") || defaultState.map,
+            search: urlParams.get("search") || defaultState.search,
+            questId: urlParams.get("questId") || defaultState.questId,
+            view: urlParams.get("view") || defaultState.view,
+        };
+    }
     document.addEventListener("keydown", (event) => {
         if ((event.ctrlKey || event.metaKey) && event.key === "f") {
             // Ctrl+F or Cmd+F (Mac) - Focus on search field

@@ -5,177 +5,115 @@ export class ItemBreadcrumb {
     constructor(context) {
         this.context = context;
         this.elements = context.elements;
+        this.updateBreadcrumb = (itemTypes, itemName) => {
+            updateBreadcrumb(this, itemTypes, itemName);
+        };
     }
+}
 
-    init() {
-        // Setup any initial configurations
-    }
 
-    // Update breadcrumb display
-    updateBreadcrumb(itemTypes, itemName) {
-        if (!this.elements.breadcrumb || !itemTypes) return;
+function updateBreadcrumb(instance, itemTypes, itemName) {
+    if (!instance.elements.breadcrumb || !itemTypes) return;
 
-        // Get types enum from browser module
-        const typesEnum = this.context.manager.modules.browser.getTypesEnum();
-        
-        const types = itemTypes.split(",").reverse();
-        const validCategories = new Set(Object.values(typesEnum));
-        
-        const breadcrumbHTML = this.generateBreadcrumbHTML(types, validCategories, typesEnum, itemName);
-        
-        this.elements.breadcrumb.innerHTML = `<div class='breadcrumb-container'>${breadcrumbHTML}</div>`;
-        this.elements.breadcrumb.style.display = "block";
+    // Get types enum from browser module
+    const typesEnum = instance.context.manager.modules.browser.getTypesEnum();
 
-        // Setup breadcrumb link handlers
-        this.setupBreadcrumbHandlers();
-    }
+    const types = itemTypes.split(",").reverse();
+    const validCategories = new Set(Object.values(typesEnum));
 
-    generateBreadcrumbHTML(types, validCategories, typesEnum, itemName) {
-        const breadcrumbParts = types.map((type, index) => {
-            const normalizedType = type.trim();
-            const isValidCategory = validCategories.has(normalizedType) ||
-                Object.keys(this.context.categoryNameMapping).includes(normalizedType);
+    const breadcrumbHTML = generateBreadcrumbHTML(instance, types, validCategories, typesEnum, itemName);
 
-            if (index === types.length - 1 && isValidCategory) {
-                // Last item - make it a browse link
-                return this.createBrowseLink(normalizedType, typesEnum, type);
-            } else if (index === 0 || !isValidCategory) {
-                // First item or invalid category - just text
-                return `<span class="breadcrumb-text">${type}</span>`;
-            } else if (isValidCategory) {
-                // Middle valid category - make it a link
-                return this.createCategoryLink(normalizedType, typesEnum, type);
-            } else {
-                // Fallback - just text
-                return `<span class="breadcrumb-text">${type}</span>`;
-            }
-        });
+    instance.elements.breadcrumb.innerHTML = `<div class='breadcrumb-container'>${breadcrumbHTML}</div>`;
+    instance.elements.breadcrumb.style.display = "block";
 
-        // Join with separators and add current item
-        return breadcrumbParts.join(' <i class="bi bi-caret-right-fill"></i> ') +
-            ' <i class="bi bi-caret-right-fill"></i> ' +
-            `<span class="breadcrumb-current">${itemName}</span>`;
-    }
+    // Setup breadcrumb link handlers
+    setupBreadcrumbHandlers(instance);
+}
 
-    createBrowseLink(normalizedType, typesEnum, displayText) {
-        const enumKey = Object.entries(typesEnum).find(
-            ([key, value]) => value === normalizedType
-        )?.[0] || normalizedType;
+function generateBreadcrumbHTML(instance, types, validCategories, typesEnum, itemName) {
+    const breadcrumbParts = types.map((type, index) => {
+        const normalizedType = type.trim();
+        const isValidCategory = validCategories.has(normalizedType) ||
+            Object.keys(instance.context.categoryNameMapping).includes(normalizedType);
 
-        return `<a href="javascript:void(0);" class="breadcrumb-link" data-view="browse" data-category="${enumKey}">${displayText}</a>`;
-    }
-
-    createCategoryLink(normalizedType, typesEnum, displayText) {
-        const enumKey = Object.entries(typesEnum).find(
-            ([key, value]) => value === normalizedType
-        )?.[0] || normalizedType;
-
-        return `<a href="javascript:void(0);" class="breadcrumb-link" data-category="${enumKey}">${displayText}</a>`;
-    }
-
-    setupBreadcrumbHandlers() {
-        if (!this.elements.breadcrumb) return;
-
-        this.elements.breadcrumb.querySelectorAll(".breadcrumb-link").forEach((link) => {
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                this.handleBreadcrumbClick(link);
-            });
-        });
-    }
-
-    handleBreadcrumbClick(link) {
-        // Navigate to browse view
-        if (this.elements.browseNavLink) {
-            this.elements.browseNavLink.click();
-        }
-
-        let categoryName = link.dataset.category;
-
-        // Apply category name mapping
-        const mappedName = Object.entries(this.context.categoryNameMapping).find(
-            ([key, value]) => value === categoryName
-        )?.[0];
-
-        if (mappedName) {
-            categoryName = mappedName.replace(/\s+/g, "-");
+        if (index === types.length - 1 && isValidCategory) {
+            // Last item - make it a browse link
+            return createBrowseLink(normalizedType, typesEnum, type);
+        } else if (index === 0 || !isValidCategory) {
+            // First item or invalid category - just text
+            return `<span class="breadcrumb-text">${type}</span>`;
+        } else if (isValidCategory) {
+            // Middle valid category - make it a link
+            return createCategoryLink(normalizedType, typesEnum, type);
         } else {
-            const typesEnum = this.context.manager.modules.browser.getTypesEnum();
-            if (typesEnum[categoryName]) {
-                categoryName = typesEnum[categoryName].replace(/\s+/g, "-");
-            } else {
-                categoryName = categoryName.replace(/\s+/g, "-");
-            }
+            // Fallback - just text
+            return `<span class="breadcrumb-text">${type}</span>`;
         }
+    });
 
-        // Find and click the category element
-        const categoryElement = document.querySelector(
-            `#browseSidebar .browse-category[data-item-type="${categoryName}"]`
-        );
-        
-        if (categoryElement) {
-            categoryElement.click();
+    // Join with separators and add current item
+    return breadcrumbParts.join(' <i class="bi bi-caret-right-fill"></i> ') +
+        ' <i class="bi bi-caret-right-fill"></i> ' +
+        `<span class="breadcrumb-current">${itemName}</span>`;
+}
+
+function createBrowseLink(normalizedType, typesEnum, displayText) {
+    const enumKey = Object.entries(typesEnum).find(
+        ([key, value]) => value === normalizedType
+    )?.[0] || normalizedType;
+
+    return `<a href="javascript:void(0);" class="breadcrumb-link" data-view="browse" data-category="${enumKey}">${displayText}</a>`;
+}
+
+function createCategoryLink(normalizedType, typesEnum, displayText) {
+    const enumKey = Object.entries(typesEnum).find(
+        ([key, value]) => value === normalizedType
+    )?.[0] || normalizedType;
+
+    return `<a href="javascript:void(0);" class="breadcrumb-link" data-category="${enumKey}">${displayText}</a>`;
+}
+
+function setupBreadcrumbHandlers(instance) {
+    if (!instance.elements.breadcrumb) return;
+
+    instance.elements.breadcrumb.querySelectorAll(".breadcrumb-link").forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            handleBreadcrumbClick(instance, link);
+        });
+    });
+}
+
+function handleBreadcrumbClick(instance, link) {
+    // Navigate to browse view
+    if (instance.elements.browseNavLink) {
+        instance.elements.browseNavLink.click();
+    }
+
+    let categoryName = link.dataset.category;
+
+    // Apply category name mapping
+    const mappedName = Object.entries(instance.context.categoryNameMapping).find(
+        ([key, value]) => value === categoryName
+    )?.[0];
+
+    if (mappedName) {
+        categoryName = mappedName.replace(/\s+/g, "-");
+    } else {
+        const typesEnum = instance.context.manager.modules.browser.getTypesEnum();
+        if (typesEnum[categoryName]) {
+            categoryName = typesEnum[categoryName].replace(/\s+/g, "-");
+        } else {
+            categoryName = categoryName.replace(/\s+/g, "-");
         }
     }
 
-    hideBreadcrumb() {
-        if (this.elements.breadcrumb) {
-            this.elements.breadcrumb.style.display = "none";
-        }
-    }
+    // Find and click the category element
+    const categoryElement = document.querySelector(
+        `#browseSidebar .browse-category[data-item-type="${categoryName}"]`
+    );
 
-    showBreadcrumb() {
-        if (this.elements.breadcrumb) {
-            this.elements.breadcrumb.style.display = "block";
-        }
-    }
-
-    clearBreadcrumb() {
-        if (this.elements.breadcrumb) {
-            this.elements.breadcrumb.innerHTML = "";
-        }
-    }
-
-    isBreadcrumbVisible() {
-        return this.elements.breadcrumb && 
-               this.elements.breadcrumb.style.display !== "none";
-    }
-
-    getBreadcrumbPath() {
-        if (!this.elements.breadcrumb) return [];
-
-        const textElements = this.elements.breadcrumb.querySelectorAll('.breadcrumb-text, .breadcrumb-link, .breadcrumb-current');
-        return Array.from(textElements).map(el => el.textContent.trim());
-    }
-
-    generateFromCategoryPath(categoryPath, itemName) {
-        if (!Array.isArray(categoryPath)) return;
-
-        const itemTypes = categoryPath.join(", ");
-        this.updateBreadcrumb(itemTypes, itemName);
-    }
-
-    updateWithCustomPath(pathSegments, currentItem) {
-        if (!this.elements.breadcrumb || !Array.isArray(pathSegments)) return;
-
-        const breadcrumbHTML = pathSegments
-            .map((segment, index) => {
-                if (segment.link) {
-                    return `<a href="javascript:void(0);" class="breadcrumb-link" data-category="${segment.category || segment.text}">${segment.text}</a>`;
-                } else {
-                    return `<span class="breadcrumb-text">${segment.text}</span>`;
-                }
-            })
-            .join(' <i class="bi bi-caret-right-fill"></i> ') +
-            (currentItem ? ` <i class="bi bi-caret-right-fill"></i> <span class="breadcrumb-current">${currentItem}</span>` : '');
-
-        this.elements.breadcrumb.innerHTML = `<div class='breadcrumb-container'>${breadcrumbHTML}</div>`;
-        this.elements.breadcrumb.style.display = "block";
-
-        this.setupBreadcrumbHandlers();
-    }
-
-    destroy() {
-        // Clean up any resources if needed
+    if (categoryElement) {
+        categoryElement.click();
     }
 }

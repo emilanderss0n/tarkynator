@@ -36,142 +36,37 @@ class IndexedDBCache {
     }
 
     async get(key) {
-        if (!this.db) {
-            await this.init();
-        }
-
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([this.storeName], 'readonly');
-            const store = transaction.objectStore(this.storeName);
-            const request = store.get(key);
-
-            request.onerror = () => {
-                console.error('IndexedDB get error:', request.error);
-                reject(request.error);
-            };
-
-            request.onsuccess = () => {
-                const result = request.result;
-                if (result && result.data) {
-                    // Check if data is still valid (optional: add expiration logic here)
-                    resolve(result.data);
-                } else {
-                    resolve(null);
-                }
-            };
-        });
+        const result = await this.runRequest('readonly', (store) => store.get(key), 'get');
+        return result && result.data ? result.data : null;
     }
 
     async set(key, data) {
-        if (!this.db) {
-            await this.init();
-        }
+        const cacheEntry = {
+            key: key,
+            data: data,
+            timestamp: Date.now()
+        };
 
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([this.storeName], 'readwrite');
-            const store = transaction.objectStore(this.storeName);
-
-            const cacheEntry = {
-                key: key,
-                data: data,
-                timestamp: Date.now()
-            };
-
-            const request = store.put(cacheEntry);
-
-            request.onerror = () => {
-                console.error('IndexedDB set error:', request.error);
-                reject(request.error);
-            };
-
-            request.onsuccess = () => {
-                resolve(true);
-            };
-        });
+        await this.runRequest('readwrite', (store) => store.put(cacheEntry), 'set');
+        return true;
     }
 
     async delete(key) {
-        if (!this.db) {
-            await this.init();
-        }
-
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([this.storeName], 'readwrite');
-            const store = transaction.objectStore(this.storeName);
-            const request = store.delete(key);
-
-            request.onerror = () => {
-                console.error('IndexedDB delete error:', request.error);
-                reject(request.error);
-            };
-
-            request.onsuccess = () => {
-                resolve(true);
-            };
-        });
+        await this.runRequest('readwrite', (store) => store.delete(key), 'delete');
+        return true;
     }
 
     async clear() {
-        if (!this.db) {
-            await this.init();
-        }
-
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([this.storeName], 'readwrite');
-            const store = transaction.objectStore(this.storeName);
-            const request = store.clear();
-
-            request.onerror = () => {
-                console.error('IndexedDB clear error:', request.error);
-                reject(request.error);
-            };
-
-            request.onsuccess = () => {
-                resolve(true);
-            };
-        });
+        await this.runRequest('readwrite', (store) => store.clear(), 'clear');
+        return true;
     }
 
     async getAllKeys() {
-        if (!this.db) {
-            await this.init();
-        }
-
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([this.storeName], 'readonly');
-            const store = transaction.objectStore(this.storeName);
-            const request = store.getAllKeys();
-
-            request.onerror = () => {
-                console.error('IndexedDB getAllKeys error:', request.error);
-                reject(request.error);
-            };
-
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-        });
+        return this.runRequest('readonly', (store) => store.getAllKeys(), 'getAllKeys');
     }
 
     async getSize() {
-        if (!this.db) {
-            await this.init();
-        }
-
-        return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([this.storeName], 'readonly');
-            const store = transaction.objectStore(this.storeName);
-            const request = store.count();
-
-            request.onerror = () => {
-                console.error('IndexedDB count error:', request.error);
-                reject(request.error);
-            };
-
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-        });
+        return this.runRequest('readonly', (store) => store.count(), 'count');
     }
 
     async migrateFromLocalStorage(localStorageKey) {
@@ -187,6 +82,31 @@ class IndexedDBCache {
             console.warn(`Failed to migrate ${localStorageKey} from localStorage:`, error);
         }
         return false;
+    }
+
+    async ensureDb() {
+        if (!this.db) {
+            await this.init();
+        }
+    }
+
+    async runRequest(mode, requestFactory, operationName) {
+        await this.ensureDb();
+
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([this.storeName], mode);
+            const store = transaction.objectStore(this.storeName);
+            const request = requestFactory(store);
+
+            request.onerror = () => {
+                console.error(`IndexedDB ${operationName} error:`, request.error);
+                reject(request.error);
+            };
+
+            request.onsuccess = () => {
+                resolve(request.result);
+            };
+        });
     }
 }
 

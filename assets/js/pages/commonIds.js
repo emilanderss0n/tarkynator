@@ -1,4 +1,4 @@
-import { fetchData } from '../core/cache.js';
+import { fetchGraphQL } from '../core/graphqlClient.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const commonIdContainer = document.getElementById('commonIdContainer');
@@ -35,17 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         `;
 
-        const url = 'https://api.tarkov.dev/graphql';
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept-Encoding': 'gzip'
-            },
-            body: JSON.stringify({ query })
-        };
-
-        fetchData(url, options)
+        fetchGraphQL(query)
             .then(data => {
                 if (data && data.data) {
                     // Store the common data in localStorage

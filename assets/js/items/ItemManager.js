@@ -448,17 +448,7 @@ export class ItemManager {
 
     initializeModules() {
         // Initialize sub-modules with shared context
-        const sharedContext = {
-            elements: this.elements,
-            gameDataCache: () => this.gameDataCache,
-            itemsArrayCache: () => this.itemsArrayCache,
-            searchIndex: () => this.searchIndex,
-            categoryFilterMap: () => this.categoryFilterMap,
-            localItems: () => this.localItems,
-            categoryNameMapping: this.categoryNameMapping,
-            ensureDataLoaded: () => this.ensureDataLoaded(),
-            manager: this
-        };
+        const sharedContext = this.createSharedContext();
 
         this.modules.searcher = new ItemSearcher(sharedContext);
         this.modules.displayer = new ItemDisplayer(sharedContext);
@@ -725,6 +715,10 @@ export class ItemManager {
     }
 
     getSharedContext() {
+        return this.createSharedContext();
+    }
+
+    createSharedContext() {
         return {
             elements: this.elements,
             gameDataCache: () => this.gameDataCache,

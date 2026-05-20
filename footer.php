@@ -18,8 +18,8 @@
                 <div class="row">
                     <div class="col-md-6 copyright">
                         <div>&copy; <?= date('Y'); ?> - <a href="https://github.com/emilanderss0n/tarkynator" target="_blank"
-                                data-tooltip="Github Repo">Tarkynator</a> - Made by <a href="https://moxopixel.com/"
-                                target="_blank">MoxoPixel</a> / <a href="https://emilandersson.com" target="_blank">Emil
+                                data-tooltip="Github Repo">Tarkynator</a> - Made by <a href="https://github.com/emilanderss0n"
+                                target="_blank">MoxoPixel</a> / <a href="https://github.com/emilanderss0n" target="_blank">Emil
                                 Andersson</a></div>
                     </div>
                     <div class="col-md-6 donate">

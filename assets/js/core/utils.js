@@ -1,4 +1,4 @@
-export function slideUp(element, { duration = 300, delay = 0 } = {}) {
+function slideUp(element, { duration = 300, delay = 0 } = {}) {
     element.style.height = element.offsetHeight + 'px';
     element.style.transitionProperty = 'height, margin, padding';
     element.style.transitionDuration = `${duration}ms`;
@@ -20,7 +20,7 @@ export function slideUp(element, { duration = 300, delay = 0 } = {}) {
     }, duration + delay);
 }
 
-export function slideDown(element, { duration = 300, delay = 0 } = {}) {
+function slideDown(element, { duration = 300, delay = 0 } = {}) {
     element.style.removeProperty('display');
     let display = window.getComputedStyle(element).display;
     if (display === 'none') display = 'block';
@@ -73,4 +73,24 @@ function cleanupStyles(element) {
         'transition-property',
         'transition-delay',
     ].forEach(prop => element.style.removeProperty(prop));
+}
+
+export function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+export function highlightSearchTerms(text, searchTerm) {
+    if (!searchTerm || searchTerm === "") {
+        return text;
+    }
+
+    const regex = new RegExp(
+        `(${searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`,
+        "gi"
+    );
+    return text.replace(regex, '<span class="highlight-search">$1</span>');
 }

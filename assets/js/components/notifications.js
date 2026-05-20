@@ -90,18 +90,6 @@ export class Notification {
         }
     }
 
-    isActive() {
-        return this.toast.classList.contains("show");
-    }
-
-    setType(type) {
-        if (!this.isInitialized) {
-            console.error("Notification is not initialized.");
-            return;
-        }
-        this.toast.className = `notification ${type}`;
-    }
-
     setContent(content) {
         if (!this.isInitialized) {
             console.error("Notification is not initialized.");
@@ -159,18 +147,4 @@ export class Notification {
         }, 10);
     }
 
-    isReady() {
-        return this.isInitialized && this.toast !== null;
-    }
-
-    // Clean up method
-    destroy() {
-        if (this.isInitialized) {
-            this.toast.removeEventListener("click", this.hide);
-            this.toast = null;
-            this.isInitialized = false;
-        } else {
-            console.warn("Notification is not initialized, nothing to destroy.");
-        }
-    }
 }

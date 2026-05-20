@@ -5,3 +5,9 @@ data/cacert.pem
 converter/
 assets/css/main.min.css
 path.php
+/node_modules
+package.json
+package-lock.json
+/.fallow
+/.github
+.fallowrc.json

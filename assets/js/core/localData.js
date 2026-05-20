@@ -1,11 +1,8 @@
 export const DATA_URL = "data/tarkov_data.json";
 export const TASKS_URL = "data/tarkov_data_tasks.json";
-export const ASSORT_URL = "data/tarkov_data_traders.json";
 export const QUESTS_URL = "data/quests.json";
 export const ITEMS_URL = "data/items.json";
 export const HANDBOOK_URL = "data/handbook.json";
 export const GLOBALS = "data/globals.json";
-export const SUITS = "data/suits.json";
-export const FLEAPRICES = "data/prices.json";
 export const DEPENDENCIES = "data/Windows.json";
 export const ACHIEVEMENTS = "data/achievements.json";

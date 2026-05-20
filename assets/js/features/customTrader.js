@@ -834,6 +834,87 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function buildRewardItemsPopoverHtml(rewardItems, items) {
+        let allItemsHtml = '';
+
+        rewardItems.forEach((rewardItem) => {
+            const currentItemId = rewardItem._tpl || rewardItem;
+            let currentStackCount = 1;
+            if (rewardItem.upd && rewardItem.upd.StackObjectsCount) {
+                currentStackCount = rewardItem.upd.StackObjectsCount;
+            }
+
+            if (items[currentItemId]) {
+                const itemData = items[currentItemId];
+                const itemIconLink = itemData.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
+                const itemCountText = currentStackCount > 1 ? `<strong>${currentStackCount}</strong>x ` : '';
+
+                allItemsHtml += `
+                    <div class="popover-item-entry" style="display: flex; align-items: center; margin-bottom: 8px; padding: 4px;">
+                        <img src="${itemIconLink}" alt="${itemData.name}" style="width: 30px; height: 30px; margin-right: 8px;">
+                        <span>${itemCountText}${itemData.name}</span>
+                    </div>
+                `;
+            } else {
+                allItemsHtml += `
+                    <div class="popover-item-entry" style="display: flex; align-items: center; margin-bottom: 8px; padding: 4px;">
+                        <img src="assets/img/icon_quest.png" alt="Unknown Item" style="width: 30px; height: 30px; margin-right: 8px;">
+                        <span>${currentStackCount > 1 ? `<strong>${currentStackCount}</strong>x ` : ''}Item ${currentItemId}</span>
+                    </div>
+                `;
+            }
+        });
+
+        return allItemsHtml;
+    }
+
+    function hydrateRewardItemPlaceholder(uniqueId, itemId, stackCount, firText, rewardItems = null) {
+        fetchItemData().then(items => {
+            if (items && items[itemId]) {
+                const item = items[itemId];
+                const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
+                const itemElement = document.getElementById(uniqueId);
+
+                if (!itemElement) {
+                    return;
+                }
+
+                const countText = stackCount > 1 ? `<strong>${stackCount}</strong>x ` : '';
+
+                if (rewardItems && rewardItems.length > 1) {
+                    const additionalItemsCount = rewardItems.length - 1;
+                    const moreText = ` <small style="color: #007bff; cursor: pointer; text-decoration: underline;" 
+                        onclick="toggleMultiItemPopover('${uniqueId}')">(+${additionalItemsCount} more item${additionalItemsCount > 1 ? 's' : ''})</small>`;
+                    const allItemsHtml = buildRewardItemsPopoverHtml(rewardItems, items);
+
+                    itemElement.innerHTML = `
+                        <div class="reward-item-display">
+                            <img src="${iconLink}" alt="${item.name}" style="width: 35px; height: 35px; margin-right: 10px;">
+                            <span>${countText}${item.name}${moreText}${firText}</span>
+                            <div id="popover-${uniqueId}" class="multi-item-popover">
+                                <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">
+                                    All Reward Items:
+                                </div>
+                                ${allItemsHtml}
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                itemElement.innerHTML = `
+                    <div class="reward-item-display">
+                        <img src="${iconLink}" alt="${item.name}"
+                             style="width: 35px; height: 35px; margin-right: 10px;">
+                        <span>${countText}${item.name}${firText}</span>
+                    </div>
+                `;
+            }
+        }).catch(() => {
+            // Ignore error, keep placeholder
+        });
+    }
+
     // Function to get a human-readable description for reward
     function getRewardDescription(reward) {
         // Handle localized reward descriptions if available
@@ -858,63 +939,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (firstItem.upd && firstItem.upd.StackObjectsCount) {
                             stackCount = firstItem.upd.StackObjectsCount;
                         }
-                        // Start loading item data and update the placeholder when done
-                        fetchItemData().then(items => {
-                            if (items && items[itemId]) {
-                                const item = items[itemId];
-                                const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
-                                const itemElement = document.getElementById(uniqueId);
 
-                                if (itemElement) {
-                                    const countText = stackCount > 1 ? `<strong>${stackCount}</strong>x ` : '';
-                                    const moreText = ` <small style="color: #007bff; cursor: pointer; text-decoration: underline;" 
-                                        onclick="toggleMultiItemPopover('${uniqueId}')">(+${additionalItemsCount} more item${additionalItemsCount > 1 ? 's' : ''})</small>`;
-
-                                    // Create detailed items list for popover
-                                    let allItemsHtml = '';
-                                    reward.items.forEach((rewardItem, index) => {
-                                        const itemId = rewardItem._tpl || rewardItem;
-                                        let stackCount = 1;
-                                        if (rewardItem.upd && rewardItem.upd.StackObjectsCount) {
-                                            stackCount = rewardItem.upd.StackObjectsCount;
-                                        }
-
-                                        if (items[itemId]) {
-                                            const itemData = items[itemId];
-                                            const itemIconLink = itemData.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
-                                            const itemCountText = stackCount > 1 ? `<strong>${stackCount}</strong>x ` : '';
-
-                                            allItemsHtml += `
-                                                <div class="popover-item-entry" style="display: flex; align-items: center; margin-bottom: 8px; padding: 4px;">
-                                                    <img src="${itemIconLink}" alt="${itemData.name}" style="width: 30px; height: 30px; margin-right: 8px;">
-                                                    <span>${itemCountText}${itemData.name}</span>
-                                                </div>
-                                            `;
-                                        } else {
-                                            allItemsHtml += `
-                                                <div class="popover-item-entry" style="display: flex; align-items: center; margin-bottom: 8px; padding: 4px;">
-                                                    <img src="assets/img/icon_quest.png" alt="Unknown Item" style="width: 30px; height: 30px; margin-right: 8px;">
-                                                    <span>${stackCount > 1 ? `<strong>${stackCount}</strong>x ` : ''}Item ${itemId}</span>
-                                                </div>
-                                            `;
-                                        }
-                                    }); itemElement.innerHTML = `
-                                        <div class="reward-item-display">
-                                            <img src="${iconLink}" alt="${item.name}" style="width: 35px; height: 35px; margin-right: 10px;">
-                                            <span>${countText}${item.name}${moreText}${firText}</span>
-                                            <div id="popover-${uniqueId}" class="multi-item-popover">
-                                                <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">
-                                                    All Reward Items:
-                                                </div>
-                                                ${allItemsHtml}
-                                            </div>
-                                        </div>
-                                    `;
-                                }
-                            }
-                        }).catch(error => {
-                            // Ignore error, keep placeholder
-                        });
+                        hydrateRewardItemPlaceholder(uniqueId, itemId, stackCount, firText, reward.items);
                         const moreText = ` <small style="color: #007bff; cursor: pointer; text-decoration: underline;" 
                             onclick="toggleMultiItemPopover('${uniqueId}')">(+${additionalItemsCount} more item${additionalItemsCount > 1 ? 's' : ''})</small>`;
                         return `<span id="${uniqueId}">Item ID: ${itemId}${moreText}${firText}</span>`;
@@ -939,26 +965,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Create placeholder with unique ID
                         const uniqueId = `item-reward-${Math.random().toString(36).substring(2, 9)}`;
 
-                        // Start loading item data and update the placeholder when done
-                        fetchItemData().then(items => {
-                            if (items && items[itemId]) {
-                                const item = items[itemId];
-                                const iconLink = item.iconLink.replace(/^.*\/data\/icons\//, 'data/icons/');
-                                const itemElement = document.getElementById(uniqueId);
-
-                                if (itemElement) {
-                                    itemElement.innerHTML = `
-                                        <div class="reward-item-display">
-                                            <img src="${iconLink}" alt="${item.name}"
-                                                 style="width: 35px; height: 35px; margin-right: 10px;">
-                                            <span>${countText}${item.name}${firText}</span>
-                                        </div>
-                                    `;
-                                }
-                            }
-                        }).catch(error => {
-                            // Ignore error, keep placeholder
-                        });
+                        hydrateRewardItemPlaceholder(uniqueId, itemId, stackCount, firText);
 
                         // Return a placeholder that will be updated
                         return `<span id="${uniqueId}">${countText}Item ID: ${itemId}${firText}</span>`;

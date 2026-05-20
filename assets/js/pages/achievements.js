@@ -1,10 +1,11 @@
-import { fetchData } from "../core/cache.js";
 import { ACHIEVEMENTS } from "../core/localData.js";
 import {
     checkJsonEditor,
     checkJsonEditorSimple,
 } from "../components/checkJsonEditor.js";
 import { Popover } from "../components/popover.js";
+import { fetchGraphQL } from "../core/graphqlClient.js";
+import { debounce, highlightSearchTerms } from "../core/utils.js";
 
 let achievementsLocalData = []; // Store local achievements data
 let localAchievementIdSet = new Set();
@@ -95,21 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const achievement = achievementsLocalData.find(ach => ach.id === achievementId);
         
         if (achievement) {
-            // Get achievement name from the GraphQL data stored in localStorage
-            const storedAchievements = localStorage.getItem("achievementsData");
-            let achievementName = "Unknown Achievement";
-            
-            if (storedAchievements) {
-                try {
-                    const graphqlAchievements = JSON.parse(storedAchievements);
-                    const graphqlAchievement = graphqlAchievements.find(ach => ach.id === achievementId);
-                    if (graphqlAchievement) {
-                        achievementName = graphqlAchievement.name;
-                    }
-                } catch (error) {
-                    console.error("Error parsing stored achievements:", error);
-                }
-            }
+            const achievementName = getStoredAchievementName(achievementId);
 
             // Update popover title
             achievementPopover.setTitle(`${achievementName} - Template Structure`);
@@ -192,22 +179,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load achievement template
     function loadAchievementTemplate(achievementId) {
         const achievement = achievementsLocalData.find(ach => ach.id === achievementId);
-        
-        // Get achievement name from the GraphQL data stored in localStorage
-        const storedAchievements = localStorage.getItem("achievementsData");
-        let achievementName = "Unknown Achievement";
-        
-        if (storedAchievements) {
-            try {
-                const graphqlAchievements = JSON.parse(storedAchievements);
-                const graphqlAchievement = graphqlAchievements.find(ach => ach.id === achievementId);
-                if (graphqlAchievement) {
-                    achievementName = graphqlAchievement.name;
-                }
-            } catch (error) {
-                console.error("Error parsing stored achievements:", error);
-            }
-        }
+
+        const achievementName = getStoredAchievementName(achievementId);
 
         achievementTitleSpan.textContent = achievementName;
         checkJsonEditorSimple(achievement);
@@ -243,17 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         `;
 
-        const url = "https://api.tarkov.dev/graphql";
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept-Encoding": "gzip",
-            },
-            body: JSON.stringify({ query }),
-        };
-
-        fetchData(url, options)
+        fetchGraphQL(query)
             .then((data) => {
                 if (data && data.data && data.data.achievements) {
                     // Store the achievements data in localStorage
@@ -277,15 +240,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 achievementsContent.innerHTML = "Error fetching achievements data.";
             });
     };
-
-    // Debounce function for search input
-    function debounce(func, wait) {
-        let timeout;
-        return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
 
     // Filter achievements by search term
     const filterAchievementsBySearch = (achievements, searchTerm) => {
@@ -323,17 +277,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return filtered;
     };
 
-    // Highlight search terms in text
-    const highlightSearchTerms = (text, searchTerm) => {
-        if (!searchTerm || searchTerm === "") {
-            return text;
+
+    const getStoredAchievementName = (achievementId) => {
+        const storedAchievements = localStorage.getItem("achievementsData");
+        if (!storedAchievements) {
+            return "Unknown Achievement";
         }
 
-        const regex = new RegExp(
-            `(${searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`,
-            "gi"
-        );
-        return text.replace(regex, '<span class="highlight-search">$1</span>');
+        try {
+            const graphqlAchievements = JSON.parse(storedAchievements);
+            const graphqlAchievement = graphqlAchievements.find(
+                (achievement) => achievement.id === achievementId
+            );
+            return graphqlAchievement ? graphqlAchievement.name : "Unknown Achievement";
+        } catch (error) {
+            console.error("Error parsing stored achievements:", error);
+            return "Unknown Achievement";
+        }
     };
 
     // Render filtered achievements

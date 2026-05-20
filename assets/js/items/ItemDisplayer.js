@@ -12,212 +12,24 @@ import {
 import {
     checkJsonEditorSimple,
 } from "../components/checkJsonEditor.js";
+import { createItemListElement } from "./itemElementFactory.js";
 
 export class ItemDisplayer {
     constructor(context) {
         this.context = context;
         this.elements = context.elements;
         this.presetPopover = null;
-    }
-
-    init() {
-        // Setup any initial configurations
-    }
-
-    // Display item by ID
-    async displayItemById(itemId) {
-        // Ensure data is loaded before displaying
-        await this.context.ensureDataLoaded();
-        
-        let data = this.context.gameDataCache();
-        if (!data) {
-            console.error("Game data not available");
-            return;
-        }
-
-        const item = data.items[itemId];
-        if (item) {
-            const listItem = this.createItemElement(item);
-            await this.displayItemDetails(listItem, false);
-        }
-    }
-
-    // Create item element from item data
-    createItemElement(item) {
-        const listItem = document.createElement("li");
-        listItem.className = "list-group-item";
-        
-        const iconLink = item.iconLink.replace(
-            /^.*\/data\/icons\//,
-            "data/icons/"
-        );
-
-        listItem.innerHTML = `
-            <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
-            ${item.name}
-        `;
-
-        const handbookCategoriesNames = item.handbookCategories
-            .map((category) => category.name)
-            .join(", ");
-        const taskIds = item.usedInTasks
-            ? item.usedInTasks.map((task) => task.id).join(",")
-            : "";
-
-        Object.assign(listItem.dataset, {
-            itemId: item.id,
-            itemTypes: handbookCategoriesNames,
-            usedInTasks: taskIds,
-        });
-
-        return listItem;
-    }
-
-    // Display item details in handbook
-    async displayItemDetails(itemElement, updateHistory = true) {
-        const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
-
-        if (updateHistory) {
-            navigationManager.navigateToItem(itemId, "handbook");
-        }
-
-        // Store in recent searches
-        this.context.manager.modules.searcher.storeRecentSearch(itemElement);
-
-        // Update breadcrumb
-        this.context.manager.modules.breadcrumb.updateBreadcrumb(itemTypes, itemElement.textContent);
-
-        // Generate tasks HTML
-        const usedInTasksHTML = await this.generateUsedInTasksHTML(usedInTasks, itemId);
-
-        // Update handbook content
-        await this.updateHandbookContent(itemElement, usedInTasksHTML);
-
-        // Clear search results
-        this.context.manager.modules.searcher.clearResults();
-        
-        if (this.elements.itemSearchInput) {
-            this.elements.itemSearchInput.value = "";
-        }
-
-        // Load JSON template
-        await this.context.manager.modules.template.loadTemplate(itemId);
-        
-        // Refresh editor if available
-        if (typeof editor !== "undefined" && editor) {
-            editor.refresh();
-            checkJsonEditorSimple();
-        }
-
-        // Hide recent searches
-        this.context.manager.modules.searcher.hideRecentSearches();
-    }
-
-    // Generate HTML for tasks that use this item
-    async generateUsedInTasksHTML(usedInTasks, itemId) {
-        if (!usedInTasks) return "";
-
-        try {
-            let data = this.context.gameDataCache();
-            if (!data) {
-                data = await fetchData(DATA_URL, { method: "GET" });
-            }
-
-            const taskIds = usedInTasks.split(",");
-            const tasks = taskIds
-                .map((taskId) => {
-                    const taskInfo = data.items[itemId].usedInTasks.find(
-                        (task) => task.id === taskId
-                    );
-                    return taskInfo
-                        ? `<li class="list-group-item"><strong>${taskInfo.name}</strong><span class="global-id">${taskId}</span></li>`
-                        : null;
-                })
-                .filter((task) => task !== null)
-                .join("");
-
-            if (tasks) {
-                return `
-                    <div class="used-in card">
-                        <figure>
-                            <figcaption class="blockquote-footer">Used in quests</figcaption>
-                        </figure>
-                        <ul class="list-group">${tasks}</ul>
-                    </div>`;
-            }
-        } catch (error) {
-            console.error("Error fetching tasks data:", error);
-            return "<p>Error fetching tasks data.</p>";
-        }
-
-        return "";
-    }
-
-    // Update handbook content display
-    async updateHandbookContent(itemElement, usedInTasksHTML) {
-        if (!this.elements.handbookContent) return;
-
-        try {
-            const itemId = itemElement.dataset.itemId;
-
-            let data = this.context.gameDataCache();
-            if (!data) {
-                data = await fetchData(DATA_URL, { method: "GET" });
-            }
-
-            const itemData = data.items[itemId];
-
-            if (!itemData) {
-                this.elements.handbookContent.innerHTML = "<p>Item not found in tarkov_data.json</p>";
-                return;
-            }
-
-            const { isMissingInModdedData } = await this.checkItemModdedAvailability(itemId);
-
-            // Generate all HTML sections
-            const {
-                fleaBanHTML,
-                slotsHTML,
-                dependenciesHTML,
-                allowedAmmoHTML,
-                armorClassHTML,
-                properties
-            } = await this.generateItemSections(itemData, itemId);
-
-            const categoriesHTML = this.generateCategoriesHTML(itemData.categories);
-            const bartersHTML = this.generateBartersHTML(itemData.buyFor);
-            const image512pxLink = this.generateImageLink(itemData.image512pxLink);
-
-            // Get handbook and preset data
-            const { parentId, presets, presetItemsHTML } = await this.getHandbookData(itemId, itemData.categories);
-
-            // Render the complete handbook content
-            this.renderHandbookContent({
-                itemElement,
-                itemData,
-                properties,
-                fleaBanHTML,
-                slotsHTML,
-                dependenciesHTML,
-                allowedAmmoHTML,
-                usedInTasksHTML,
-                categoriesHTML,
-                bartersHTML,
-                image512pxLink,
-                parentId,
-                presets,
-                presetItemsHTML,
-                armorClassHTML,
-                isMissingInModdedData
-            });
-
-            // Setup interactive elements
-            this.setupInteractiveElements();
-
-        } catch (error) {
-            console.error("Error fetching item data:", error);
-            this.elements.handbookContent.innerHTML = "<p>Error fetching item data.</p>";
-        }
+        this.checkItemModdedAvailability = this.checkItemModdedAvailability.bind(this);
+        this.generateItemSections = this.generateItemSections.bind(this);
+        this.generateCategoriesHTML = this.generateCategoriesHTML.bind(this);
+        this.generateBartersHTML = this.generateBartersHTML.bind(this);
+        this.generateImageLink = this.generateImageLink.bind(this);
+        this.getHandbookData = this.getHandbookData.bind(this);
+        this.renderHandbookContent = this.renderHandbookContent.bind(this);
+        this.setupInteractiveElements = this.setupInteractiveElements.bind(this);
+        this.displayItemById = async (itemId) => {
+            await displayItemById(this, itemId);
+        };
     }
 
     async checkItemModdedAvailability(itemId) {
@@ -673,13 +485,6 @@ export class ItemDisplayer {
         }
     }
 
-    // Hide preset popover
-    hidePresetPopover() {
-        if (this.presetPopover && this.presetPopover.isReady()) {
-            this.presetPopover.hide();
-        }
-    }
-
     // Setup interactive elements in the handbook
     setupInteractiveElements() {
         // Initialize Swiper for presets if present
@@ -795,8 +600,169 @@ export class ItemDisplayer {
         }
     }
 
-    // Clean up resources
-    destroy() {
-        // Clean up any resources if needed
+}
+
+async function displayItemById(instance, itemId) {
+    // Ensure data is loaded before displaying
+    await instance.context.ensureDataLoaded();
+
+    let data = instance.context.gameDataCache();
+    if (!data) {
+        console.error("Game data not available");
+        return;
+    }
+
+    const item = data.items[itemId];
+    if (item) {
+        const listItem = createItemElement(item);
+        await displayItemDetails(instance, listItem, false);
+    }
+}
+
+function createItemElement(item) {
+    return createItemListElement(item);
+}
+
+async function displayItemDetails(instance, itemElement, updateHistory = true) {
+    const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
+
+    if (updateHistory) {
+        navigationManager.navigateToItem(itemId, "handbook");
+    }
+
+    // Store in recent searches
+    instance.context.manager.modules.searcher.storeRecentSearch(itemElement);
+
+    // Update breadcrumb
+    instance.context.manager.modules.breadcrumb.updateBreadcrumb(itemTypes, itemElement.textContent);
+
+    // Generate tasks HTML
+    const usedInTasksHTML = await generateUsedInTasksHTML(instance, usedInTasks, itemId);
+
+    // Update handbook content
+    await updateHandbookContent(instance, itemElement, usedInTasksHTML);
+
+    // Clear search results
+    instance.context.manager.modules.searcher.clearResults();
+
+    if (instance.elements.itemSearchInput) {
+        instance.elements.itemSearchInput.value = "";
+    }
+
+    // Load JSON template
+    await instance.context.manager.modules.template.loadTemplate(itemId);
+
+    // Refresh editor if available
+    if (typeof editor !== "undefined" && editor) {
+        editor.refresh();
+        checkJsonEditorSimple();
+    }
+
+    // Hide recent searches
+    instance.context.manager.modules.searcher.hideRecentSearches();
+}
+
+async function generateUsedInTasksHTML(instance, usedInTasks, itemId) {
+    if (!usedInTasks) return "";
+
+    try {
+        let data = instance.context.gameDataCache();
+        if (!data) {
+            data = await fetchData(DATA_URL, { method: "GET" });
+        }
+
+        const taskIds = usedInTasks.split(",");
+        const tasks = taskIds
+            .map((taskId) => {
+                const taskInfo = data.items[itemId].usedInTasks.find(
+                    (task) => task.id === taskId
+                );
+                return taskInfo
+                    ? `<li class="list-group-item"><strong>${taskInfo.name}</strong><span class="global-id">${taskId}</span></li>`
+                    : null;
+            })
+            .filter((task) => task !== null)
+            .join("");
+
+        if (tasks) {
+            return `
+                <div class="used-in card">
+                    <figure>
+                        <figcaption class="blockquote-footer">Used in quests</figcaption>
+                    </figure>
+                    <ul class="list-group">${tasks}</ul>
+                </div>`;
+        }
+    } catch (error) {
+        console.error("Error fetching tasks data:", error);
+        return "<p>Error fetching tasks data.</p>";
+    }
+
+    return "";
+}
+
+async function updateHandbookContent(instance, itemElement, usedInTasksHTML) {
+    if (!instance.elements.handbookContent) return;
+
+    try {
+        const itemId = itemElement.dataset.itemId;
+
+        let data = instance.context.gameDataCache();
+        if (!data) {
+            data = await fetchData(DATA_URL, { method: "GET" });
+        }
+
+        const itemData = data.items[itemId];
+
+        if (!itemData) {
+            instance.elements.handbookContent.innerHTML = "<p>Item not found in tarkov_data.json</p>";
+            return;
+        }
+
+        const { isMissingInModdedData } = await instance.checkItemModdedAvailability(itemId);
+
+        // Generate all HTML sections
+        const {
+            fleaBanHTML,
+            slotsHTML,
+            dependenciesHTML,
+            allowedAmmoHTML,
+            armorClassHTML,
+            properties
+        } = await instance.generateItemSections(itemData, itemId);
+
+        const categoriesHTML = instance.generateCategoriesHTML(itemData.categories);
+        const bartersHTML = instance.generateBartersHTML(itemData.buyFor);
+        const image512pxLink = instance.generateImageLink(itemData.image512pxLink);
+
+        // Get handbook and preset data
+        const { parentId, presets, presetItemsHTML } = await instance.getHandbookData(itemId, itemData.categories);
+
+        // Render the complete handbook content
+        instance.renderHandbookContent({
+            itemElement,
+            itemData,
+            properties,
+            fleaBanHTML,
+            slotsHTML,
+            dependenciesHTML,
+            allowedAmmoHTML,
+            usedInTasksHTML,
+            categoriesHTML,
+            bartersHTML,
+            image512pxLink,
+            parentId,
+            presets,
+            presetItemsHTML,
+            armorClassHTML,
+            isMissingInModdedData
+        });
+
+        // Setup interactive elements
+        instance.setupInteractiveElements();
+
+    } catch (error) {
+        console.error("Error fetching item data:", error);
+        instance.elements.handbookContent.innerHTML = "<p>Error fetching item data.</p>";
     }
 }

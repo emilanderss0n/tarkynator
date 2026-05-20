@@ -1,6 +1,6 @@
 import { fetchData } from '../core/cache.js';
 import { DATA_URL, GLOBALS, QUESTS_URL } from '../core/localData.js';
-import { slideToggle } from '../core/utils.js';
+import { slideToggle, debounce } from '../core/utils.js';
 import { Popover } from '../components/popover.js';
 import AssortsCreator from '../features/assortsCreator.js';
 
@@ -193,6 +193,32 @@ document.addEventListener('DOMContentLoaded', () => {
             presetItems: presetItems,
             matchedPresetId: matchedPresetId,
             presetItemData: presetItemData || null
+        };
+    };
+
+    const resolveAssortItemDisplay = (assortItem, assortItems) => {
+        const tpl = assortItem._tpl;
+        let itemData = tarkovData.items[tpl] || {};
+        let iconLink = itemData.iconLink || '';
+        let name = itemData.name || tpl;
+
+        const presetInfo = getPresetInfo(assortItem._id, assortItems);
+        if (presetInfo) {
+            if (presetInfo.presetItemData) {
+                itemData = presetInfo.presetItemData;
+            } else {
+                itemData = presetInfo.baseItemData;
+            }
+            name = itemData.name;
+            iconLink = itemData.iconLink || iconLink;
+        }
+
+        return {
+            tpl,
+            itemData,
+            iconLink,
+            name,
+            presetInfo,
         };
     };
 
@@ -548,26 +574,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Barters: those with barter_scheme entry
         const barterScheme = currentAssort.barter_scheme || {};
         let barters = rootItems.filter(item => barterScheme[item._id] && barterScheme[item._id].length > 0).map(item => {
-            const tpl = item._tpl;
-            let itemData = tarkovData.items[tpl] || {};
-            let iconLink = itemData.iconLink || '';
-            let name = itemData.name || tpl;
-            
-            // Check if this is a preset
-            const presetInfo = getPresetInfo(item._id, currentAssort.items);
-            if (presetInfo) {
-                // If we found a matching preset, use its display data
-                if (presetInfo.presetItemData) {
-                    itemData = presetInfo.presetItemData;
-                    name = itemData.name;
-                    iconLink = itemData.iconLink || iconLink;
-                } else {
-                    // Fallback to base item data but keep the clean name
-                    itemData = presetInfo.baseItemData;
-                    name = itemData.name;
-                    iconLink = itemData.iconLink || iconLink;
-                }
-            }
+            const {
+                tpl,
+                iconLink,
+                name,
+                presetInfo,
+            } = resolveAssortItemDisplay(item, currentAssort.items);
 
             const level = getLoyaltyLevel(item._id, loyaltyMap);
             const requiredItems = processBarterRequiredItems(barterScheme, item._id, tarkovData);
@@ -591,26 +603,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const scheme = barterScheme[item._id];
             return scheme && scheme.length === 1 && CURRENCY_TPLS.includes(scheme[0]._tpl);
         }).map(item => {
-            const tpl = item._tpl;
-            let itemData = tarkovData.items[tpl] || {};
-            let iconLink = itemData.iconLink || '';
-            let name = itemData.name || tpl;
-            
-            // Check if this is a preset
-            const presetInfo = getPresetInfo(item._id, currentAssort.items);
-            if (presetInfo) {
-                // If we found a matching preset, use its display data
-                if (presetInfo.presetItemData) {
-                    itemData = presetInfo.presetItemData;
-                    name = itemData.name;
-                    iconLink = itemData.iconLink || iconLink;
-                } else {
-                    // Fallback to base item data but keep the clean name
-                    itemData = presetInfo.baseItemData;
-                    name = itemData.name;
-                    iconLink = itemData.iconLink || iconLink;
-                }
-            }
+            const {
+                tpl,
+                iconLink,
+                name,
+                presetInfo,
+            } = resolveAssortItemDisplay(item, currentAssort.items);
 
             const scheme = barterScheme[item._id][0];
             const level = getLoyaltyLevel(item._id, loyaltyMap);
@@ -836,15 +834,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
-
-    // Debounce function for search input
-    function debounce(func, wait) {
-        let timeout;
-        return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
 
     // Handlers
     assortSearch.addEventListener('input', debounce(() => {

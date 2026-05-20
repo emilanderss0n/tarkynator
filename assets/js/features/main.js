@@ -21,25 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(() => {
                     if (event.target.matches("a.global-id")) {
                         const originalHTML = event.target.innerHTML;
-                        event.target.innerHTML = '<i class="bi bi-check"></i> Copied';
-                        event.target.classList.add("copied");
-                        // Show notification toast
-                        const notif = new Notification("globalIdNotification", { type: "info", autoClose: true });
-                        notif.setContent("ID copied to clipboard!");
-                        notif.show();
-                        setTimeout(() => {
-                            event.target.innerHTML = originalHTML;
-                            event.target.classList.remove("copied");
-                        }, 3000);
+                        showCopiedState(event.target, 3000, originalHTML);
                     } else {
-                        event.target.classList.add("copied");
-                        // Show notification toast
-                        const notif = new Notification("globalIdNotification", { type: "info", autoClose: true });
-                        notif.setContent("ID copied to clipboard!");
-                        notif.show();
-                        setTimeout(() => {
-                            event.target.classList.remove("copied");
-                        }, 1400);
+                        showCopiedState(event.target, 1400);
                     }
                 })
                 .catch((err) => {
@@ -59,6 +43,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
         }
+    }
+
+    function showGlobalIdNotification() {
+        const notif = new Notification("globalIdNotification", { type: "info", autoClose: true });
+        notif.setContent("ID copied to clipboard!");
+        notif.show();
+    }
+
+    function showCopiedState(target, duration, originalHTML) {
+        if (originalHTML) {
+            target.innerHTML = '<i class="bi bi-check"></i> Copied';
+        }
+
+        target.classList.add("copied");
+        showGlobalIdNotification();
+
+        setTimeout(() => {
+            if (originalHTML) {
+                target.innerHTML = originalHTML;
+            }
+            target.classList.remove("copied");
+        }, duration);
     }
 
     // Use the function for all containers

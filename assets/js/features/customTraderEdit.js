@@ -145,21 +145,8 @@ class CustomTraderEditor {
             return;
         }
 
-        this.isEditMode = true;
-        const toggleBtn = document.getElementById('edit-mode-toggle');
-        const saveBtn = document.getElementById('save-changes');
-        const cancelBtn = document.getElementById('cancel-changes');
-        const statusSpan = document.getElementById('edit-status');
-
-        // Hide the edit mode button and show save/cancel buttons
-        if (toggleBtn) toggleBtn.style.display = 'none';
-        if (saveBtn) saveBtn.style.display = 'inline-block';
-        if (cancelBtn) cancelBtn.style.display = 'inline-block';
-
-        if (statusSpan) {
-            statusSpan.textContent = 'Edit mode enabled';
-            statusSpan.className = 'text-warning ms-2';
-        }
+        this.setEditControlsState(true);
+        this.setStatusMessage('Edit mode enabled', 'text-warning ms-2');
 
         this.enableQuestEditing();
     }
@@ -180,26 +167,48 @@ class CustomTraderEditor {
     }
     // Exit edit mode and return to view mode
     exitEditMode() {
-        this.isEditMode = false;
-        const toggleBtn = document.getElementById('edit-mode-toggle');
-        const saveBtn = document.getElementById('save-changes');
-        const cancelBtn = document.getElementById('cancel-changes');
-        const statusSpan = document.getElementById('edit-status');
-
-        // Show the edit mode button and hide save/cancel buttons
-        if (toggleBtn) toggleBtn.style.display = 'inline-block';
-        if (saveBtn) saveBtn.style.display = 'none';
-        if (cancelBtn) cancelBtn.style.display = 'none';
-
-        if (statusSpan) {
-            statusSpan.textContent = '';
-            statusSpan.className = 'text-muted ms-2';
-        }
+        this.setEditControlsState(false);
+        this.setStatusMessage('', 'text-muted ms-2');
 
         // Reset locale selectors to current locale
         this.resetLocaleSelectors();
 
         this.disableQuestEditing();
+    }
+
+    setEditControlsState(isEditMode) {
+        this.isEditMode = isEditMode;
+
+        const toggleBtn = document.getElementById('edit-mode-toggle');
+        const saveBtn = document.getElementById('save-changes');
+        const cancelBtn = document.getElementById('cancel-changes');
+
+        if (toggleBtn) toggleBtn.style.display = isEditMode ? 'none' : 'inline-block';
+        if (saveBtn) saveBtn.style.display = isEditMode ? 'inline-block' : 'none';
+        if (cancelBtn) cancelBtn.style.display = isEditMode ? 'inline-block' : 'none';
+    }
+
+    setStatusMessage(text, className = 'text-muted ms-2') {
+        const statusSpan = document.getElementById('edit-status');
+        if (statusSpan) {
+            statusSpan.textContent = text;
+            statusSpan.className = className;
+        }
+    }
+
+    scheduleViewModeUiReset() {
+        setTimeout(() => {
+            const downloadBtn = document.getElementById('download-trader');
+            if (downloadBtn && this.hasSavedModifications && !this.isEditMode) {
+                downloadBtn.style.display = 'inline-block';
+            }
+        }, 100);
+
+        setTimeout(() => {
+            if (!this.isEditMode) {
+                this.setStatusMessage('', 'text-muted ms-2');
+            }
+        }, 3000);
     }
 
     // Reset all locale selectors to match current locale
@@ -372,31 +381,11 @@ class CustomTraderEditor {
         this.hasChanges = false;
         this.hasSavedModifications = true; // Mark that we have saved modifications
 
-        const statusSpan = document.getElementById('edit-status');
-        if (statusSpan) {
-            statusSpan.textContent = 'Changes saved';
-            statusSpan.className = 'text-success ms-2';
-        }
-
         // Exit edit mode first
         this.exitEditMode();
+        this.setStatusMessage('Changes saved', 'text-success ms-2');
 
-        // Show download button after exiting edit mode (when user can see it)
-        setTimeout(() => {
-            const downloadBtn = document.getElementById('download-trader');
-            if (downloadBtn && this.hasSavedModifications && !this.isEditMode) {
-                downloadBtn.style.display = 'inline-block';
-            }
-        }, 100);
-
-        // Show success message briefly
-        setTimeout(() => {
-            const statusSpan = document.getElementById('edit-status');
-            if (statusSpan && !this.isEditMode) {
-                statusSpan.textContent = '';
-                statusSpan.className = 'text-muted ms-2';
-            }
-        }, 3000);
+        this.scheduleViewModeUiReset();
     }
     cancelChanges() {
         // Restore the original data
@@ -420,32 +409,10 @@ class CustomTraderEditor {
                 // Re-setup edit controls after display is complete
                 this.setupEditControls();
 
-                // Update status message after DOM is recreated
-                const statusSpan = document.getElementById('edit-status');
-                if (statusSpan) {
-                    statusSpan.textContent = 'Changes cancelled';
-                    statusSpan.className = 'text-info ms-2';
-                }
-
                 // Exit edit mode (no need to restore edit mode since we're cancelling)
                 this.exitEditMode();
-
-                // Show download button if there are saved modifications and we're not in edit mode
-                setTimeout(() => {
-                    const downloadBtn = document.getElementById('download-trader');
-                    if (downloadBtn && this.hasSavedModifications && !this.isEditMode) {
-                        downloadBtn.style.display = 'inline-block';
-                    }
-                }, 100);
-
-                // Clear status message after 3 seconds
-                setTimeout(() => {
-                    const statusSpan = document.getElementById('edit-status');
-                    if (statusSpan && !this.isEditMode) {
-                        statusSpan.textContent = '';
-                        statusSpan.className = 'text-muted ms-2';
-                    }
-                }, 3000);
+                this.setStatusMessage('Changes cancelled', 'text-info ms-2');
+                this.scheduleViewModeUiReset();
             });
         }
     }
@@ -469,21 +436,11 @@ class CustomTraderEditor {
 
                 // Restore edit mode if it was active
                 if (wasInEditMode) {
-                    // Set edit mode state
-                    this.isEditMode = true;
-                    const toggleBtn = document.getElementById('edit-mode-toggle');
-                    const saveBtn = document.getElementById('save-changes');
-                    const cancelBtn = document.getElementById('cancel-changes');
-                    const statusSpan = document.getElementById('edit-status');
-
-                    // Hide edit button, show save/cancel buttons
-                    if (toggleBtn) toggleBtn.style.display = 'none';
-                    if (saveBtn) saveBtn.style.display = 'inline-block';
-                    if (cancelBtn) cancelBtn.style.display = 'inline-block';
-                    if (statusSpan) {
-                        statusSpan.textContent = this.hasChanges ? 'Modified (unsaved changes)' : 'Edit mode enabled';
-                        statusSpan.className = this.hasChanges ? 'text-danger ms-2' : 'text-warning ms-2';
-                    }
+                    this.setEditControlsState(true);
+                    this.setStatusMessage(
+                        this.hasChanges ? 'Modified (unsaved changes)' : 'Edit mode enabled',
+                        this.hasChanges ? 'text-danger ms-2' : 'text-warning ms-2'
+                    );
 
                     // Don't show download button while in edit mode
                     // It will be shown after saving and exiting edit mode

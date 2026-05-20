@@ -112,11 +112,12 @@ export class ItemBrowser {
                 this.renderBrowseItems();
             }
         }, 150);
-    }
 
-    init() {
+        this.handleBrowseContainerActivation = () => {
+            handleBrowseContainerActivation(this);
+        };
+        this.getTypesEnum = () => this.typesEnum;
         this.setupBrowseCategories();
-        // Don't load initial category data until user actually navigates to browse view
     }
 
     setupBrowseCategories() {
@@ -129,15 +130,6 @@ export class ItemBrowser {
             browseItem.innerHTML = `${type}`;
             this.elements.browseSidebar.appendChild(browseItem);
         });
-    }
-
-    setupInitialCategory() {
-        const firstCategory = document.querySelector(".browse-category");
-        if (firstCategory) {
-            firstCategory.classList.add("active");
-            const itemType = firstCategory.dataset.itemType.replace(/-/g, " ");
-            this.loadCategory(itemType);
-        }
     }
 
     async loadCategory(itemType, page = 1) {
@@ -389,27 +381,20 @@ export class ItemBrowser {
         });
     }
 
-    handleBrowseContainerActivation() {
-        const activeCategory = this.context.manager.lastActiveCategory || "Ammo-packs";
-        const categoryElement = document.querySelector(
-            `#browseSidebar .browse-category[data-item-type="${activeCategory}"]`
-        );
+}
 
-        if (categoryElement) {
-            document.querySelectorAll("#browseSidebar .browse-category")
-                .forEach((category) => category.classList.remove("active"));
-            categoryElement.classList.add("active");
+function handleBrowseContainerActivation(instance) {
+    const activeCategory = instance.context.manager.lastActiveCategory || "Ammo-packs";
+    const categoryElement = document.querySelector(
+        `#browseSidebar .browse-category[data-item-type="${activeCategory}"]`
+    );
 
-            const formattedCategory = activeCategory.replace(/-/g, " ");
-            this.loadCategory(formattedCategory);
-        }
-    }
+    if (categoryElement) {
+        document.querySelectorAll("#browseSidebar .browse-category")
+            .forEach((category) => category.classList.remove("active"));
+        categoryElement.classList.add("active");
 
-    getTypesEnum() {
-        return this.typesEnum;
-    }
-
-    destroy() {
-        // Clean up any resources if needed
+        const formattedCategory = activeCategory.replace(/-/g, " ");
+        instance.loadCategory(formattedCategory);
     }
 }

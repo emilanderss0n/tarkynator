@@ -1,6 +1,6 @@
 // Search optimization utilities for better performance
 
-export class SearchOptimizer {
+class SearchOptimizer {
     constructor() {
         this.searchCache = new Map();
         this.maxCacheSize = 100;
@@ -10,21 +10,7 @@ export class SearchOptimizer {
     createSearchIndex(items) {
         const index = new Map();
 
-        items.forEach(item => {
-            const searchableText = item.name.toLowerCase();
-
-            // Create n-gram indices for better search performance
-            for (let i = 0; i < searchableText.length; i++) {
-                for (let len = 1; len <= Math.min(6, searchableText.length - i); len++) {
-                    const ngram = searchableText.substring(i, i + len);
-
-                    if (!index.has(ngram)) {
-                        index.set(ngram, new Set());
-                    }
-                    index.get(ngram).add(item);
-                }
-            }
-        });
+        items.forEach(item => addItemNgrams(index, item));
 
         return index;
     }
@@ -93,53 +79,49 @@ export class SearchOptimizer {
     createCategoryFilter(items) {
         const categoryMap = new Map();
 
-        items.forEach(item => {
-            item.handbookCategories.forEach(category => {
-                const categoryName = category.name;
-                if (!categoryMap.has(categoryName)) {
-                    categoryMap.set(categoryName, []);
-                }
-                categoryMap.get(categoryName).push(item);
-            });
-        });
+        items.forEach(item => addItemCategories(categoryMap, item));
 
         return categoryMap;
     }
 
     // Extend existing search index with new items (for chunked processing)
     extendSearchIndex(existingIndex, newItems) {
-        newItems.forEach(item => {
-            const searchableText = item.name.toLowerCase();
-
-            for (let i = 0; i < searchableText.length; i++) {
-                for (let len = 1; len <= Math.min(6, searchableText.length - i); len++) {
-                    const ngram = searchableText.substring(i, i + len);
-
-                    if (!existingIndex.has(ngram)) {
-                        existingIndex.set(ngram, new Set());
-                    }
-                    existingIndex.get(ngram).add(item);
-                }
-            }
-        });
+        newItems.forEach(item => addItemNgrams(existingIndex, item));
 
         return existingIndex;
     }
 
     // Extend existing category filter with new items (for chunked processing)
     extendCategoryFilter(existingCategoryMap, newItems) {
-        newItems.forEach(item => {
-            item.handbookCategories.forEach(category => {
-                const categoryName = category.name;
-                if (!existingCategoryMap.has(categoryName)) {
-                    existingCategoryMap.set(categoryName, []);
-                }
-                existingCategoryMap.get(categoryName).push(item);
-            });
-        });
+        newItems.forEach(item => addItemCategories(existingCategoryMap, item));
 
         return existingCategoryMap;
     }
+}
+
+function addItemNgrams(index, item) {
+    const searchableText = item.name.toLowerCase();
+
+    for (let i = 0; i < searchableText.length; i++) {
+        for (let len = 1; len <= Math.min(6, searchableText.length - i); len++) {
+            const ngram = searchableText.substring(i, i + len);
+
+            if (!index.has(ngram)) {
+                index.set(ngram, new Set());
+            }
+            index.get(ngram).add(item);
+        }
+    }
+}
+
+function addItemCategories(categoryMap, item) {
+    item.handbookCategories.forEach(category => {
+        const categoryName = category.name;
+        if (!categoryMap.has(categoryName)) {
+            categoryMap.set(categoryName, []);
+        }
+        categoryMap.get(categoryName).push(item);
+    });
 }
 
 // Create a singleton instance

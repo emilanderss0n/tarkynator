@@ -1,124 +1,29 @@
 // ItemSearcher - Handles item search functionality
 import { searchOptimizer } from "../core/searchOptimizer.js";
 import { navigationManager } from "../core/navigationManager.js";
+import { createItemListElement } from "./itemElementFactory.js";
 
 export class ItemSearcher {
     constructor(context) {
         this.context = context;
         this.elements = context.elements;
-    }
+        this.performSearch = async (query) => {
+            await performSearch(this, query);
+        };
+        this.clearResults = () => {
+            clearResults(this);
+        };
+        this.storeRecentSearch = (itemElement) => {
+            storeRecentSearch(this, itemElement);
+        };
+        this.showRecentSearches = () => {
+            showRecentSearches(this);
+        };
+        this.hideRecentSearches = () => {
+            hideRecentSearches(this);
+        };
 
-    init() {
         this.setupRecentSearches();
-    }
-
-    // Perform item search
-    async performSearch(query) {
-        const isId = /^[0-9a-fA-F]{24}$/.test(query);
-        
-        if (this.elements.spinner) {
-            this.elements.spinner.style.display = "inline-block";
-        }
-
-        try {
-            // Ensure data is loaded before searching
-            await this.context.ensureDataLoaded();
-            
-            if (this.elements.spinner) {
-                this.elements.spinner.style.display = "none";
-            }
-
-            // Perform fast search
-            const filteredItems = this.fastItemSearch(query);
-
-            if (filteredItems.length > 0) {
-                this.updateSearchResults(filteredItems);
-            } else {
-                this.displayNoResults("No results found");
-            }
-        } catch (error) {
-            console.error("Error loading local items:", error);
-            if (this.elements.spinner) {
-                this.elements.spinner.style.display = "none";
-            }
-            this.displayNoResults("Error loading local items");
-        }
-    }
-
-    // Perform fast item search using search index
-    fastItemSearch(query) {
-        const itemsArrayCache = this.context.itemsArrayCache();
-        const searchIndex = this.context.searchIndex();
-        
-        if (!itemsArrayCache || !searchIndex) return [];
-        return searchOptimizer.fastSearch(query, searchIndex, itemsArrayCache);
-    }
-
-    // Update search results display
-    updateSearchResults(items) {
-        if (!this.elements.searchResults) return;
-
-        this.elements.searchResults.innerHTML = "";
-        
-        if (this.elements.searchResultsCont) {
-            this.elements.searchResultsCont.style.display = "inline-block";
-        }
-
-        if (items.length > 0) {
-            items.forEach((item, index) => this.createSearchResultItem(item, index));
-        } else {
-            this.displayNoResults("No matching results found");
-        }
-    }
-
-    createSearchResultItem(item, index) {
-        const listItem = document.createElement("li");
-        listItem.className = "list-group-item";
-        
-        const iconLink = item.iconLink.replace(
-            /^.*\/data\/icons\//,
-            "data/icons/"
-        );
-
-        listItem.innerHTML = `
-            <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
-            ${item.name}
-        `;
-
-        const handbookCategoriesNames = item.handbookCategories
-            .map((category) => category.name)
-            .join(", ");
-
-        const taskIds = item.usedInTasks
-            ? item.usedInTasks.map((task) => task.id).join(",")
-            : "";
-
-        Object.assign(listItem.dataset, {
-            itemId: item.id,
-            itemTypes: handbookCategoriesNames,
-            usedInTasks: taskIds,
-        });
-
-        this.elements.searchResults.appendChild(listItem);
-
-        // Animate item appearance
-        setTimeout(() => {
-            listItem.classList.add("show");
-        }, 100 * index);
-    }
-
-    displayNoResults(message) {
-        if (!this.elements.searchResults) return;
-        this.elements.searchResults.innerHTML = `<li class="list-group-item">${message}</li>`;
-    }
-
-    clearResults() {
-        if (this.elements.searchResults) {
-            this.elements.searchResults.innerHTML = "";
-        }
-        if (this.elements.searchResultsCont) {
-            this.elements.searchResultsCont.style.display = "none";
-        }
     }
 
     setupRecentSearches() {
@@ -137,37 +42,6 @@ export class ItemSearcher {
                 attributeFilter: ["style"],
             });
         }
-    }
-
-    storeRecentSearch(itemElement) {
-        const recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
-        
-        const itemData = {
-            id: itemElement.dataset.itemId,
-            name: itemElement.textContent,
-            iconLink: itemElement.querySelector("img").src,
-            itemTypes: itemElement.dataset.itemTypes,
-            usedInTasks: itemElement.dataset.usedInTasks,
-        };
-
-        // Remove existing entry if present
-        const existingIndex = recentSearches.findIndex(
-            (item) => item.id === itemData.id
-        );
-        if (existingIndex !== -1) {
-            recentSearches.splice(existingIndex, 1);
-        }
-
-        // Add to beginning
-        recentSearches.unshift(itemData);
-
-        // Limit to 8 items
-        if (recentSearches.length > 8) {
-            recentSearches.pop();
-        }
-
-        localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
-        this.updateRecentSearches();
     }
 
     updateRecentSearches() {
@@ -210,15 +84,122 @@ export class ItemSearcher {
         this.elements.recentSearchesElement.style.display = isVisible ? "grid" : "none";
     }
 
-    showRecentSearches() {
-        this.toggleRecentSearchesVisibility(true);
+}
+
+async function performSearch(instance, query) {
+    if (instance.elements.spinner) {
+        instance.elements.spinner.style.display = "inline-block";
     }
 
-    hideRecentSearches() {
-        this.toggleRecentSearchesVisibility(false);
+    try {
+        // Ensure data is loaded before searching
+        await instance.context.ensureDataLoaded();
+
+        if (instance.elements.spinner) {
+            instance.elements.spinner.style.display = "none";
+        }
+
+        // Perform fast search
+        const filteredItems = fastItemSearch(instance, query);
+
+        if (filteredItems.length > 0) {
+            updateSearchResults(instance, filteredItems);
+        } else {
+            displayNoResults(instance, "No results found");
+        }
+    } catch (error) {
+        console.error("Error loading local items:", error);
+        if (instance.elements.spinner) {
+            instance.elements.spinner.style.display = "none";
+        }
+        displayNoResults(instance, "Error loading local items");
+    }
+}
+
+function fastItemSearch(instance, query) {
+    const itemsArrayCache = instance.context.itemsArrayCache();
+    const searchIndex = instance.context.searchIndex();
+
+    if (!itemsArrayCache || !searchIndex) return [];
+    return searchOptimizer.fastSearch(query, searchIndex, itemsArrayCache);
+}
+
+function updateSearchResults(instance, items) {
+    if (!instance.elements.searchResults) return;
+
+    instance.elements.searchResults.innerHTML = "";
+
+    if (instance.elements.searchResultsCont) {
+        instance.elements.searchResultsCont.style.display = "inline-block";
     }
 
-    destroy() {
-        // Clean up any resources if needed
+    if (items.length > 0) {
+        items.forEach((item, index) => createSearchResultItem(instance, item, index));
+    } else {
+        displayNoResults(instance, "No matching results found");
     }
+}
+
+function createSearchResultItem(instance, item, index) {
+    const listItem = createItemListElement(item);
+
+    instance.elements.searchResults.appendChild(listItem);
+
+    // Animate item appearance
+    setTimeout(() => {
+        listItem.classList.add("show");
+    }, 100 * index);
+}
+
+function displayNoResults(instance, message) {
+    if (!instance.elements.searchResults) return;
+    instance.elements.searchResults.innerHTML = `<li class="list-group-item">${message}</li>`;
+}
+
+function clearResults(instance) {
+    if (instance.elements.searchResults) {
+        instance.elements.searchResults.innerHTML = "";
+    }
+    if (instance.elements.searchResultsCont) {
+        instance.elements.searchResultsCont.style.display = "none";
+    }
+}
+
+function storeRecentSearch(instance, itemElement) {
+    const recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
+
+    const itemData = {
+        id: itemElement.dataset.itemId,
+        name: itemElement.textContent,
+        iconLink: itemElement.querySelector("img").src,
+        itemTypes: itemElement.dataset.itemTypes,
+        usedInTasks: itemElement.dataset.usedInTasks,
+    };
+
+    // Remove existing entry if present
+    const existingIndex = recentSearches.findIndex(
+        (item) => item.id === itemData.id
+    );
+    if (existingIndex !== -1) {
+        recentSearches.splice(existingIndex, 1);
+    }
+
+    // Add to beginning
+    recentSearches.unshift(itemData);
+
+    // Limit to 8 items
+    if (recentSearches.length > 8) {
+        recentSearches.pop();
+    }
+
+    localStorage.setItem("recentSearches", JSON.stringify(recentSearches));
+    instance.updateRecentSearches();
+}
+
+function showRecentSearches(instance) {
+    instance.toggleRecentSearchesVisibility(true);
+}
+
+function hideRecentSearches(instance) {
+    instance.toggleRecentSearchesVisibility(false);
 }
