@@ -1,5 +1,5 @@
 import { fetchData } from '../core/cache.js';
-import { DATA_URL, GLOBALS } from '../core/localData.js';
+import { DATA_URL, GLOBALS, QUESTS_URL } from '../core/localData.js';
 import { slideToggle } from '../core/utils.js';
 import { Popover } from '../components/popover.js';
 import AssortsCreator from '../features/assortsCreator.js';
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentAssortType = 'all';
     let tarkovData = null;
     let globalsData = null;
+    let localQuestNamesById = null;
     let currentAssort = null;
     let assortPopover = null;
     let assortsCreator = null;
@@ -73,6 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!globalsData) {
             globalsData = await fetchData(GLOBALS);
         }
+        if (!localQuestNamesById) {
+            localQuestNamesById = {};
+            try {
+                const questsData = await fetchData(QUESTS_URL);
+                if (questsData && typeof questsData === 'object') {
+                    Object.entries(questsData).forEach(([questId, quest]) => {
+                        localQuestNamesById[questId] = quest?.QuestName || quest?.name || questId;
+                    });
+                }
+            } catch (error) {
+                console.warn('Failed to load local quest names for assort tooltips:', error);
+            }
+        }
     }
 
     // Load the correct assort.json for the active trader
@@ -85,6 +99,54 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         }
     }
+
+    async function loadTraderQuestAssort(traderId) {
+        const path = `data/traders/${traderId}/questassort.json`;
+        try {
+            return await fetchData(path);
+        } catch (e) {
+            console.warn(`Failed to load quest assort for trader ${traderId}:`, e);
+            return null;
+        }
+    }
+
+    const getQuestNameById = (questId) => {
+        return localQuestNamesById?.[questId] || questId;
+    };
+
+    const buildQuestUnlockMap = (questAssortData) => {
+        const unlockMap = {};
+        if (!questAssortData || typeof questAssortData !== 'object') {
+            return unlockMap;
+        }
+
+        const successMap = questAssortData.success;
+        if (!successMap || typeof successMap !== 'object') {
+            return unlockMap;
+        }
+
+        Object.entries(successMap).forEach(([assortId, questId]) => {
+            if (!questId) {
+                return;
+            }
+
+            unlockMap[assortId] = {
+                questId,
+                questName: getQuestNameById(questId)
+            };
+        });
+
+        return unlockMap;
+    };
+
+    const escapeHtmlAttr = (value) => {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    };
 
     // Helper function to get preset information if the item is a preset
     const getPresetInfo = (assortId, assortItems) => {
@@ -455,6 +517,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             await ensureTarkovDataLoaded();
             currentAssort = await loadTraderAssort(traderId);
+            const questAssortData = await loadTraderQuestAssort(traderId);
+            const questUnlockMap = buildQuestUnlockMap(questAssortData);
             
             if (!currentAssort?.items) {
                 assortContent.innerHTML = '<div class="alert alert-secondary">No trader data found</div>';
@@ -516,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 level,
                 buyLimit: item.upd?.BuyRestrictionMax,
                 requiredItems,
-                taskUnlock: null,
+                taskUnlock: questUnlockMap[item._id] || null,
                 isPreset: !!presetInfo,
                 presetInfo: presetInfo
             };
@@ -560,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 buyLimit: item.upd?.BuyRestrictionMax,
                 price: scheme.count || 1,
                 currency: CURRENCY_MAP[scheme._tpl] || '',
-                taskUnlock: null,
+                taskUnlock: questUnlockMap[item._id] || null,
                 isPreset: !!presetInfo,
                 presetInfo: presetInfo
             };
@@ -605,10 +669,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Determine loyalty level for display (use level or minTraderLevel)
             const loyaltyLevel = item.level || item.minTraderLevel;
+            const questLockTag = item.taskUnlock
+                ? `<span class="tag quest-lock-tag" data-tooltip="${escapeHtmlAttr(item.taskUnlock.questName)}" aria-label="Quest locked"><i class="bi bi-lock-fill"></i></span>`
+                : '';
             
             html += `<div class="card ${cardClass}" data-category="${categoryForFilter}" data-loyalty="${loyaltyLevel}" data-assort-width="${cardWidth}" data-assort-id="${item.id}" data-tpl="${item.tpl}" style="width: ${cardWidth}px; min-height: ${cardHeight}px; --expanded-width: ${expandedWidth}px;">`;
             html += '<div class="card-body">';
-            html += `<div class="assort-image clickable" style="cursor: pointer;">${getItemIcon(item.iconLink, item.name, item.isPreset)}`;
+            html += `<div class="assort-image clickable" style="cursor: pointer;">${getItemIcon(item.iconLink, item.name, item.isPreset)}${questLockTag}`;
             html += '</div></div></div>';
         });
         html += '</div><div id="assortInfo" class="assort-info-empty"><div class="assort-info-placeholder">Select an item to view details.</div></div>';
@@ -630,6 +697,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Render info in #assortInfo
                     const assortInfoDiv = document.getElementById('assortInfo');
                     if (assortInfoDiv) {
+                        const questLockTagInfo = item.taskUnlock
+                            ? `<span class="tag quest-lock-tag-info" data-tooltip="${escapeHtmlAttr(item.taskUnlock.questName)}">Quest Locked</span>`
+                            : '';
                         let infoHtml = `<div class="info-header"><h3>${formatItemName(item.name, item.isPreset, item.level || item.minTraderLevel, true)}</h3></div>`;
                         
                         // Use data/images for main item image in assortInfo (convert -icon.webp to -512.webp)
@@ -666,7 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
                         // Add View JSON button
-                        infoHtml += `</div><div class="info-footer"><div class="assort-actions"><button class="btn btn-sm view-json-btn" data-assort-id="${item.id}">View JSON</button></div></div>`;
+                        infoHtml += `</div><div class="info-footer"><div class="assort-actions"><button class="btn btn-sm view-json-btn" data-assort-id="${item.id}">View JSON</button>${questLockTagInfo}</div></div>`;
                         assortInfoDiv.innerHTML = infoHtml;
                         // Wire up the button
                         const jsonBtn = assortInfoDiv.querySelector('.view-json-btn');
