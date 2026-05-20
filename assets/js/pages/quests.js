@@ -24,6 +24,19 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentSearchTerm = "";
     let listScrollPositionBeforeJsonOpen = null;
     let shouldRestoreListScrollOnNextRender = false;
+    const legacyQuestMapAliases = {
+        Labs: "The Lab",
+    };
+
+    function normalizeQuestMapFilter(mapName) {
+        return legacyQuestMapAliases[mapName] || mapName;
+    }
+
+    function hasMapOption(mapName) {
+        return Array.from(selectMap.options).some(
+            (option) => option.value === mapName
+        );
+    }
 
     navigationManager.init();
 
@@ -97,7 +110,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setActiveQuestCategory(questState.trader, false);
 
-        selectMap.value = questState.map;
+        const normalizedMap = normalizeQuestMapFilter(questState.map);
+        selectMap.value = hasMapOption(normalizedMap) ? normalizedMap : "All";
 
         currentSearchTerm = questState.search;
         questSearch.value = questState.search;
@@ -506,7 +520,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function getQuestStateFromParams(urlParams, defaultState) {
         return {
             trader: urlParams.get("trader") || defaultState.trader,
-            map: urlParams.get("map") || defaultState.map,
+            map: normalizeQuestMapFilter(
+                urlParams.get("map") || defaultState.map
+            ),
             search: urlParams.get("search") || defaultState.search,
             questId: urlParams.get("questId") || defaultState.questId,
             view: urlParams.get("view") || defaultState.view,
@@ -561,10 +577,15 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const filterQuestsByMap = (quests, mapName) => {
-        if (mapName === "All") return quests;
-        if (mapName === "Any") return quests.filter((quest) => !quest.map);
+        const normalizedMapName = normalizeQuestMapFilter(mapName);
+
+        if (normalizedMapName === "All") return quests;
+        if (normalizedMapName === "Any") {
+            return quests.filter((quest) => !quest.map);
+        }
+
         return quests.filter(
-            (quest) => quest.map && quest.map.name === mapName
+            (quest) => quest.map && quest.map.name === normalizedMapName
         );
     };
 

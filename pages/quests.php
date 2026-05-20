@@ -25,9 +25,13 @@ include_once '../header.php';
                         <option value="Any">Multiple Maps</option>
                         <option value="Customs">Customs</option>
                         <option value="Factory">Factory</option>
+                        <option value="Night Factory">Night Factory</option>
                         <option value="Ground Zero">Ground Zero</option>
+                        <option value="Ground Zero 21+">Ground Zero 21+</option>
                         <option value="Interchange">Interchange</option>
-                        <option value="Labs">Labs</option>
+                        <option value="Lighthouse">Lighthouse</option>
+                        <option value="The Lab">Labs</option>
+                        <option value="The Labyrinth">The Labyrinth</option>
                         <option value="Reserve">Reserve</option>
                         <option value="Shoreline">Shoreline</option>
                         <option value="Streets of Tarkov">Streets of Tarkov</option>
