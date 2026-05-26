@@ -16,8 +16,11 @@ include_once '../header.php';
         </div>
         <div id="questFilters" class="animate-in container-fluid page">
             <div class="search-filter-container flex-container">                
-                <div class="search-container-quests">
-                    <input type="text" id="questSearch" placeholder="Search by name or ID..." class="form-control">
+                <div class="search-container-quests global-search">
+                    <input type="text" id="questGlobalSearch" placeholder="Global search (all traders) by name or ID..." class="form-control">
+                </div>
+                <div class="search-container-quests trader-search">
+                    <input type="text" id="questSearch" placeholder="Search selected trader quests by name or ID..." class="form-control">
                 </div>
                 <div class="filter-container flex-container">
                     <select id="selectMap" class="select-default">

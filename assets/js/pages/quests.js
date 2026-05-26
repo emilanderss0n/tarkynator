@@ -12,7 +12,10 @@ import { enhanceContainerImages } from "../core/imageManager.js";
 document.addEventListener("DOMContentLoaded", () => {
     const questsContainer = document.getElementById("questsContainer");
     const questsCategoryToggles = document.querySelectorAll(
-        "#questsContainer .btn"
+        "#traderQuests .trader-nav .btn[data-trader-id]:not([data-trader-id='all-quests'])"
+    );
+    const allQuestsTraderBtn = document.querySelector(
+        "#traderQuests .trader-nav .btn[data-trader-id='all-quests']"
     );
     const questsContent = document.getElementById("questsContent");
     const jsonQuests = document.querySelectorAll(".json-quests");
@@ -21,9 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectMap = document.getElementById("selectMap");
     const questNameSpan = document.getElementById("questName");
     const questSearch = document.getElementById("questSearch");
+    const questGlobalSearch = document.getElementById("questGlobalSearch");
     let allQuests = [];
     let localQuestsData = null;
     let currentSearchTerm = "";
+    let currentGlobalSearchTerm = "";
     let listScrollPositionBeforeJsonOpen = null;
     let shouldRestoreListScrollOnNextRender = false;
     let latestFetchToken = 0;
@@ -49,9 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
     navigationManager.init();
 
     const questDefaultState = {
+        scope: "trader",
         trader: "Prapor",
         map: "All",
         search: "",
+        globalSearch: "",
         questId: null,
         view: "list",
     };
@@ -83,9 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const url = new URL(window.location);
         const params = url.searchParams;
 
-        ["trader", "map", "search", "questId", "view"].forEach((param) => {
+        ["scope", "trader", "map", "search", "globalSearch", "questId", "view"].forEach((param) => {
             params.delete(param);
         });
+
+        if (questState.scope !== questDefaultState.scope) {
+            params.set("scope", questState.scope);
+        }
 
         if (questState.trader !== questDefaultState.trader) {
             params.set("trader", questState.trader);
@@ -95,6 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (questState.search !== questDefaultState.search) {
             params.set("search", questState.search);
+        }
+        if (questState.globalSearch !== questDefaultState.globalSearch) {
+            params.set("globalSearch", questState.globalSearch);
         }
         if (questState.questId) {
             params.set("questId", questState.questId);
@@ -115,22 +129,28 @@ document.addEventListener("DOMContentLoaded", () => {
         applyQuestState(currentQuestState);
     };
     const applyQuestState = (questState) => {
+        setQuestScope(questState.scope, false);
 
-        setActiveQuestCategory(questState.trader, false);
+        if (questState.scope === "trader") {
+            setActiveQuestCategory(questState.trader, false);
+        }
 
         const normalizedMap = normalizeQuestMapFilter(questState.map);
         selectMap.value = hasMapOption(normalizedMap) ? normalizedMap : "All";
 
         currentSearchTerm = questState.search;
         questSearch.value = questState.search;
+        currentGlobalSearchTerm = questState.globalSearch;
+        if (questGlobalSearch) {
+            questGlobalSearch.value = questState.globalSearch;
+        }
 
         if (questState.view === "json" && questState.questId) {
             showQuestJSON(questState.questId);
         } else {
             showQuestsList();
             if (allQuests.length > 0) {
-                const filteredQuests = filterQuests();
-                renderQuests(filteredQuests);
+                processQuestData();
             } else {
                 setTimeout(() => fetchQuestsData(), 0);
             }
@@ -140,6 +160,33 @@ document.addEventListener("DOMContentLoaded", () => {
         currentQuestState = { ...currentQuestState, ...newState };
         updateQuestURL(currentQuestState);
         applyQuestState(currentQuestState);
+    };
+
+    const setQuestScope = (scope, updateState = true) => {
+        const normalizedScope = scope === "global" ? "global" : "trader";
+
+        if (questFilters) {
+            questFilters.dataset.scope = normalizedScope;
+        }
+
+        if (allQuestsTraderBtn) {
+            allQuestsTraderBtn.classList.toggle(
+                "active",
+                normalizedScope === "global"
+            );
+        }
+
+        if (normalizedScope === "global") {
+            questsCategoryToggles.forEach((button) =>
+                button.classList.remove("active")
+            );
+        } else if (allQuestsTraderBtn) {
+            allQuestsTraderBtn.classList.remove("active");
+        }
+
+        if (updateState) {
+            updateQuestState({ scope: normalizedScope });
+        }
     };
 
     const showQuestsList = () => {
@@ -177,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const getActiveQuestCategory = () => {
         const activeQuestCategory = document.querySelector(
-            "#questsContainer .btn-group .btn.active"
+            "#traderQuests .trader-nav .btn.active[data-trader-id]:not([data-trader-id='all-quests'])"
         );
         return activeQuestCategory
             ? activeQuestCategory.textContent.trim()
@@ -185,13 +232,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const updateMapOptions = (availableMaps) => {
+        const normalizedAvailableMaps = new Set(
+            availableMaps.map((mapName) => normalizeQuestMapFilter(mapName))
+        );
+
         const options = selectMap.options;
         for (let i = 0; i < options.length; i++) {
             const option = options[i];
             if (option.value === "All" || option.value === "Any") {
                 option.disabled = false;
             } else {
-                option.disabled = !availableMaps.includes(option.value);
+                option.disabled = !normalizedAvailableMaps.has(
+                    normalizeQuestMapFilter(option.value)
+                );
             }
         }
     };
@@ -199,12 +252,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const activeCategory = getActiveQuestCategory();
         const selectedMap = selectMap.value;
         const searchTerm = currentSearchTerm.toLowerCase().trim();
+        const globalSearchTerm = currentGlobalSearchTerm.toLowerCase().trim();
+        const isGlobalScope = currentQuestState.scope === "global";
 
         // Chain filters for better performance
         let filteredQuests = allQuests;
 
-        // Filter by trader
-        if (activeCategory) {
+        // Filter by trader unless global scope is active
+        if (activeCategory && !isGlobalScope) {
             filteredQuests = filterQuestsByTrader(
                 filteredQuests,
                 activeCategory
@@ -214,8 +269,19 @@ document.addEventListener("DOMContentLoaded", () => {
         // Filter by map
         filteredQuests = filterQuestsByMap(filteredQuests, selectedMap);
 
-        // Filter by search term
-        filteredQuests = filterQuestsBySearch(filteredQuests, searchTerm);
+        // Global search: name/ID only, across all traders
+        if (isGlobalScope && globalSearchTerm) {
+            filteredQuests = filterQuestsBySearch(
+                filteredQuests,
+                globalSearchTerm,
+                false
+            );
+        }
+
+        // Trader-scoped search: keep objective text matching
+        if (!isGlobalScope) {
+            filteredQuests = filterQuestsBySearch(filteredQuests, searchTerm, true);
+        }
 
         // Sort the filtered quests by name
         filteredQuests = filteredQuests.sort((a, b) =>
@@ -253,7 +319,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const searchTerm = currentSearchTerm.toLowerCase().trim();
+        const searchTerm =
+            currentQuestState.scope === "global"
+                ? currentGlobalSearchTerm.toLowerCase().trim()
+                : currentSearchTerm.toLowerCase().trim();
         const questsHTML = quests
             .map(
                 (quest) => {
@@ -379,7 +448,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const processQuestData = () => {
         const activeCategory = getActiveQuestCategory();
         const availableMaps = new Set();
+        const isGlobalScope = currentQuestState.scope === "global";
         allQuests.forEach((quest) => {
+            if (isGlobalScope) {
+                if (quest.map && quest.map.name) {
+                    availableMaps.add(quest.map.name);
+                }
+                return;
+            }
+
             if (
                 quest.trader &&
                 quest.trader.name === activeCategory &&
@@ -409,9 +486,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (updateState) {
                 updateQuestState({
+                    scope: "trader",
                     trader: questCategoryName,
                     map: "All",
                     search: "",
+                    globalSearch: currentGlobalSearchTerm,
                 });
                 // Reset filters when changing trader
                 selectMap.value = "All";
@@ -429,10 +508,30 @@ document.addEventListener("DOMContentLoaded", () => {
             debounce((event) => {
                 event.preventDefault();
                 const traderName = questCategory.textContent.trim();
+
+                // Any explicit trader selection should switch scope back to trader mode.
+                setQuestScope("trader", false);
                 setActiveQuestCategory(traderName, true);
             }, 100)
         );
     });
+    if (allQuestsTraderBtn) {
+        allQuestsTraderBtn.addEventListener(
+            "click",
+            debounce((event) => {
+                event.preventDefault();
+                currentSearchTerm = "";
+                questSearch.value = "";
+                setQuestScope("global", false);
+                updateQuestState({
+                    scope: "global",
+                    search: "",
+                    view: "list",
+                    questId: null,
+                });
+            }, 100)
+        );
+    }
     selectMap.addEventListener("change", () => {
         updateQuestState({ map: selectMap.value });
         const filteredQuests = filterQuests();
@@ -448,6 +547,18 @@ document.addEventListener("DOMContentLoaded", () => {
             renderQuests(filteredQuests);
         }, 300)
     );
+    if (questGlobalSearch) {
+        questGlobalSearch.addEventListener(
+            "input",
+            debounce(() => {
+                const searchValue = questGlobalSearch.value;
+                currentGlobalSearchTerm = searchValue;
+                updateQuestState({ globalSearch: searchValue });
+                const filteredQuests = filterQuests();
+                renderQuests(filteredQuests);
+            }, 300)
+        );
+    }
     questsContent.addEventListener("click", (event) => {
         const questItem = event.target.closest(".quest-item");
         if (questItem) {
@@ -548,11 +659,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getQuestStateFromParams(urlParams, defaultState) {
         return {
+            scope: urlParams.get("scope") || defaultState.scope,
             trader: urlParams.get("trader") || defaultState.trader,
             map: normalizeQuestMapFilter(
                 urlParams.get("map") || defaultState.map
             ),
             search: urlParams.get("search") || defaultState.search,
+            globalSearch:
+                urlParams.get("globalSearch") || defaultState.globalSearch,
             questId: urlParams.get("questId") || defaultState.questId,
             view: urlParams.get("view") || defaultState.view,
         };
@@ -561,12 +675,22 @@ document.addEventListener("DOMContentLoaded", () => {
         if ((event.ctrlKey || event.metaKey) && event.key === "f") {
             // Ctrl+F or Cmd+F (Mac) - Focus on search field
             event.preventDefault();
-            questSearch.focus();
+            if (currentQuestState.scope === "global" && questGlobalSearch) {
+                questGlobalSearch.focus();
+            } else {
+                questSearch.focus();
+            }
         } else if (event.key === "Escape") {
             if (document.activeElement === questSearch) {
                 questSearch.value = "";
                 currentSearchTerm = "";
                 updateQuestState({ search: "" });
+                const filteredQuests = filterQuests();
+                renderQuests(filteredQuests);
+            } else if (questGlobalSearch && document.activeElement === questGlobalSearch) {
+                questGlobalSearch.value = "";
+                currentGlobalSearchTerm = "";
+                updateQuestState({ globalSearch: "" });
                 const filteredQuests = filterQuests();
                 renderQuests(filteredQuests);
             } else if (currentQuestState.view === "json") {
@@ -590,6 +714,11 @@ document.addEventListener("DOMContentLoaded", () => {
     questSearch.addEventListener("focus", () => {
         questSearch.select();
     });
+    if (questGlobalSearch) {
+        questGlobalSearch.addEventListener("focus", () => {
+            questGlobalSearch.select();
+        });
+    }
 
     window.addEventListener("popstate", (event) => {
         if (event.state) {
@@ -618,14 +747,14 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     };
 
-    const filterQuestsBySearch = (quests, searchTerm) => {
+    const filterQuestsBySearch = (quests, searchTerm, includeObjectives = true) => {
         if (!searchTerm) return quests;
         const term = searchTerm.toLowerCase();
         return quests.filter(
             (quest) =>
                 quest.name.toLowerCase().includes(term) ||
                 quest.id.toLowerCase().includes(term) ||
-                (quest.objectives &&
+                (includeObjectives && quest.objectives &&
                     quest.objectives.some((obj) =>
                         obj.description.toLowerCase().includes(term)
                     ))

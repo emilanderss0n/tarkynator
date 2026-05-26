@@ -163,6 +163,12 @@ function generate_trader_nav($active_trader_id = TRADER_PRAPOR, $activePage = ''
         $active_class = ($trader_id === $active_trader_id) ? ' active' : '';
         $nav_html .= '<a class="btn sm' . $active_class . '" href="javascript:void(0);" data-trader-id="' . $trader_id . '"><img class="trader-img" src="'. $data['image'] .'" alt="' . $data['name'] . '" /><span class="trader-name">' . $data['name'] . '</span></a>' . "\n";
     }
+
+    if ($activePage === 'quests') {
+        $all_quests_active_class = ($active_trader_id === 'all-quests') ? ' active' : '';
+        $nav_html .= '<a class="btn sm all-quests-btn' . $all_quests_active_class . '" href="javascript:void(0);" data-trader-id="all-quests"><img class="trader-img" src="assets/img/avatar/unknown.png" alt="All Quests" /><span class="trader-name">All Quests</span></a>' . "\n";
+    }
+
     $nav_html .= '</nav>';
     return $nav_html;
 }

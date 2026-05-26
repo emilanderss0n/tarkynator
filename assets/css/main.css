@@ -3347,11 +3347,30 @@ ul.inner-list {
 }
 
 .search-container-quests {
-    width: 100%;
+    width: auto;
+    flex: 1;
+    min-width: 240px;
+}
+
+.search-container-quests.global-search {
+    min-width: 280px;
 }
 
 .search-filter-container:has(.search-container-quests) {
     gap: 2rem;
+    align-items: stretch;
+}
+
+#questFilters[data-scope="trader"] .global-search {
+    display: none;
+}
+
+#questFilters[data-scope="global"] .trader-search {
+    display: none;
+}
+
+#questFilters .search-filter-container .filter-container {
+    flex-shrink: 0;
 }
 
 @media screen and (max-width: 760px) {
