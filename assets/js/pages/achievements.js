@@ -18,6 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const achievementsContainer = document.getElementById("achievementsContainer");
     const achievementsContent = document.getElementById("achievementsContent");
     const achievementTitleSpan = document.getElementById("achievementTitle");
+    const achievementsTransitionOptions = {
+        skipIfBusy: true,
+        scopeElement: achievementsContent,
+        transitionName: "achievements-content",
+    };
 
     // Add search and filter UI elements
     const createSearchAndFilterUI = () => {
@@ -114,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
             achievementPopover.setContent(editorContent);
 
             // Initialize CodeMirror editor
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 const editorElement = document.getElementById(editorId);
                 if (editorElement) {
                     if (typeof CodeMirror !== 'undefined') {
@@ -146,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     console.error(`Editor element with ID ${editorId} not found`);
                 }
-            }, 100);
+            });
         } else {
             achievementPopover.showError('Failed to load achievement template data');
         }
@@ -254,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     withViewTransition(() => {
                         achievementsContent.innerHTML = "No achievements data found.";
-                    }, { skipIfBusy: true });
+                    }, achievementsTransitionOptions);
                 }
             })
             .catch((error) => {
@@ -262,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (requestToken === latestAchievementsRequestToken) {
                     withViewTransition(() => {
                         achievementsContent.innerHTML = "Error fetching achievements data.";
-                    }, { skipIfBusy: true });
+                    }, achievementsTransitionOptions);
                 }
             })
             .finally(() => {
@@ -332,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (achievements.length === 0) {
             withViewTransition(() => {
                 achievementsContent.innerHTML = '<div class="no-results">No achievements match your search criteria</div>';
-            }, { skipIfBusy: true });
+            }, achievementsTransitionOptions);
             return;
         }
 
@@ -363,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
             enhanceContainerImages(achievementsContent, {
                 fallbackSrc: "assets/img/icon_quest.png",
             });
-        }, { skipIfBusy: true });
+        }, achievementsTransitionOptions);
         
         // Re-attach click handlers after rendering
         attachAchievementClickHandlers();

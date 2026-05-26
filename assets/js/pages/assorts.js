@@ -3,7 +3,6 @@ import { DATA_URL, GLOBALS, QUESTS_URL } from '../core/localData.js';
 import { slideToggle, debounce } from '../core/utils.js';
 import { Popover } from '../components/popover.js';
 import AssortsCreator from '../features/assortsCreator.js';
-import { withViewTransition } from '../core/viewTransitionManager.js';
 import { enhanceContainerImages } from '../core/imageManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -390,9 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Error handling wrapper
     const handleError = (error, context) => {
         console.error(`Error in ${context}:`, error);
-        withViewTransition(() => {
-            assortContent.innerHTML = `<div class="alert alert-danger">Error: ${error.message || 'Unknown error'}</div>`;
-        }, { skipIfBusy: true });
+        assortContent.innerHTML = `<div class="alert alert-danger">Error: ${error.message || 'Unknown error'}</div>`;
     };
 
     // Initialize assort popover
@@ -455,29 +452,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 assortPopover.setContent(editorContent);
 
-                // Initialize CodeMirror editor (if available)
-                if (typeof CodeMirror !== 'undefined') {
-                    const editor = CodeMirror(document.getElementById(editorId), {
-                        value: JSON.stringify(assortData, null, 2),
-                        mode: 'application/json',
-                        theme: 'mbo',
-                        lineNumbers: true,
-                        closeBrackets: true,
-                        autoCloseBrackets: true,
-                        foldCode: true,
-                        readOnly: true,
-                        foldGutter: true,
-                        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
-                    });
+                requestAnimationFrame(() => {
+                    // Initialize CodeMirror editor (if available)
+                    if (typeof CodeMirror !== 'undefined') {
+                        const editorElement = document.getElementById(editorId);
+                        if (!editorElement) {
+                            assortPopover.showError('Failed to mount assort editor');
+                            return;
+                        }
 
-                    editor.setSize('100%', '70vh');
-                    
-                    // Refresh the editor after it's added to DOM
-                    setTimeout(() => editor.refresh(), 100);
-                } else {
-                    // Fallback to plain text display
-                    document.getElementById(editorId).innerHTML = `<pre><code>${JSON.stringify(assortData, null, 2)}</code></pre>`;
-                }
+                        const editor = CodeMirror(editorElement, {
+                            value: JSON.stringify(assortData, null, 2),
+                            mode: 'application/json',
+                            theme: 'mbo',
+                            lineNumbers: true,
+                            closeBrackets: true,
+                            autoCloseBrackets: true,
+                            foldCode: true,
+                            readOnly: true,
+                            foldGutter: true,
+                            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+                        });
+
+                        editor.setSize('100%', '70vh');
+                        
+                        // Refresh the editor after it's added to DOM
+                        setTimeout(() => editor.refresh(), 100);
+                    } else {
+                        // Fallback to plain text display
+                        const editorElement = document.getElementById(editorId);
+                        if (editorElement) {
+                            editorElement.innerHTML = `<pre><code>${JSON.stringify(assortData, null, 2)}</code></pre>`;
+                        } else {
+                            assortPopover.showError('Failed to mount assort template data');
+                        }
+                    }
+                });
             } else {
                 assortPopover.showError('Assort data not found');
             }
@@ -549,9 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const traderId = getActiveTraderId();
             if (!traderId) {
-                withViewTransition(() => {
-                    assortContent.innerHTML = 'Select a trader.';
-                }, { skipIfBusy: true });
+                assortContent.innerHTML = 'Select a trader.';
                 finishLoading();
                 return;
             }
@@ -567,9 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const questUnlockMap = buildQuestUnlockMap(questAssortData);
             
             if (!currentAssort?.items) {
-                withViewTransition(() => {
-                    assortContent.innerHTML = '<div class="alert alert-secondary">No trader data found</div>';
-                }, { skipIfBusy: true });
+                assortContent.innerHTML = '<div class="alert alert-secondary">No trader data found</div>';
                 finishLoading();
                 return;
             }
@@ -663,9 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
         allItems.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
         if (allItems.length === 0) {
-            withViewTransition(() => {
-                assortContent.innerHTML = '<div class="alert alert-secondary">No offers available</div>';
-            }, { skipIfBusy: true });
+            assortContent.innerHTML = '<div class="alert alert-secondary">No offers available</div>';
             finishLoading();
             return;
         }
@@ -761,12 +765,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         // Add View JSON button
                         infoHtml += `</div><div class="info-footer"><div class="assort-actions"><button class="btn btn-sm view-json-btn" data-assort-id="${item.id}">View JSON</button>${questLockTagInfo}</div></div>`;
-                        withViewTransition(() => {
-                            assortInfoDiv.innerHTML = infoHtml;
-                            enhanceContainerImages(assortInfoDiv, {
-                                fallbackSrc: 'assets/img/icon_quest.png'
-                            });
-                        }, { skipIfBusy: true });
+                        assortInfoDiv.innerHTML = infoHtml;
+                        enhanceContainerImages(assortInfoDiv, {
+                            fallbackSrc: 'assets/img/icon_quest.png'
+                        });
+
                         // Wire up the button
                         const jsonBtn = assortInfoDiv.querySelector('.view-json-btn');
                         if (jsonBtn) {

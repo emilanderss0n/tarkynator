@@ -5,6 +5,11 @@ import { enhanceContainerImages } from '../core/imageManager.js';
 document.addEventListener('DOMContentLoaded', () => {
     const commonIdContainer = document.getElementById('commonIdContainer');
     const commonIdContent = document.getElementById('commonIdContent');
+    const commonIdsTransitionOptions = {
+        skipIfBusy: true,
+        scopeElement: commonIdContent,
+        transitionName: 'commonids-content'
+    };
 
     const fetchCommonData = () => {
         commonIdContent.classList.add('content-loading');
@@ -260,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             enhanceContainerImages(commonIdContent, {
                                 fallbackSrc: 'assets/img/icon_quest.png'
                             });
-                        }, { skipIfBusy: true });
+                        }, commonIdsTransitionOptions);
 
                         createPaginationControls(data.data.bosses, currentPageBosses, 'bosses-pagination', (newPage) => {
                             currentPageBosses = newPage;
@@ -292,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error fetching common data:', error);
                 withViewTransition(() => {
                     commonIdContent.innerHTML = 'Error fetching common data.';
-                }, { skipIfBusy: true });
+                }, commonIdsTransitionOptions);
             })
             .finally(() => {
                 commonIdContent.classList.remove('content-loading');

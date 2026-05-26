@@ -151,6 +151,34 @@
     animation: theme-fade-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+::view-transition-group(achievements-content),
+::view-transition-group(quests-content),
+::view-transition-group(crafts-content),
+::view-transition-group(commonids-content),
+::view-transition-group(assort-info-content),
+::view-transition-group(popover-content) {
+    animation-duration: 0.22s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(achievements-content),
+::view-transition-old(quests-content),
+::view-transition-old(crafts-content),
+::view-transition-old(commonids-content),
+::view-transition-old(assort-info-content),
+::view-transition-old(popover-content) {
+    animation: content-fade-out 0.14s ease-out both;
+}
+
+::view-transition-new(achievements-content),
+::view-transition-new(quests-content),
+::view-transition-new(crafts-content),
+::view-transition-new(commonids-content),
+::view-transition-new(assort-info-content),
+::view-transition-new(popover-content) {
+    animation: content-fade-in 0.2s ease-out both;
+}
+
 html,
 body {
     height: 100%;
@@ -4308,6 +4336,30 @@ footer .text-end {
         opacity: 1;
         transform: scale(1);
         filter: blur(0);
+    }
+}
+
+@keyframes content-fade-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes content-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

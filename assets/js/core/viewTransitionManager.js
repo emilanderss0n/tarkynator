@@ -5,7 +5,40 @@ function supportsViewTransition() {
 }
 
 export function withViewTransition(updateFn, options = {}) {
-    const { skipIfBusy = false } = options;
+    const {
+        skipIfBusy = false,
+        scopeElement = null,
+        transitionName = "",
+    } = options;
+
+    const hasScopedTransition =
+        scopeElement instanceof Element &&
+        typeof transitionName === "string" &&
+        transitionName.trim().length > 0;
+
+    const scopedName = hasScopedTransition ? transitionName.trim() : "";
+    const previousTransitionName = hasScopedTransition
+        ? scopeElement.style.viewTransitionName
+        : "";
+
+    const applyScopedTransitionName = () => {
+        if (hasScopedTransition) {
+            scopeElement.style.viewTransitionName = scopedName;
+        }
+    };
+
+    const cleanupScopedTransitionName = () => {
+        if (!hasScopedTransition) {
+            return;
+        }
+
+        if (previousTransitionName) {
+            scopeElement.style.viewTransitionName = previousTransitionName;
+            return;
+        }
+
+        scopeElement.style.removeProperty("view-transition-name");
+    };
 
     if (typeof updateFn !== "function") {
         return Promise.resolve();
@@ -22,6 +55,8 @@ export function withViewTransition(updateFn, options = {}) {
     }
 
     try {
+        applyScopedTransitionName();
+
         const transition = document.startViewTransition(() => {
             updateFn();
         });
@@ -30,14 +65,20 @@ export function withViewTransition(updateFn, options = {}) {
             ? transition.finished.catch(() => {})
             : Promise.resolve();
 
-        activeTransition = finishedPromise.finally(() => {
-            if (activeTransition === finishedPromise) {
+        let settledPromise = null;
+        settledPromise = finishedPromise.finally(() => {
+            cleanupScopedTransitionName();
+
+            if (activeTransition === settledPromise) {
                 activeTransition = null;
             }
         });
 
-        return activeTransition;
+        activeTransition = settledPromise;
+
+        return settledPromise;
     } catch (error) {
+        cleanupScopedTransitionName();
         updateFn();
         return Promise.resolve();
     }

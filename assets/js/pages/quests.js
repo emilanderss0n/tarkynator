@@ -27,6 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let listScrollPositionBeforeJsonOpen = null;
     let shouldRestoreListScrollOnNextRender = false;
     let latestFetchToken = 0;
+    const questsTransitionOptions = {
+        skipIfBusy: true,
+        scopeElement: questsContent,
+        transitionName: "quests-content",
+    };
     const legacyQuestMapAliases = {
         Labs: "The Lab",
     };
@@ -234,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
             withViewTransition(() => {
                 questsContent.innerHTML =
                     '<div class="no-results">No quests match your search criteria</div>';
-            }, { skipIfBusy: true });
+            }, questsTransitionOptions);
 
             if (shouldRestoreListScrollOnNextRender) {
                 requestAnimationFrame(() => {
@@ -325,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
             enhanceContainerImages(questsContent, {
                 fallbackSrc: "assets/img/missing-quest.jpg",
             });
-        }, { skipIfBusy: true });
+        }, questsTransitionOptions);
 
         if (shouldRestoreListScrollOnNextRender) {
             requestAnimationFrame(() => {
@@ -355,14 +360,14 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 withViewTransition(() => {
                     questsContent.innerHTML = "No quests data found.";
-                }, { skipIfBusy: true });
+                }, questsTransitionOptions);
             }
         } catch (error) {
             console.error("Error fetching quests data:", error);
             if (fetchToken === latestFetchToken) {
                 withViewTransition(() => {
                     questsContent.innerHTML = "Error fetching quests data.";
-                }, { skipIfBusy: true });
+                }, questsTransitionOptions);
             }
         } finally {
             if (fetchToken === latestFetchToken) {

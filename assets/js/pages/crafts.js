@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const craftsContainer = document.getElementById('craftsContainer');
     const craftsCategoryToggles = document.querySelectorAll('#craftsContainer .btn');
     const craftsContent = document.getElementById('craftsContent');
+    const craftsTransitionOptions = {
+        skipIfBusy: true,
+        scopeElement: craftsContent,
+        transitionName: 'crafts-content'
+    };
     let moddedItemsData = null;
 
     const ensureModdedDataLoaded = async () => {
@@ -135,17 +140,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     enhanceContainerImages(craftsContent, {
                         fallbackSrc: 'assets/img/icon_quest.png'
                     });
-                }, { skipIfBusy: true });
+                }, craftsTransitionOptions);
             } else {
                 withViewTransition(() => {
                     craftsContent.innerHTML = 'No crafts data found.';
-                }, { skipIfBusy: true });
+                }, craftsTransitionOptions);
             }
         } catch (error) {
             console.error('Error fetching crafts data:', error);
             withViewTransition(() => {
                 craftsContent.innerHTML = 'Error fetching crafts data.';
-            }, { skipIfBusy: true });
+            }, craftsTransitionOptions);
         } finally {
             craftsContent.classList.remove('content-loading');
         }

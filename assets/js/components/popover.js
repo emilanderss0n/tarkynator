@@ -1,5 +1,3 @@
-import { withViewTransition } from "../core/viewTransitionManager.js";
-
 // Reusable Popover Component
 export class Popover {
     constructor(popoverId, options = {}) {
@@ -85,27 +83,29 @@ export class Popover {
     }
 
     setContent(content) {
-        if (!this.popover) return;
+        if (!this.popover) return Promise.resolve(false);
         
         const bodyElement = this.popover.querySelector('.preset-popover-body, .popover-body');
         if (bodyElement) {
-            withViewTransition(() => {
-                if (typeof content === 'string') {
-                    bodyElement.innerHTML = content;
-                } else if (content instanceof Element) {
-                    bodyElement.innerHTML = '';
-                    bodyElement.appendChild(content);
-                }
-            }, { skipIfBusy: true });
+            if (typeof content === 'string') {
+                bodyElement.innerHTML = content;
+            } else if (content instanceof Element) {
+                bodyElement.innerHTML = '';
+                bodyElement.appendChild(content);
+            }
+
+            return Promise.resolve(true);
         }
+
+        return Promise.resolve(false);
     }
 
     showLoading(message = 'Loading...') {
-        this.setContent(`<div class="popover-loading">${message}</div>`);
+        return this.setContent(`<div class="popover-loading">${message}</div>`);
     }
 
     showError(message = 'An error occurred') {
-        this.setContent(`<div class="popover-error">${message}</div>`);
+        return this.setContent(`<div class="popover-error">${message}</div>`);
     }
 
     // Utility method to check if popover is properly initialized
