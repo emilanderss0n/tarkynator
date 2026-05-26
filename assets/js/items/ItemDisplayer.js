@@ -382,9 +382,7 @@ export class ItemDisplayer {
                         <h4 class="popover-title">Preset Details</h4>
                         <span class="popover-close"><i class="bi bi-x-lg"></i></span>
                     </div>
-                    <div class="preset-popover-body">
-                        <div class="popover-loading">Loading...</div>
-                    </div>
+                    <div class="preset-popover-body"></div>
                 </div>
             </div>
         `;

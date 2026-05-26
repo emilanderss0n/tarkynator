@@ -376,24 +376,12 @@ export class ItemManager {
         if (this.elements.spinner) {
             this.elements.spinner.style.display = "inline-block";
         }
-        
-        // Show loading overlay if available
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.style.display = 'flex';
-        }
     }
 
     // Hide loading state
     hideLoadingState() {
         if (this.elements.spinner) {
             this.elements.spinner.style.display = "none";
-        }
-        
-        // Hide loading overlay
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.style.display = 'none';
         }
     }
 
@@ -426,7 +414,6 @@ export class ItemManager {
             handbookContainer: document.getElementById("handbookContainer"),
             browseContainer: document.getElementById("browseContainer"),
             handbookContent: document.getElementById("handbookContent"),
-            templateLoader: document.querySelector(".template-load"),
 
             // Browse elements
             browseSidebar: document.getElementById("browseSidebar"),

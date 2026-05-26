@@ -34,7 +34,7 @@
     </div>
 
 
-    <script src="<?= BASE_URL ?>/assets/js/core/themeManager.js"></script>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/core/themeManager.js"></script>
 
     <?php if ($activePage === 'template' || $activePage === 'quests' || $activePage === 'assorts' || $activePage === 'achievements' || $activePage === 'custom-trader'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/components/jsonEditorBootstrap.js"></script>
@@ -52,8 +52,8 @@
     <script type="module" src="<?= BASE_URL ?>/assets/js/pages/achievements.js"></script>
     <?php endif; ?>
     <?php if ($activePage === 'assorts'): ?>
-    <script type="module" src="<?= BASE_URL ?>/assets/js/pages/assorts.js"></script>
     <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script type="module" src="<?= BASE_URL ?>/assets/js/pages/assorts.js"></script>
     <?php endif; ?>
     <?php if ($activePage === 'quests'): ?>
     <script type="module" src="<?= BASE_URL ?>/assets/js/pages/quests.js"></script>

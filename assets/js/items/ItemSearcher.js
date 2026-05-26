@@ -2,6 +2,7 @@
 import { searchOptimizer } from "../core/searchOptimizer.js";
 import { navigationManager } from "../core/navigationManager.js";
 import { createItemListElement } from "./itemElementFactory.js";
+import { createManagedImage } from "../core/imageManager.js";
 
 export class ItemSearcher {
     constructor(context) {
@@ -54,14 +55,30 @@ export class ItemSearcher {
             const listItem = document.createElement("a");
             listItem.className = "last-search-item card-bfx";
             listItem.href = "javascript:void(0);";
-            listItem.innerHTML = `
-                <div class="card-body">
-                    <img src="${item.iconLink}" alt="${item.name.trim()}" style="width: 50px; height: 50px; margin-right: 10px;">
-                    <div class="title">
-                        <h4>${item.name.trim()}</h4>
-                    </div>
-                </div>
-            `;
+
+            const cardBody = document.createElement("div");
+            cardBody.className = "card-body";
+
+            const image = createManagedImage({
+                src: item.iconLink,
+                alt: item.name.trim(),
+                width: 50,
+                height: 50,
+                fallbackSrc: "assets/img/icon_quest.png",
+            });
+
+            image.style.marginRight = "10px";
+
+            const titleWrap = document.createElement("div");
+            titleWrap.className = "title";
+
+            const title = document.createElement("h4");
+            title.textContent = item.name.trim();
+
+            titleWrap.appendChild(title);
+            cardBody.appendChild(image);
+            cardBody.appendChild(titleWrap);
+            listItem.appendChild(cardBody);
             
             listItem.dataset.itemId = item.id;
             listItem.dataset.itemTypes = item.itemTypes;

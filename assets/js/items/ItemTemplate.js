@@ -1,6 +1,7 @@
 // ItemTemplate - Handles JSON template loading and display
 import { fetchData } from "../core/cache.js";
 import { ITEMS_URL } from "../core/localData.js";
+import { withViewTransition } from "../core/viewTransitionManager.js";
 
 export class ItemTemplate {
     constructor(context) {
@@ -16,18 +17,8 @@ async function loadTemplate(instance, itemId) {
     if (!itemId) return;
 
     try {
-        // Show loader
-        if (instance.elements.templateLoader) {
-            instance.elements.templateLoader.style.display = "block";
-        }
-
         // Fetch template data
         const data = await fetchData(ITEMS_URL, { method: "GET" });
-
-        // Hide loader
-        if (instance.elements.templateLoader) {
-            instance.elements.templateLoader.style.display = "none";
-        }
 
         if (data && typeof data === "object") {
             const itemTemplate = data[itemId];
@@ -47,11 +38,6 @@ async function loadTemplate(instance, itemId) {
     } catch (error) {
         console.warn("Could not load JSON template:", error.message);
 
-        // Hide loader
-        if (instance.elements.templateLoader) {
-            instance.elements.templateLoader.style.display = "none";
-        }
-
         displayUnavailableTemplate();
         disableTemplateNavLink(instance);
     }
@@ -59,27 +45,35 @@ async function loadTemplate(instance, itemId) {
 
 function displayTemplate(itemTemplate) {
     if (typeof editor !== "undefined" && editor) {
-        editor.setValue(JSON.stringify(itemTemplate, null, 2));
+        withViewTransition(() => {
+            editor.setValue(JSON.stringify(itemTemplate, null, 2));
+        }, { skipIfBusy: true });
     }
 }
 
 function displayNoTemplate() {
     if (typeof editor !== "undefined" && editor) {
-        editor.setValue("No JSON template found for this item.");
+        withViewTransition(() => {
+            editor.setValue("No JSON template found for this item.");
+        }, { skipIfBusy: true });
     }
 }
 
 function displayInvalidData() {
     if (typeof editor !== "undefined" && editor) {
-        editor.setValue("Invalid data format.");
+        withViewTransition(() => {
+            editor.setValue("Invalid data format.");
+        }, { skipIfBusy: true });
     }
 }
 
 function displayUnavailableTemplate() {
     if (typeof editor !== "undefined" && editor) {
-        editor.setValue(
-            "JSON template unavailable (this is normal if items.json cannot be cached)."
-        );
+        withViewTransition(() => {
+            editor.setValue(
+                "JSON template unavailable (this is normal if items.json cannot be cached)."
+            );
+        }, { skipIfBusy: true });
     }
 }
 

@@ -23,11 +23,6 @@ include_once('../header.php');
     <div id="customTraderContainer" class="item-info-item">
         <div class="body animate-in container-fluid page" id="customTraderContent">
             <div id="uploadStatus" class="alert" style="display: none;"></div>
-            <div class="text-center" id="loaderContainer" style="display: none;">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
             <div id="questsList"></div>
         </div>    
     </div>

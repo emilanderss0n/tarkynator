@@ -1,10 +1,14 @@
 import { fetchGraphQL } from '../core/graphqlClient.js';
+import { withViewTransition } from '../core/viewTransitionManager.js';
+import { enhanceContainerImages } from '../core/imageManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const commonIdContainer = document.getElementById('commonIdContainer');
     const commonIdContent = document.getElementById('commonIdContent');
 
     const fetchCommonData = () => {
+        commonIdContent.classList.add('content-loading');
+
         const query = `
             query {
                 traders {
@@ -92,13 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                     event.preventDefault();
                                     const newPage = parseInt(event.target.getAttribute('data-page'));
                                     updatePageCallback(newPage);
-                                    renderTables();
+                                    void renderTables();
                                 });
                             });
                         }
                     };
 
-                    const renderTables = () => {
+                    const renderTables = async () => {
                         if (!data || !data.data) return;
 
                         const bossesHTML = createTableRows(data.data.bosses, currentPageBosses);
@@ -109,8 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         const mapsHTML = createTableRows(data.data.maps, currentPageMaps, true);
                         const skillsHTML = createTableRows(data.data.skills, currentPageSkills);
 
-
-                        commonIdContent.innerHTML = `
+                        await withViewTransition(() => {
+                            commonIdContent.innerHTML = `
                             <div class="bosses card scroll-ani scroll-70">
                                 <div class="table-responsive">
                                     <table class="table caption-top">
@@ -253,6 +257,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         `;
 
+                            enhanceContainerImages(commonIdContent, {
+                                fallbackSrc: 'assets/img/icon_quest.png'
+                            });
+                        }, { skipIfBusy: true });
+
                         createPaginationControls(data.data.bosses, currentPageBosses, 'bosses-pagination', (newPage) => {
                             currentPageBosses = newPage;
                         });
@@ -276,12 +285,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     };
 
-                    renderTables();
+                    void renderTables();
                 }
             })
             .catch(error => {
                 console.error('Error fetching common data:', error);
-                commonIdContent.innerHTML = 'Error fetching common data.';
+                withViewTransition(() => {
+                    commonIdContent.innerHTML = 'Error fetching common data.';
+                }, { skipIfBusy: true });
+            })
+            .finally(() => {
+                commonIdContent.classList.remove('content-loading');
             });
     };
 

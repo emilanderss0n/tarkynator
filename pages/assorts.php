@@ -25,7 +25,6 @@ include_once '../header.php';
             <a class="btn sm" href="javascript:void(0);" id="createAssortBtn"><i class="bi bi-cart-plus-fill"></i> Create Assort</a>
         </div>
         <div class="body animate-in delay-2 container-fluid page" id="assortContent">
-            <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>
 

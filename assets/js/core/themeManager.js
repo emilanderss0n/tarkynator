@@ -1,6 +1,8 @@
 // Theme Management System
 // Handles theme switching and persistence with localStorage
 
+import { withViewTransition } from './viewTransitionManager.js';
+
 class ThemeManager {
     constructor() {
         this.currentTheme = 'eft'; // Default theme
@@ -80,16 +82,9 @@ class ThemeManager {
             
             // Listen for changes
             this.themeSelect.addEventListener('change', (e) => {
-
-                if (!document.startViewTransition) {
-                    this.changeTheme(e.target.value);
-                return;
-                }
-
-                document.startViewTransition(() => {
+                withViewTransition(() => {
                     this.changeTheme(e.target.value);
                 });
-
             });
         }
     }

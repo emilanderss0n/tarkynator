@@ -3,6 +3,8 @@ import { DATA_URL, GLOBALS, QUESTS_URL } from '../core/localData.js';
 import { slideToggle, debounce } from '../core/utils.js';
 import { Popover } from '../components/popover.js';
 import AssortsCreator from '../features/assortsCreator.js';
+import { withViewTransition } from '../core/viewTransitionManager.js';
+import { enhanceContainerImages } from '../core/imageManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const assortContainer = document.getElementById('assortContainer');
@@ -27,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let assortsCreator = null;
     let isotopeInstance = null;
     let allItems = []; // Add allItems to global scope
+    let latestAssortRenderToken = 0;
 
     // Constants for better performance
     const CURRENCY_TPLS = ['5449016a4bdc2d6f028b456f', '5696686a4bdc2da3298b456a', '569668774bdc2da2298b4568'];
@@ -55,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const presetClass = isPreset ? ' preset-icon' : '';
         
         // Popover logic disabled:
-        return `<img src="${iconSrc}" alt="${name}" class="item-icon${presetClass}"/>`;
+        return `<img src="${iconSrc}" alt="${name}" class="item-icon${presetClass}" loading="eager" decoding="async" data-managed="true"/>`;
     };
     
     // Utility to format currency
@@ -387,7 +390,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Error handling wrapper
     const handleError = (error, context) => {
         console.error(`Error in ${context}:`, error);
-        assortContent.innerHTML = `<div class="alert alert-danger">Error: ${error.message || 'Unknown error'}</div>`;
+        withViewTransition(() => {
+            assortContent.innerHTML = `<div class="alert alert-danger">Error: ${error.message || 'Unknown error'}</div>`;
+        }, { skipIfBusy: true });
     };
 
     // Initialize assort popover
@@ -401,9 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h4 class="popover-title">Assort Item Data</h4>
                             <span class="popover-close"><i class="bi bi-x-lg"></i></span>
                         </div>
-                        <div class="popover-body">
-                            <div class="popover-loading">Loading...</div>
-                        </div>
+                        <div class="popover-body"></div>
                     </div>
                 </div>
             `;
@@ -534,20 +537,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Main render function
     async function renderTraderAssort() {
+        const renderToken = ++latestAssortRenderToken;
+        assortContent.classList.add('content-loading');
+
+        const finishLoading = () => {
+            if (renderToken === latestAssortRenderToken) {
+                assortContent.classList.remove('content-loading');
+            }
+        };
+
         try {
             const traderId = getActiveTraderId();
             if (!traderId) {
-                assortContent.innerHTML = 'Select a trader.';
+                withViewTransition(() => {
+                    assortContent.innerHTML = 'Select a trader.';
+                }, { skipIfBusy: true });
+                finishLoading();
                 return;
             }
             
             await ensureTarkovDataLoaded();
             currentAssort = await loadTraderAssort(traderId);
             const questAssortData = await loadTraderQuestAssort(traderId);
+
+            if (renderToken !== latestAssortRenderToken) {
+                return;
+            }
+
             const questUnlockMap = buildQuestUnlockMap(questAssortData);
             
             if (!currentAssort?.items) {
-                assortContent.innerHTML = '<div class="alert alert-secondary">No trader data found</div>';
+                withViewTransition(() => {
+                    assortContent.innerHTML = '<div class="alert alert-secondary">No trader data found</div>';
+                }, { skipIfBusy: true });
+                finishLoading();
                 return;
             }
         // Map items by _id for quick lookup
@@ -640,7 +663,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
         allItems.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
         if (allItems.length === 0) {
-            assortContent.innerHTML = '<div class="alert alert-secondary">No offers available</div>';
+            withViewTransition(() => {
+                assortContent.innerHTML = '<div class="alert alert-secondary">No offers available</div>';
+            }, { skipIfBusy: true });
+            finishLoading();
             return;
         }
         let html = '<div id="grid-container" class="assorts-list"><div class="assort-items">';
@@ -735,7 +761,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         // Add View JSON button
                         infoHtml += `</div><div class="info-footer"><div class="assort-actions"><button class="btn btn-sm view-json-btn" data-assort-id="${item.id}">View JSON</button>${questLockTagInfo}</div></div>`;
-                        assortInfoDiv.innerHTML = infoHtml;
+                        withViewTransition(() => {
+                            assortInfoDiv.innerHTML = infoHtml;
+                            enhanceContainerImages(assortInfoDiv, {
+                                fallbackSrc: 'assets/img/icon_quest.png'
+                            });
+                        }, { skipIfBusy: true });
                         // Wire up the button
                         const jsonBtn = assortInfoDiv.querySelector('.view-json-btn');
                         if (jsonBtn) {
@@ -792,7 +823,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 100);
         }
+
+        finishLoading();
     } catch (error) {
+        finishLoading();
         handleError(error, 'renderTraderAssort');
     }
 }

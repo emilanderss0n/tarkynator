@@ -42,13 +42,11 @@ include_once('header.php');
 
         <div id="templateContainer" class="item-info-item animate-in">
             <div class="body" id="templateContent">
-                <div id="activityContent" class="template-load"><span class="loader"></span></div>
                 <textarea id="jsoneditor" name="jsoneditor"></textarea>
             </div>
         </div>
         <div id="handbookContainer" class="item-info-item animate-in">
             <div class="body" id="handbookContent">
-                <div id="activityContent"><span class="loader"></span></div>
             </div>
         </div>
 

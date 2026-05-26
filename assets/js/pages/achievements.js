@@ -6,6 +6,8 @@ import {
 import { Popover } from "../components/popover.js";
 import { fetchGraphQL } from "../core/graphqlClient.js";
 import { debounce, highlightSearchTerms } from "../core/utils.js";
+import { withViewTransition } from "../core/viewTransitionManager.js";
+import { enhanceContainerImages } from "../core/imageManager.js";
 
 let achievementsLocalData = []; // Store local achievements data
 let localAchievementIdSet = new Set();
@@ -48,6 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let filteredAchievements = [];
     let currentSearchTerm = "";
     let currentRarityFilter = "all";
+    let latestAchievementsRequestToken = 0;
+    let hasAchievementClickDelegation = false;
     
     // Get UI elements after creation
     const { achievementSearch, rarityFilters } = createSearchAndFilterUI();
@@ -63,9 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <h4 class="popover-title">Achievement Template</h4>
                             <span class="popover-close"><i class="bi bi-x-lg"></i></span>
                         </div>
-                        <div class="popover-body">
-                            <div class="popover-loading">Loading...</div>
-                        </div>
+                        <div class="popover-body"></div>
                     </div>
                 </div>
             `;
@@ -188,21 +190,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Attach click event listeners to achievement items
     const attachAchievementClickHandlers = () => {
-        const achievementItems = document.querySelectorAll('.achievements-item');
-        achievementItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Check if the item is disabled
-                if (item.classList.contains('disabled')) {
-                    return; // Don't do anything for disabled items
-                }
-                const achievementId = item.getAttribute('data-achievement-id');
+        if (hasAchievementClickDelegation || !achievementsContent) {
+            return;
+        }
+
+        hasAchievementClickDelegation = true;
+
+        achievementsContent.addEventListener('click', (e) => {
+            const item = e.target.closest('.achievements-item');
+            if (!item || !achievementsContent.contains(item)) {
+                return;
+            }
+
+            e.preventDefault();
+
+            if (item.classList.contains('disabled')) {
+                return;
+            }
+
+            const achievementId = item.getAttribute('data-achievement-id');
+            if (achievementId) {
                 showAchievementPopover(achievementId);
-            });
+            }
         });
     };
 
     const fetchAchievementsData = () => {
+        const requestToken = ++latestAchievementsRequestToken;
+        achievementsContent.classList.add("content-loading");
+
         const query = `
             query {
                 achievements {
@@ -218,6 +234,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         fetchGraphQL(query)
             .then((data) => {
+                if (requestToken !== latestAchievementsRequestToken) {
+                    return;
+                }
+
                 if (data && data.data && data.data.achievements) {
                     // Store the achievements data in localStorage
                     localStorage.setItem(
@@ -232,12 +252,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     filteredAchievements = filterAchievements();
                     renderAchievements(filteredAchievements);
                 } else {
-                    achievementsContent.innerHTML = "No achievements data found.";
+                    withViewTransition(() => {
+                        achievementsContent.innerHTML = "No achievements data found.";
+                    }, { skipIfBusy: true });
                 }
             })
             .catch((error) => {
                 console.error("Error fetching achievements data:", error);
-                achievementsContent.innerHTML = "Error fetching achievements data.";
+                if (requestToken === latestAchievementsRequestToken) {
+                    withViewTransition(() => {
+                        achievementsContent.innerHTML = "Error fetching achievements data.";
+                    }, { skipIfBusy: true });
+                }
+            })
+            .finally(() => {
+                if (requestToken === latestAchievementsRequestToken) {
+                    achievementsContent.classList.remove("content-loading");
+                }
             });
     };
 
@@ -299,7 +330,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Render filtered achievements
     const renderAchievements = (achievements) => {
         if (achievements.length === 0) {
-            achievementsContent.innerHTML = '<div class="no-results">No achievements match your search criteria</div>';
+            withViewTransition(() => {
+                achievementsContent.innerHTML = '<div class="no-results">No achievements match your search criteria</div>';
+            }, { skipIfBusy: true });
             return;
         }
 
@@ -325,7 +358,12 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .join("");
         
-        achievementsContent.innerHTML = achievementsHTML;
+        withViewTransition(() => {
+            achievementsContent.innerHTML = achievementsHTML;
+            enhanceContainerImages(achievementsContent, {
+                fallbackSrc: "assets/img/icon_quest.png",
+            });
+        }, { skipIfBusy: true });
         
         // Re-attach click handlers after rendering
         attachAchievementClickHandlers();
@@ -387,6 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize everything
     loadLocalAchievementsData().then(() => {
         initializeAchievementPopover(); // Initialize popover
+        attachAchievementClickHandlers(); // Setup delegated card click handling once
         setupSearchAndFilterHandlers(); // Setup search and filter event handlers
         fetchAchievementsData();
     });

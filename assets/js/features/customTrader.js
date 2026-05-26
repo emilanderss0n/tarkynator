@@ -1,9 +1,26 @@
 ﻿import { DATA_URL } from '../core/localData.js';
+import { enhanceContainerImages } from '../core/imageManager.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const uploadForm = document.getElementById('traderUploadForm');
     const uploadStatus = document.getElementById('uploadStatus'); const questsList = document.getElementById('questsList');
-    const loaderContainer = document.getElementById('loaderContainer');
+    const uploadButton = document.getElementById('uploadButton');
+    const uploadButtonDefaultHTML = uploadButton ? uploadButton.innerHTML : 'Upload';
+
+    function setUploadPending(isPending) {
+        if (!uploadButton) {
+            return;
+        }
+
+        uploadButton.disabled = isPending;
+
+        if (isPending) {
+            uploadButton.innerHTML = '<span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>Processing...';
+            return;
+        }
+
+        uploadButton.innerHTML = uploadButtonDefaultHTML;
+    }
 
     // Check if we have any saved traders and display a dropdown if we do
     loadSavedTraders();
@@ -11,8 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle form submission
     uploadForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        // Show loader
-        loaderContainer.style.display = 'block';
+        setUploadPending(true);
         questsList.innerHTML = '';
 
         // Create FormData object
@@ -25,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('traderFile', file);
         } else {
             showStatusMessage('danger', 'Please select a file to upload.');
-            loaderContainer.style.display = 'none';
+            setUploadPending(false);
             return;
         }
 
@@ -38,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Check response size before parsing
                     const responseSize = xhr.responseText.length;
                     const data = JSON.parse(xhr.responseText);
-                    loaderContainer.style.display = 'none'; if (data.success) {
+                    setUploadPending(false); if (data.success) {
                         // Store complete data with images in memory for current session
                         window.currentTraderData = {
                             uploadId: data.uploadId,
@@ -143,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         showStatusMessage('danger', data.message || 'Unknown error');
                     }
                 } catch (e) {
-                    loaderContainer.style.display = 'none';
+                    setUploadPending(false);
 
                     // Try to determine the specific issue
                     let errorMessage = 'Error processing server response.';
@@ -160,12 +176,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     showStatusMessage('danger', errorMessage);
                 }
             } else {
-                loaderContainer.style.display = 'none';
+                setUploadPending(false);
                 showStatusMessage('danger', `HTTP error ${xhr.status}: ${xhr.statusText}`);
             }
         };        // Handle network errors
         xhr.onerror = function () {
-            loaderContainer.style.display = 'none';
+            setUploadPending(false);
             showStatusMessage('danger', 'Network error occurred');
         };
 
@@ -386,14 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (trader && typeof trader === 'object' && trader.name) {
             html += `<div class="trader-info-box card">
                     <div class="trader-profile">                        <div class="trader-avatar-container">                        ${trader.avatarData ?
-                    `<div class="image-loading-container">
-                        <div class="loading-container" id="trader-avatar-loader-${trader.nickname || trader.id}">
-                            <span class="loader"></span>
-                        </div>
-                        <img src="${trader.avatarData}" class="trader-avatar" alt="${trader.name}" 
-                                onload="document.getElementById('trader-avatar-loader-${trader.nickname || trader.id}').style.display='none'; this.classList.add('loaded');"
-                                onerror="document.getElementById('trader-avatar-loader-${trader.nickname || trader.id}').style.display='none'; this.onerror=null; this.src='assets/img/missing-quest.jpg'; this.classList.add('loaded');">
-                    </div>` :
+                    `<img src="${trader.avatarData}" class="trader-avatar managed-image" alt="${trader.name}" data-fallback-src="assets/img/missing-quest.jpg">` :
                     `<div class="trader-avatar-placeholder">
                             <span>${trader.name.charAt(0).toUpperCase()}</span>
                         </div>`
@@ -515,14 +524,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="quest-header">                        
                         <div class="quest-title-section">${questData.questImageData ?
                         `<div class="quest-image-container">
-                            <div class="loading-container" id="quest-image-loader-${questData._id}">
-                                <span class="loader"></span>
-                            </div>
-                            <img src="${questData.questImageData}" alt="${questName}" class="quest-image" 
-                                      onload="document.getElementById('quest-image-loader-${questData._id}').style.display='none'; this.classList.add('loaded');"
-                                      onerror="document.getElementById('quest-image-loader-${questData._id}').style.display='none'; this.src='assets/img/icon_quest.png'; this.classList.add('loaded');">
+                            <img src="${questData.questImageData}" alt="${questName}" class="quest-image managed-image" data-fallback-src="assets/img/icon_quest.png">
                         </div>` :
-                        `<img src="assets/img/icon_quest.png" alt="${questName}" class="quest-image loaded">`}                                <div>
+                        `<img src="assets/img/icon_quest.png" alt="${questName}" class="quest-image managed-image is-loaded">`}                                <div>
                                     <h5 class="quest-name">${questName}</h5>
                                     <div class="quest-description">${questDescription}</div>
                                     <div class="quest-meta text-muted small">
@@ -651,6 +655,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
             `;
         }); questsList.innerHTML = html;
+        enhanceContainerImages(questsList, {
+            fallbackSrc: 'assets/img/icon_quest.png'
+        });
     }; // End of displayQuests function    // Global function to change quest locale
     window.changeQuestLocale = function (fileName, newLocale) {
         window.currentLocale = newLocale;
@@ -706,7 +713,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="condition-item-display">
                             <img src="${iconLink}" alt="${item.name}"
                                  style="width: 35px; height: 35px; margin-right: 10px;"
-                                 onerror="this.onerror=null; this.src='assets/img/icon_quest.png';">
+                                 data-fallback-src="assets/img/icon_quest.png">
                             <span>Handover ${countText}${item.name}${handoverFirText}</span>
                         </div>
                     `;
@@ -731,7 +738,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <div class="find-item-entry" style="display: inline-flex; align-items: center; margin-right: 10px;">
                                     <img src="${iconLink}" alt="${item.name}"
                                          style="width: 35px; height: 35px; margin-right: 5px;"
-                                         onerror="this.onerror=null; this.src='assets/img/icon_quest.png';">
+                                         data-fallback-src="assets/img/icon_quest.png">
                                     <span>${findCountText}${item.name}</span>
                                 </div>
                             `;
@@ -766,7 +773,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="place-item-display">
                             <img src="${iconLink}" alt="${item.name}"
                                  style="width: 35px; height: 35px; margin-right: 10px;"
-                                 onerror="this.onerror=null; this.src='assets/img/icon_quest.png';">
+                                 data-fallback-src="assets/img/icon_quest.png">
                             <span>Place ${placeCountText}${item.name} at ${placeLocation}</span>
                         </div>
                     `;
@@ -899,6 +906,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                         </div>
                     `;
+                    enhanceContainerImages(itemElement, {
+                        fallbackSrc: 'assets/img/icon_quest.png'
+                    });
                     return;
                 }
 
@@ -909,6 +919,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span>${countText}${item.name}${firText}</span>
                     </div>
                 `;
+                enhanceContainerImages(itemElement, {
+                    fallbackSrc: 'assets/img/icon_quest.png'
+                });
             }
         }).catch(() => {
             // Ignore error, keep placeholder
@@ -1010,6 +1023,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <span>${amount.toLocaleString()} ${currencyItem.name}${firText}</span>
                                 </div>
                             `;
+                            enhanceContainerImages(itemElement, {
+                                fallbackSrc: 'assets/img/icon_quest.png'
+                            });
                         }
                     }
                 }).catch(error => {
@@ -1066,6 +1082,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                         ${itemDisplays.join('')}
                                     </div>
                                 `;
+                                enhanceContainerImages(element, {
+                                    fallbackSrc: 'assets/img/icon_quest.png'
+                                });
                             }
                         }
                     }).catch(error => {

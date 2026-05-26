@@ -11,18 +11,6 @@
     src: url("fonts/Bender-Bold.otf") format("opentype");
 }
 
-@property --rotation {
-    syntax: "<angle>";
-    inherits: false;
-    initial-value: 0deg;
-}
-
-@property --scale {
-    syntax: "<number>";
-    inherits: false;
-    initial-value: 1;
-}
-
 :root {
     interpolate-size: allow-keywords;
 
@@ -147,43 +135,20 @@
 }
 
 ::view-transition {
-    background: var(--background-color);
+    background: transparent;
 }
 
-::view-transition-image-pair(root) {
-    perspective: 2500px;
-    perspective-origin: center;
-    transform-style: preserve-3d;
-    transform-origin: 50% 50% 100vw;
-    filter: drop-shadow(0px 0px 6px hsl(165deg 11% 3%)) drop-shadow(0px 0px 25px hsl(165deg 11% 3%/50%));
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation: 1.5s linear(0,
-            0.324 9.1%,
-            0.584 18.6%,
-            0.782 28.6%,
-            0.858 33.8%,
-            0.92 39.2%,
-            0.997 49.5%,
-            1.021 55.1%,
-            1.033 61%,
-            1.035 71.7%,
-            1);
-    transform-style: preserve-3d;
-    transform-origin: 50% 50% 0;
-    /*   perspective: 800px; */
-    transform: translateZ(-50vw) scale(var(--scale)) rotatey(var(--rotation)) translatez(50vw);
-    backface-visibility: hidden;
+::view-transition-group(root) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 ::view-transition-old(root) {
-    animation-name: reveal-out;
+    animation: theme-fade-out 0.18s ease-out both;
 }
 
 ::view-transition-new(root) {
-    animation-name: reveal-in;
+    animation: theme-fade-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 html,
@@ -219,6 +184,22 @@ a:hover {
 
 .hidden {
     display: none;
+}
+
+.content-loading {
+    opacity: 0.68;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.managed-image {
+    opacity: 0;
+    transform: scale(0.985);
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.managed-image.is-loaded {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .strong {
@@ -763,6 +744,21 @@ details {
     &:popover-open::backdrop {
         background-color: hsl(0 0 0 / 50%);
     }
+}
+
+.popover-loading,
+.popover-error {
+    padding: 2rem;
+    text-align: center;
+}
+
+.popover-loading {
+    color: var(--bright-color);
+    opacity: 0.9;
+}
+
+.popover-error {
+    color: #ffb0b0;
 }
 
 @starting-style {
@@ -1551,16 +1547,6 @@ span.global-id.copied::after {
     display: none;
 }
 
-#activityContent {
-    position: relative;
-    width: 2.8rem;
-    height: 2.8rem;
-}
-
-#questsContent:has(.loading-container) {
-    display: flex !important;
-}
-
 .loading-container {
     display: flex;
     justify-content: center;
@@ -1699,19 +1685,6 @@ span.global-id.copied::after {
 
 #templateContent .cm-s-moxer.CodeMirror {
     border-radius: 0.5rem;
-}
-
-#handbookLoad {
-    position: relative;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-}
-
-#handbookLoad .loader {
-    width: 100px;
-    height: 100px;
 }
 
 #handbookContainer .handbook-item {
@@ -3843,24 +3816,9 @@ ul.inner-list {
     transition: opacity 0.3s ease-in-out;
 }
 
-#customTraderContent .quest-image.loaded {
+#customTraderContent .quest-image.loaded,
+#customTraderContent .quest-image.is-loaded {
     opacity: 1;
-}
-
-/* Image loading containers */
-#customTraderContent .image-loading-container {
-    position: relative;
-    display: inline-block;
-}
-
-#customTraderContent .image-loading-container .loading-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--content-bg);
-    border-radius: inherit;
 }
 
 /* Trader avatar specific loading */
@@ -3875,7 +3833,8 @@ ul.inner-list {
     background-color: #1a1a1a;
 }
 
-#customTraderContent .trader-avatar.loaded {
+#customTraderContent .trader-avatar.loaded,
+#customTraderContent .trader-avatar.is-loaded {
     opacity: 1;
 }
 
@@ -3887,26 +3846,12 @@ ul.inner-list {
     position: relative;
 }
 
-#customTraderContent .trader-avatar-container .image-loading-container {
-    width: 100%;
-    height: 100%;
-}
-
-#customTraderContent .trader-avatar-container .loading-container {
-    border-radius: var(--br-lg);
-    background-color: var(--content-bg);
-}
-
 /* Quest image specific loading */
 #customTraderContent .quest-image-container {
     position: relative;
     display: inline-block;
     max-width: max-content;
     width: 100%;
-    border-radius: var(--br-med);
-}
-
-#customTraderContent .quest-image-container .loading-container {
     border-radius: var(--br-med);
 }
 
@@ -4178,10 +4123,6 @@ ul.inner-list {
     gap: 0.5rem;
 }
 
-#loaderContainer {
-    padding: 40px 0;
-}
-
 footer {
     background-color: var(--header-bg);
     padding: 1rem 0;
@@ -4342,47 +4283,31 @@ footer .text-end {
     }
 }
 
-@keyframes reveal-in {
+@keyframes theme-fade-out {
     from {
-        --rotation: -90deg;
-        animation-timing-function: ease-in-out;
-    }
-
-    15% {
-        --scale: 0.8;
-        --rotation: -90deg;
-    }
-
-    85% {
-        --scale: 0.8;
-        --rotation: 0deg;
-        animation-timing-function: ease-in-out;
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
     }
 
     to {
-        --rotation: 0deg;
+        opacity: 0;
+        transform: scale(0.992);
+        filter: blur(2px);
     }
 }
 
-@keyframes reveal-out {
+@keyframes theme-fade-in {
     from {
-        --rotation: 0deg;
-        animation-timing-function: ease-in-out;
-    }
-
-    15% {
-        --scale: 0.8;
-        --rotation: 0deg;
-    }
-
-    85% {
-        --scale: 0.8;
-        --rotation: 90deg;
-        animation-timing-function: ease-in-out;
+        opacity: 0;
+        transform: scale(1.008);
+        filter: blur(2px);
     }
 
     to {
-        --rotation: 90deg;
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
     }
 }
 

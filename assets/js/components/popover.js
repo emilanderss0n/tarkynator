@@ -1,3 +1,5 @@
+import { withViewTransition } from "../core/viewTransitionManager.js";
+
 // Reusable Popover Component
 export class Popover {
     constructor(popoverId, options = {}) {
@@ -87,12 +89,14 @@ export class Popover {
         
         const bodyElement = this.popover.querySelector('.preset-popover-body, .popover-body');
         if (bodyElement) {
-            if (typeof content === 'string') {
-                bodyElement.innerHTML = content;
-            } else if (content instanceof Element) {
-                bodyElement.innerHTML = '';
-                bodyElement.appendChild(content);
-            }
+            withViewTransition(() => {
+                if (typeof content === 'string') {
+                    bodyElement.innerHTML = content;
+                } else if (content instanceof Element) {
+                    bodyElement.innerHTML = '';
+                    bodyElement.appendChild(content);
+                }
+            }, { skipIfBusy: true });
         }
     }
 

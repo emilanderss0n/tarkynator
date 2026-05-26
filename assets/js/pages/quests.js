@@ -6,6 +6,8 @@ import {
     checkJsonEditorSimple,
 } from "../components/checkJsonEditor.js";
 import { debounce, highlightSearchTerms } from "../core/utils.js";
+import { withViewTransition } from "../core/viewTransitionManager.js";
+import { enhanceContainerImages } from "../core/imageManager.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const questsContainer = document.getElementById("questsContainer");
@@ -24,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentSearchTerm = "";
     let listScrollPositionBeforeJsonOpen = null;
     let shouldRestoreListScrollOnNextRender = false;
+    let latestFetchToken = 0;
     const legacyQuestMapAliases = {
         Labs: "The Lab",
     };
@@ -228,8 +231,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const renderQuests = (quests) => {
         if (quests.length === 0) {
-            questsContent.innerHTML =
-                '<div class="no-results">No quests match your search criteria</div>';
+            withViewTransition(() => {
+                questsContent.innerHTML =
+                    '<div class="no-results">No quests match your search criteria</div>';
+            }, { skipIfBusy: true });
 
             if (shouldRestoreListScrollOnNextRender) {
                 requestAnimationFrame(() => {
@@ -258,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <a href="javascript:void(0);" class="image">
                         <img src="data/quest-images/${quest.id}.webp" alt="${
                     quest.name
-                }" onerror="this.onerror=null; this.src='assets/img/missing-quest.jpg';">
+                }" data-fallback-src="assets/img/missing-quest.jpg">
                     </a>
                     <div class="details">
                         <a href="javascript:void(0);" class="titleLink"><h4>${highlightSearchTerms(
@@ -315,7 +320,12 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("");
 
-        questsContent.innerHTML = questsHTML;
+        withViewTransition(() => {
+            questsContent.innerHTML = questsHTML;
+            enhanceContainerImages(questsContent, {
+                fallbackSrc: "assets/img/missing-quest.jpg",
+            });
+        }, { skipIfBusy: true });
 
         if (shouldRestoreListScrollOnNextRender) {
             requestAnimationFrame(() => {
@@ -328,22 +338,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
     const fetchQuestsData = async () => {
-        questsContent.innerHTML =
-            '<div class="loading-container"><span class="loader"></span></div>';
+        const fetchToken = ++latestFetchToken;
+        questsContent.classList.add("content-loading");
 
         try {
             await ensureLocalQuestsLoaded();
             const data = await fetchData(TASKS_URL);
 
+            if (fetchToken !== latestFetchToken) {
+                return;
+            }
+
             if (data && data.tasks) {
                 allQuests = Object.values(data.tasks); // Convert tasks object to array
                 processQuestData();
             } else {
-                questsContent.innerHTML = "No quests data found.";
+                withViewTransition(() => {
+                    questsContent.innerHTML = "No quests data found.";
+                }, { skipIfBusy: true });
             }
         } catch (error) {
             console.error("Error fetching quests data:", error);
-            questsContent.innerHTML = "Error fetching quests data.";
+            if (fetchToken === latestFetchToken) {
+                withViewTransition(() => {
+                    questsContent.innerHTML = "Error fetching quests data.";
+                }, { skipIfBusy: true });
+            }
+        } finally {
+            if (fetchToken === latestFetchToken) {
+                questsContent.classList.remove("content-loading");
+            }
         }
     };
 

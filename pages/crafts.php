@@ -14,7 +14,6 @@ include_once('../header.php');
             </nav>
         </div>
         <div class="body grid grid-400 animate-in container-fluid page" grid-max-col-count="3" id="craftsContent">
-            <div id="activityContent"><span class="loader"></span></div>
         </div>
     </div>
 

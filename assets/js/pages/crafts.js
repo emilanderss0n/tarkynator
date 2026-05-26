@@ -1,5 +1,7 @@
 import { fetchData } from '../core/cache.js';
 import { ITEMS_URL } from '../core/localData.js';
+import { withViewTransition } from '../core/viewTransitionManager.js';
+import { enhanceContainerImages } from '../core/imageManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -37,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const fetchCraftsData = async () => {
+        craftsContent.classList.add('content-loading');
+
         const query = `
             query {
                 crafts {
@@ -126,13 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                 }).join('');
-                craftsContent.innerHTML = craftsHTML;
+                withViewTransition(() => {
+                    craftsContent.innerHTML = craftsHTML;
+                    enhanceContainerImages(craftsContent, {
+                        fallbackSrc: 'assets/img/icon_quest.png'
+                    });
+                }, { skipIfBusy: true });
             } else {
-                craftsContent.innerHTML = 'No crafts data found.';
+                withViewTransition(() => {
+                    craftsContent.innerHTML = 'No crafts data found.';
+                }, { skipIfBusy: true });
             }
         } catch (error) {
             console.error('Error fetching crafts data:', error);
-            craftsContent.innerHTML = 'Error fetching crafts data.';
+            withViewTransition(() => {
+                craftsContent.innerHTML = 'Error fetching crafts data.';
+            }, { skipIfBusy: true });
+        } finally {
+            craftsContent.classList.remove('content-loading');
         }
     };
 

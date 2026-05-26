@@ -2,6 +2,8 @@
 import { searchOptimizer } from "../core/searchOptimizer.js";
 import { navigationManager } from "../core/navigationManager.js";
 import { checkJsonEditorSimple } from "../components/checkJsonEditor.js";
+import { withViewTransition } from "../core/viewTransitionManager.js";
+import { createManagedImage } from "../core/imageManager.js";
 
 export class ItemBrowser {
     constructor(context) {
@@ -16,7 +18,7 @@ export class ItemBrowser {
         this.itemsPerPage = this.itemsPerPageDefault;
         this.categoryCache = {};
         this.isRendering = false;
-        this.isAttachingListeners = false;
+        this.listenersInitialized = false;
 
         // Types enum
         this.typesEnum = Object.freeze({
@@ -117,7 +119,20 @@ export class ItemBrowser {
             handleBrowseContainerActivation(this);
         };
         this.getTypesEnum = () => this.typesEnum;
+
+        this.scheduleBrowseRender = () => {
+            if (window.requestIdleCallback) {
+                requestIdleCallback(this.debouncedRenderBrowseItems);
+                return;
+            }
+
+            setTimeout(() => {
+                this.debouncedRenderBrowseItems();
+            }, 0);
+        };
+
         this.setupBrowseCategories();
+        this.initializeDelegatedListeners();
     }
 
     setupBrowseCategories() {
@@ -132,10 +147,62 @@ export class ItemBrowser {
         });
     }
 
+    initializeDelegatedListeners() {
+        if (this.listenersInitialized) return;
+
+        if (this.elements.browseItems) {
+            this.elements.browseItems.addEventListener("click", (event) => {
+                const browseItem = event.target.closest(".browse-item");
+                if (browseItem && this.elements.browseItems.contains(browseItem)) {
+                    event.preventDefault();
+                    const itemId = browseItem.dataset.itemId;
+                    if (itemId) {
+                        navigationManager.navigateToItem(itemId, "handbook");
+                        checkJsonEditorSimple();
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                    return;
+                }
+
+                const pageLink = event.target.closest("#browsePagination .page-link");
+                if (pageLink && this.elements.browseItems.contains(pageLink)) {
+                    event.preventDefault();
+                    this.currentPage = parseInt(pageLink.dataset.page, 10);
+                    this.renderBrowseItems();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            });
+
+            this.elements.browseItems.addEventListener("input", (event) => {
+                if (event.target?.id === "browseSearchInput") {
+                    this.handleSearch(event);
+                }
+            });
+        }
+
+        if (this.elements.browseSidebar) {
+            this.elements.browseSidebar.addEventListener("click", (event) => {
+                const categoryElement = event.target.closest(".browse-category");
+                if (!categoryElement || !this.elements.browseSidebar.contains(categoryElement)) {
+                    return;
+                }
+
+                document.querySelectorAll(".browse-category").forEach((el) => el.classList.remove("active"));
+                categoryElement.classList.add("active");
+                const itemType = categoryElement.dataset.itemType;
+                this.context.manager.lastActiveCategory = itemType;
+                this.loadCategory(itemType.replace(/-/g, " "));
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        }
+
+        this.listenersInitialized = true;
+    }
+
     async loadCategory(itemType, page = 1) {
         if (!this.elements.browseItems) return;
 
-        this.elements.browseItems.innerHTML = '<div id="activityContent"><span class="loader"></span></div>';
+        this.elements.browseItems.classList.add("content-loading");
         this.currentPage = page;
         
         // Clear search state when switching categories
@@ -145,11 +212,19 @@ export class ItemBrowser {
         if (this.categoryCache[itemType]) {
             this.browseItemsData = this.categoryCache[itemType];
             this.filteredItemsData = [];
-            requestIdleCallback(this.debouncedRenderBrowseItems);
+            this.scheduleBrowseRender();
             return;
         }
 
         const apiCategoryName = this.context.categoryNameMapping[itemType] || itemType;
+
+        // Category labels are not fully consistent in source data.
+        // Keep a local alias set for known mismatches between UI labels and handbook categories.
+        const categoryAliases = new Set([itemType, apiCategoryName]);
+        if (itemType === "SMGs") {
+            categoryAliases.add("SMG");
+            categoryAliases.add("Submachine guns");
+        }
 
         try {
             // Ensure data is loaded
@@ -166,7 +241,7 @@ export class ItemBrowser {
                 this.browseItemsData = items.filter((item) =>
                     item.handbookCategories.some((category) => {
                         return (
-                            category.name === apiCategoryName ||
+                            categoryAliases.has(category.name) ||
                             category.name.replace(/\s*\/\s*/g, "/") === itemType.replace(/\s*\/\s*/g, "/")
                         );
                     })
@@ -180,17 +255,23 @@ export class ItemBrowser {
             this.categoryCache[itemType] = this.browseItemsData;
             this.filteredItemsData = [];
             
-            requestIdleCallback(this.debouncedRenderBrowseItems);
+            this.scheduleBrowseRender();
 
         } catch (error) {
             console.error("Error fetching data:", error);
             this.elements.browseItems.innerHTML = "Error fetching data.";
+            this.elements.browseItems.classList.remove("content-loading");
         }
     }
 
     renderBrowseItems() {
         if (this.isRendering || !this.elements.browseItems) return;
         this.isRendering = true;
+
+        const finishRender = () => {
+            this.elements.browseItems.classList.remove("content-loading");
+            this.isRendering = false;
+        };
 
         const itemsToDisplay = this.filteredItemsData.length > 0 ? this.filteredItemsData : this.browseItemsData;
         const currentItemType = document.querySelector(".browse-category.active")?.dataset.itemType.replace(/-/g, " ");
@@ -212,51 +293,44 @@ export class ItemBrowser {
         const currentSearchValue = searchInput?.value || "";
         const wasFocused = searchInput === document.activeElement;
 
-        // Clear browse items but preserve search filter
-        const searchFilter = this.elements.browseItems.querySelector(".search-filter");
-        this.elements.browseItems.innerHTML = "";
-        
-        // Re-add preserved search filter or create new one
-        if (searchFilter) {
-            this.elements.browseItems.appendChild(searchFilter);
-        } else {
-            const newSearchFilter = document.createElement("div");
-            newSearchFilter.className = "search-filter";
-            newSearchFilter.innerHTML = `
-                <input type="text" id="browseSearchInput" class="form-control" placeholder="Search within category..." value="${currentSearchValue}">
-            `;
-            this.elements.browseItems.appendChild(newSearchFilter);
-        }
+        withViewTransition(() => {
+            // Clear browse items but preserve search filter
+            const searchFilter = this.elements.browseItems.querySelector(".search-filter");
+            this.elements.browseItems.innerHTML = "";
+
+            // Re-add preserved search filter or create new one
+            if (searchFilter) {
+                this.elements.browseItems.appendChild(searchFilter);
+            } else {
+                const newSearchFilter = document.createElement("div");
+                newSearchFilter.className = "search-filter";
+                newSearchFilter.innerHTML = `
+                    <input type="text" id="browseSearchInput" class="form-control" placeholder="Search within category..." value="${currentSearchValue}">
+                `;
+                this.elements.browseItems.appendChild(newSearchFilter);
+            }
+
+            // Add items
+            this.elements.browseItems.appendChild(fragment);
+
+            // Add pagination
+            this.elements.browseItems.insertAdjacentHTML(
+                "beforeend",
+                this.renderPaginationControls(itemsToDisplay.length, this.itemsPerPage)
+            );
+        }, { skipIfBusy: true });
 
         // Restore focus if it was focused before
         if (wasFocused) {
             requestAnimationFrame(() => {
                 const restoredInput = document.getElementById("browseSearchInput");
                 if (restoredInput) {
-                    restoredInput.focus();
+                    restoredInput.focus({ preventScroll: true });
                 }
             });
         }
-        
-        // Add items
-        this.elements.browseItems.appendChild(fragment);
-        
-        // Add pagination
-        this.elements.browseItems.insertAdjacentHTML(
-            "beforeend",
-            this.renderPaginationControls(itemsToDisplay.length, this.itemsPerPage)
-        );
 
-        // Attach event listeners
-        if (!this.isAttachingListeners) {
-            this.isAttachingListeners = true;
-            requestIdleCallback(() => {
-                this.attachEventListeners();
-                this.isAttachingListeners = false;
-            });
-        }
-
-        this.isRendering = false;
+        finishRender();
     }
 
     renderGroupedItems(paginatedItems, fragment) {
@@ -295,14 +369,30 @@ export class ItemBrowser {
         itemElement.href = "javascript:void(0);";
         itemElement.className = "browse-item card-bfx scroll-ani";
         itemElement.dataset.itemId = item.id;
-        itemElement.innerHTML = `
-            <div class="card-body">
-                <img class="small-glow" src="${itemIconLink}" alt="${item.name}" width="46" height="46" />
-                <div class="item-title">
-                    <h4>${item.name}</h4>
-                </div>
-            </div>
-        `;
+
+        const cardBody = document.createElement("div");
+        cardBody.className = "card-body";
+
+        const image = createManagedImage({
+            src: itemIconLink,
+            alt: item.name,
+            className: "small-glow",
+            width: 46,
+            height: 46,
+            fallbackSrc: "assets/img/icon_quest.png",
+        });
+
+        const titleWrap = document.createElement("div");
+        titleWrap.className = "item-title";
+
+        const title = document.createElement("h4");
+        title.textContent = item.name;
+
+        titleWrap.appendChild(title);
+        cardBody.appendChild(image);
+        cardBody.appendChild(titleWrap);
+        itemElement.appendChild(cardBody);
+
         return itemElement;
     }
 
@@ -338,47 +428,6 @@ export class ItemBrowser {
         }
         paginationHTML += "</div>";
         return paginationHTML;
-    }
-
-    attachEventListeners() {
-        // Item click handlers
-        document.querySelectorAll("#browseItems .browse-item").forEach((itemElement) => {
-            itemElement.addEventListener("click", () => {
-                const itemId = itemElement.dataset.itemId;
-                navigationManager.navigateToItem(itemId, "handbook");
-                checkJsonEditorSimple();
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-        });
-
-        // Pagination handlers
-        document.querySelectorAll("#browsePagination .page-link").forEach((pageLink) => {
-            pageLink.addEventListener("click", (event) => {
-                event.preventDefault();
-                this.currentPage = parseInt(event.target.dataset.page, 10);
-                this.renderBrowseItems();
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-        });
-
-        // Search input handler
-        const browseSearchInput = document.getElementById("browseSearchInput");
-        if (browseSearchInput) {
-            browseSearchInput.removeEventListener("input", this.handleSearch);
-            browseSearchInput.addEventListener("input", this.handleSearch);
-        }
-
-        // Category click handlers
-        document.querySelectorAll(".browse-category").forEach((categoryElement) => {
-            categoryElement.addEventListener("click", () => {
-                document.querySelectorAll(".browse-category").forEach((el) => el.classList.remove("active"));
-                categoryElement.classList.add("active");
-                const itemType = categoryElement.dataset.itemType;
-                this.context.manager.lastActiveCategory = itemType;
-                this.loadCategory(itemType.replace(/-/g, " "));
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-        });
     }
 
 }

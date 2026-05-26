@@ -1,3 +1,5 @@
+import { createManagedImage } from "../core/imageManager.js";
+
 export function createItemListElement(item) {
     const listItem = document.createElement("li");
     listItem.className = "list-group-item";
@@ -7,10 +9,19 @@ export function createItemListElement(item) {
         "data/icons/"
     );
 
-    listItem.innerHTML = `
-        <img src="${iconLink}" alt="${item.name}" class="small-glow" style="width: 50px; height: 50px; margin-right: 10px;">
-        ${item.name}
-    `;
+    const image = createManagedImage({
+        src: iconLink,
+        alt: item.name,
+        className: "small-glow",
+        width: 50,
+        height: 50,
+        fallbackSrc: "assets/img/icon_quest.png",
+    });
+
+    image.style.marginRight = "10px";
+
+    listItem.appendChild(image);
+    listItem.append(document.createTextNode(item.name));
 
     const handbookCategoriesNames = item.handbookCategories
         .map((category) => category.name)
