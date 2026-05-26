@@ -2270,6 +2270,7 @@ span.global-id.copied::after {
     display: inline-flex;
     justify-content: flex-end;
     margin-bottom: 1rem;
+    grid-column: 1 / -1;
 }
 
 #browseItems:has(.group-title) .search-filter {
