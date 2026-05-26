@@ -84,6 +84,10 @@ class ThemeManager {
             this.themeSelect.addEventListener('change', (e) => {
                 withViewTransition(() => {
                     this.changeTheme(e.target.value);
+                }, {
+                    skipIfBusy: true,
+                    scopeElement: document.documentElement,
+                    transitionName: 'theme-root'
                 });
             });
         }

@@ -449,8 +449,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div id="${editorId}" class="assort-codemirror"></div>
                     </div>
                 `;
-                
-                assortPopover.setContent(editorContent);
+
+                const popoverBody = document.querySelector('#assort-popover .popover-body');
+                if (!popoverBody) {
+                    assortPopover.showError('Failed to mount assort template data');
+                    return;
+                }
+
+                popoverBody.innerHTML = editorContent;
 
                 requestAnimationFrame(() => {
                     // Initialize CodeMirror editor (if available)
@@ -925,6 +931,27 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTraderAssort();
         }
     });
+
+    // Delegate View JSON handling from assort info panel to survive dynamic re-renders.
+    assortContent.addEventListener('click', (e) => {
+        const jsonBtn = e.target.closest('.view-json-btn');
+        if (!jsonBtn) {
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const assortId = jsonBtn.getAttribute('data-assort-id');
+        if (!assortId) {
+            return;
+        }
+
+        const item = allItems.find(i => i.id === assortId);
+        const itemName = item?.name || 'Assort item';
+        showAssortPopover(assortId, itemName);
+    });
+
     createAssortBtn.addEventListener('click', (e) => {
         e.preventDefault();
         

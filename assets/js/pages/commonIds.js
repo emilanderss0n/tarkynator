@@ -3,7 +3,6 @@ import { withViewTransition } from '../core/viewTransitionManager.js';
 import { enhanceContainerImages } from '../core/imageManager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const commonIdContainer = document.getElementById('commonIdContainer');
     const commonIdContent = document.getElementById('commonIdContent');
     const commonIdsTransitionOptions = {
         skipIfBusy: true,
@@ -51,247 +50,231 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fetchGraphQL(query)
             .then(data => {
-                if (data && data.data) {
-                    // Store the common data in localStorage
-                    localStorage.setItem('commonData', JSON.stringify(data.data));
-
-                    const ITEMS_PER_PAGE = 10;
-                    let currentPageBosses = 1;
-                    let currentPageStations = 1;
-                    let currentPageTraders = 1;
-                    let currentPageHandbook = 1;
-                    let currentPageContainers = 1;
-                    let currentPageMaps = 1;
-                    let currentPageSkills = 1;
-
-                    const createTableRows = (items, page, isMap = false) => {
-                        // Add null check for items
-                        if (!items || !Array.isArray(items)) return '';
-
-                        // Sort items alphabetically by name
-                        const sortedItems = [...items].sort((a, b) => a.name.localeCompare(b.name));
-
-                        const start = (page - 1) * ITEMS_PER_PAGE;
-                        const end = start + ITEMS_PER_PAGE;
-                        return sortedItems.slice(start, end).map(item => `
-                            <tr>
-                                <td>${isMap ? `${item.name} / ${item.nameId}` : item.name}</td>
-                                <td><span class="global-id">${item.id}</span></td>
-                            </tr>
-                        `).join('');
-                    };
-
-                    const createPaginationControls = (items, currentPage, containerId, updatePageCallback) => {
-                        // Add null check for items
-                        if (!items || !Array.isArray(items)) return;
-
-                        const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-                        let paginationHTML = '<nav><ul class="pagination">';
-                        for (let i = 1; i <= totalPages; i++) {
-                            paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-                        }
-                        paginationHTML += '</ul></nav>';
-
-                        const paginationElement = document.getElementById(containerId);
-                        if (paginationElement) {
-                            paginationElement.innerHTML = paginationHTML;
-
-                            paginationElement.querySelectorAll('.page-link').forEach(link => {
-                                link.addEventListener('click', (event) => {
-                                    event.preventDefault();
-                                    const newPage = parseInt(event.target.getAttribute('data-page'));
-                                    updatePageCallback(newPage);
-                                    void renderTables();
-                                });
-                            });
-                        }
-                    };
-
-                    const renderTables = async () => {
-                        if (!data || !data.data) return;
-
-                        const bossesHTML = createTableRows(data.data.bosses, currentPageBosses);
-                        const stationsHTML = createTableRows(data.data.hideoutStations, currentPageStations);
-                        const tradersHTML = createTableRows(data.data.traders, currentPageTraders);
-                        const handbookCategoriesHTML = createTableRows(data.data.handbookCategories, currentPageHandbook);
-                        const lootContainersHTML = createTableRows(data.data.lootContainers, currentPageContainers);
-                        const mapsHTML = createTableRows(data.data.maps, currentPageMaps, true);
-                        const skillsHTML = createTableRows(data.data.skills, currentPageSkills);
-
-                        await withViewTransition(() => {
-                            commonIdContent.innerHTML = `
-                            <div class="bosses card scroll-ani scroll-70">
-                                <div class="table-responsive">
-                                    <table class="table caption-top">
-                                        <div class="page-top-title">
-                                            <img src="assets/img/handbook/icon_gear_facecovers.png" height="38" width="29" />
-                                            <h4>Bosses</h4>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            ${bossesHTML}
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-controls" id="bosses-pagination"></div>
-                                </div>
-                            </div>
-                            <div class="hideout-stations card scroll-ani scroll-70">
-                                <div class="table-responsive">
-                                    <table class="table caption-top">
-                                        <div class="page-top-title">
-                                            <img src="assets/img/handbook/icon_gear_secured.png" height="34" width="32" />
-                                            <h4>Hideout Stations</h4>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            ${stationsHTML}
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-controls" id="stations-pagination"></div>
-                                </div>
-                            </div>
-                            <div class="traders card scroll-ani scroll-70">
-                                <div class="table-responsive">
-                                    <table class="table caption-top">
-                                        <div class="page-top-title">
-                                            <img src="assets/img/handbook/icon_barter.png" height="24" width="25" />
-                                            <h4>Traders</h4>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            ${tradersHTML}
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-controls" id="traders-pagination"></div>
-                                </div>
-                            </div>
-                            <div class="handbook-categories card scroll-ani scroll-70">
-                                <div class="table-responsive">
-                                    <table class="table caption-top">
-                                        <div class="page-top-title">
-                                            <img src="assets/img/handbook/icon_info.png" height="27" width="29" />
-                                            <h4>Handbook Categories</h4>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            ${handbookCategoriesHTML}
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-controls" id="handbook-pagination"></div>
-                                </div>
-                            </div>
-                            <div class="loot-containers card scroll-ani scroll-70">
-                                <div class="table-responsive">
-                                    <table class="table caption-top">
-                                        <div class="page-top-title">
-                                            <img src="assets/img/handbook/icon_gear_cases.png" height="29" width="34" />
-                                            <h4>Loot Containers</h4>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            ${lootContainersHTML}
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-controls" id="containers-pagination"></div>
-                                </div>
-                            </div>
-                            <div class="maps card scroll-ani scroll-70">
-                                <div class="table-responsive">
-                                    <table class="table caption-top">
-                                        <div class="page-top-title">
-                                            <img src="assets/img/handbook/icon_maps.png" height="25" width="29" />
-                                            <h4>Maps</h4>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            ${mapsHTML}
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-controls" id="maps-pagination"></div>
-                                </div>
-                            </div>
-                            <div class="skills card scroll-ani scroll-70">
-                                <div class="table-responsive">
-                                    <table class="table caption-top">
-                                        <div class="page-top-title">
-                                            <img src="assets/img/handbook/icon_barter_tools.png" height="25" width="29" />
-                                            <h4>Skills</h4>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">ID</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            ${skillsHTML}
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-controls" id="skills-pagination"></div>
-                                </div>
-                            </div>
-                        `;
-
-                            enhanceContainerImages(commonIdContent, {
-                                fallbackSrc: 'assets/img/icon_quest.png'
-                            });
-                        }, commonIdsTransitionOptions);
-
-                        createPaginationControls(data.data.bosses, currentPageBosses, 'bosses-pagination', (newPage) => {
-                            currentPageBosses = newPage;
-                        });
-                        createPaginationControls(data.data.hideoutStations, currentPageStations, 'stations-pagination', (newPage) => {
-                            currentPageStations = newPage;
-                        });
-                        createPaginationControls(data.data.traders, currentPageTraders, 'traders-pagination', (newPage) => {
-                            currentPageTraders = newPage;
-                        });
-                        createPaginationControls(data.data.handbookCategories, currentPageHandbook, 'handbook-pagination', (newPage) => {
-                            currentPageHandbook = newPage;
-                        });
-                        createPaginationControls(data.data.lootContainers, currentPageContainers, 'containers-pagination', (newPage) => {
-                            currentPageContainers = newPage;
-                        });
-                        createPaginationControls(data.data.maps, currentPageMaps, 'maps-pagination', (newPage) => {
-                            currentPageMaps = newPage;
-                        });
-                        createPaginationControls(data.data.skills, currentPageSkills, 'skills-pagination', (newPage) => {
-                            currentPageSkills = newPage;
-                        });
-                    };
-
-                    void renderTables();
+                if (!data?.data) {
+                    return;
                 }
+
+                localStorage.setItem('commonData', JSON.stringify(data.data));
+
+                const ITEMS_PER_PAGE = 10;
+                const sectionConfigs = [
+                    {
+                        key: 'bosses',
+                        title: 'Bosses',
+                        icon: 'assets/img/handbook/icon_gear_facecovers.png',
+                        iconHeight: 38,
+                        iconWidth: 29,
+                        items: data.data.bosses,
+                        isMap: false,
+                    },
+                    {
+                        key: 'stations',
+                        title: 'Hideout Stations',
+                        icon: 'assets/img/handbook/icon_gear_secured.png',
+                        iconHeight: 34,
+                        iconWidth: 32,
+                        items: data.data.hideoutStations,
+                        isMap: false,
+                    },
+                    {
+                        key: 'traders',
+                        title: 'Traders',
+                        icon: 'assets/img/handbook/icon_barter.png',
+                        iconHeight: 24,
+                        iconWidth: 25,
+                        items: data.data.traders,
+                        isMap: false,
+                    },
+                    {
+                        key: 'handbook',
+                        title: 'Handbook Categories',
+                        icon: 'assets/img/handbook/icon_info.png',
+                        iconHeight: 27,
+                        iconWidth: 29,
+                        items: data.data.handbookCategories,
+                        isMap: false,
+                    },
+                    {
+                        key: 'containers',
+                        title: 'Loot Containers',
+                        icon: 'assets/img/handbook/icon_gear_cases.png',
+                        iconHeight: 29,
+                        iconWidth: 34,
+                        items: data.data.lootContainers,
+                        isMap: false,
+                    },
+                    {
+                        key: 'maps',
+                        title: 'Maps',
+                        icon: 'assets/img/handbook/icon_maps.png',
+                        iconHeight: 25,
+                        iconWidth: 29,
+                        items: data.data.maps,
+                        isMap: true,
+                    },
+                    {
+                        key: 'skills',
+                        title: 'Skills',
+                        icon: 'assets/img/handbook/icon_barter_tools.png',
+                        iconHeight: 25,
+                        iconWidth: 29,
+                        items: data.data.skills,
+                        isMap: false,
+                    },
+                ];
+
+                const sectionMap = Object.fromEntries(
+                    sectionConfigs.map(config => [config.key, config])
+                );
+
+                const pageState = Object.fromEntries(
+                    sectionConfigs.map(config => [config.key, 1])
+                );
+
+                const sortItems = (items) => {
+                    if (!items || !Array.isArray(items)) {
+                        return [];
+                    }
+
+                    return [...items].sort((a, b) => a.name.localeCompare(b.name));
+                };
+
+                const createTableRows = (items, page, isMap = false) => {
+                    const sortedItems = sortItems(items);
+                    const start = (page - 1) * ITEMS_PER_PAGE;
+                    const end = start + ITEMS_PER_PAGE;
+
+                    return sortedItems.slice(start, end).map(item => `
+                        <tr>
+                            <td>${isMap ? `${item.name} / ${item.nameId}` : item.name}</td>
+                            <td><span class="global-id">${item.id}</span></td>
+                        </tr>
+                    `).join('');
+                };
+
+                const createPaginationInner = (items, currentPage, sectionKey) => {
+                    if (!items || !Array.isArray(items)) {
+                        return '';
+                    }
+
+                    const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+                    if (totalPages <= 1) {
+                        return '';
+                    }
+
+                    let paginationHTML = '<nav aria-label="Page navigation"><ul class="pagination">';
+                    for (let i = 1; i <= totalPages; i++) {
+                        paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}" data-section="${sectionKey}">${i}</a></li>`;
+                    }
+                    paginationHTML += '</ul></nav>';
+                    return paginationHTML;
+                };
+
+                const renderCardMarkup = (config) => {
+                    const currentPage = pageState[config.key];
+                    const rows = createTableRows(config.items, currentPage, config.isMap);
+                    const paginationInner = createPaginationInner(config.items, currentPage, config.key);
+
+                    return `
+                        <div id="commonids-card-${config.key}" class="${config.key} card scroll-ani scroll-70">
+                            <div class="table-responsive">
+                                <table class="table caption-top">
+                                    <div class="page-top-title">
+                                        <img src="${config.icon}" height="${config.iconHeight}" width="${config.iconWidth}" />
+                                        <h4>${config.title}</h4>
+                                    </div>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        ${rows}
+                                    </tbody>
+                                </table>
+                                <div class="pagination-controls" id="${config.key}-pagination">${paginationInner}</div>
+                            </div>
+                        </div>
+                    `;
+                };
+
+                const renderTables = async () => {
+                    await withViewTransition(() => {
+                        commonIdContent.innerHTML = sectionConfigs.map(renderCardMarkup).join('');
+
+                        enhanceContainerImages(commonIdContent, {
+                            fallbackSrc: 'assets/img/icon_quest.png'
+                        });
+                    }, commonIdsTransitionOptions);
+                };
+
+                const updateSectionPage = (sectionKey, direction) => {
+                    const config = sectionMap[sectionKey];
+                    if (!config) {
+                        return;
+                    }
+
+                    const cardElement = document.getElementById(`commonids-card-${sectionKey}`);
+                    if (!cardElement) {
+                        return;
+                    }
+
+                    const transitionScope = cardElement.querySelector('.table-responsive table') || cardElement.querySelector('.table-responsive') || cardElement;
+
+                    const currentPage = pageState[sectionKey];
+                    withViewTransition(() => {
+                        const table = cardElement.querySelector('table.caption-top');
+                        const tbody = table?.querySelector('tbody.table-group-divider') || null;
+                        if (tbody) {
+                            tbody.innerHTML = createTableRows(config.items, currentPage, config.isMap);
+                        }
+
+                        const paginationContainer = cardElement.querySelector('.pagination-controls');
+                        if (paginationContainer) {
+                            paginationContainer.innerHTML = createPaginationInner(config.items, currentPage, sectionKey);
+                        }
+                    }, {
+                        skipIfBusy: true,
+                        scopeElement: transitionScope,
+                        transitionName: `commonids-card-${direction}`,
+                    });
+                };
+
+                let paginationDelegationBound = false;
+                const bindPaginationDelegation = () => {
+                    if (paginationDelegationBound) {
+                        return;
+                    }
+
+                    paginationDelegationBound = true;
+                    commonIdContent.addEventListener('click', (event) => {
+                        const pageLink = event.target.closest('.pagination-controls .page-link');
+                        if (!pageLink || !commonIdContent.contains(pageLink)) {
+                            return;
+                        }
+
+                        event.preventDefault();
+
+                        const sectionKey = pageLink.dataset.section;
+                        const newPage = parseInt(pageLink.dataset.page, 10);
+                        if (!sectionKey || Number.isNaN(newPage) || !pageState[sectionKey]) {
+                            return;
+                        }
+
+                        const previousPage = pageState[sectionKey];
+                        if (newPage === previousPage) {
+                            return;
+                        }
+
+                        pageState[sectionKey] = newPage;
+                        const direction = newPage > previousPage ? 'next' : 'prev';
+                        updateSectionPage(sectionKey, direction);
+                    });
+                };
+
+                bindPaginationDelegation();
+                void renderTables();
             })
             .catch(error => {
                 console.error('Error fetching common data:', error);
@@ -305,5 +288,4 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fetchCommonData();
-
 });

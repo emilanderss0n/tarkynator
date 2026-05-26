@@ -115,8 +115,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div id="${editorId}" class="achievement-codemirror"></div>
                 </div>
             `;
-            
-            achievementPopover.setContent(editorContent);
+
+            const popoverBody = document.querySelector('#achievement-popover .popover-body');
+            if (!popoverBody) {
+                achievementPopover.showError('Failed to mount achievement template data');
+                return;
+            }
+
+            popoverBody.innerHTML = editorContent;
 
             // Initialize CodeMirror editor
             requestAnimationFrame(() => {

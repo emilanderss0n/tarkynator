@@ -138,16 +138,27 @@
     background: transparent;
 }
 
+/* Disable default full-page crossfade for regular content transitions. */
 ::view-transition-group(root) {
+    animation: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+}
+
+/* Theme switch keeps its own dedicated whole-page transition scope. */
+::view-transition-group(theme-root) {
     animation-duration: 0.3s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-::view-transition-old(root) {
+::view-transition-old(theme-root) {
     animation: theme-fade-out 0.18s ease-out both;
 }
 
-::view-transition-new(root) {
+::view-transition-new(theme-root) {
     animation: theme-fade-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -177,6 +188,28 @@
 ::view-transition-new(assort-info-content),
 ::view-transition-new(popover-content) {
     animation: content-fade-in 0.2s ease-out both;
+}
+
+::view-transition-group(commonids-card-next),
+::view-transition-group(commonids-card-prev) {
+    animation-duration: 0.26s;
+    animation-timing-function: cubic-bezier(0.2, 0.85, 0.32, 1);
+}
+
+::view-transition-old(commonids-card-next) {
+    animation: commonids-card-old-next 0.2s ease-out both;
+}
+
+::view-transition-new(commonids-card-next) {
+    animation: commonids-card-new-next 0.24s cubic-bezier(0.2, 0.85, 0.32, 1) both;
+}
+
+::view-transition-old(commonids-card-prev) {
+    animation: commonids-card-old-prev 0.2s ease-out both;
+}
+
+::view-transition-new(commonids-card-prev) {
+    animation: commonids-card-new-prev 0.24s cubic-bezier(0.2, 0.85, 0.32, 1) both;
 }
 
 html,
@@ -2911,6 +2944,18 @@ ul.inner-list {
     margin-top: 1rem;
 }
 
+#commonIdContainer .pagination-controls {
+    min-height: 2.4rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+}
+
+#commonIdContainer .pagination-controls .pagination {
+    margin: 0;
+}
+
 #resourcesContainer .title {
     margin: 2rem 0;
     display: inline-block;
@@ -4360,6 +4405,62 @@ footer .text-end {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes commonids-card-old-next {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.995);
+        filter: blur(0.8px);
+    }
+}
+
+@keyframes commonids-card-new-next {
+    from {
+        opacity: 0;
+        transform: translateX(12px) scale(1.005);
+        filter: blur(0.8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes commonids-card-old-prev {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(10px) scale(0.995);
+        filter: blur(0.8px);
+    }
+}
+
+@keyframes commonids-card-new-prev {
+    from {
+        opacity: 0;
+        transform: translateX(-12px) scale(1.005);
+        filter: blur(0.8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
     }
 }
 
