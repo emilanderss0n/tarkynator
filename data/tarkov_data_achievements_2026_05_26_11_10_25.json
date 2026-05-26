@@ -1,0 +1,985 @@
+{
+    "items": {
+        "6512ea46f7a078264a4376e4": {
+            "id": "6512ea46f7a078264a4376e4",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6512ea46f7a078264a4376e4-icon.webp",
+            "name": "PMC's Best Friend",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Survive and extract from Interchange through the Scav Co-Op extraction while playing as a PMC",
+            "hidden": false
+        },
+        "6512eb3ddfb0ae1ee75a0376": {
+            "id": "6512eb3ddfb0ae1ee75a0376",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6512eb3ddfb0ae1ee75a0376-icon.webp",
+            "name": "Traveler",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Survive and extract from every location in Tarkov while playing as a PMC ",
+            "hidden": false
+        },
+        "6512f16bde333c33d5127cbc": {
+            "id": "6512f16bde333c33d5127cbc",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6512f16bde333c33d5127cbc-icon.webp",
+            "name": "Killer of Killers",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Eliminate one of the hooded men with their own knife at night time while playing as a PMC",
+            "hidden": true
+        },
+        "6512f1e3be73cc7f07358ed5": {
+            "id": "6512f1e3be73cc7f07358ed5",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6512f1e3be73cc7f07358ed5-icon.webp",
+            "name": "Art of Style",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Killa for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513eb6e0dc723592b0f9095": {
+            "id": "6513eb6e0dc723592b0f9095",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513eb6e0dc723592b0f9095-icon.webp",
+            "name": "Call Your Brother",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Tagilla for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513ed89cf2f1c285e606068": {
+            "id": "6513ed89cf2f1c285e606068",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513ed89cf2f1c285e606068-icon.webp",
+            "name": "Silence of the Sawmill",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Shturman for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513ee11a3dd9b6aa7159b4a": {
+            "id": "6513ee11a3dd9b6aa7159b4a",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513ee11a3dd9b6aa7159b4a-icon.webp",
+            "name": "Deal to Make",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Reshala for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513eec00dc723592b0f90cc": {
+            "id": "6513eec00dc723592b0f90cc",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513eec00dc723592b0f90cc-icon.webp",
+            "name": "Grouse Hunting",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Glukhar for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513efa1b49e3253755f47eb": {
+            "id": "6513efa1b49e3253755f47eb",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513efa1b49e3253755f47eb-icon.webp",
+            "name": "Sanatorium Orderly",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Sanitar for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513f0a10dc723592b0f90cf": {
+            "id": "6513f0a10dc723592b0f90cf",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513f0a10dc723592b0f90cf-icon.webp",
+            "name": "Funny Graveyard Keeper",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Kaban for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513f1feec10ff011f17c7ea": {
+            "id": "6513f1feec10ff011f17c7ea",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513f1feec10ff011f17c7ea-icon.webp",
+            "name": "Now There Are Three of Them!",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Knight, Birdeye, and Big Pipe in a single raid for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6513f28cb49e3253755f47f3": {
+            "id": "6513f28cb49e3253755f47f3",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6513f28cb49e3253755f47f3-icon.webp",
+            "name": "The Blind Watcher",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Zryachiy for the first time while playing as a PMC",
+            "hidden": true
+        },
+        "65140ab8ec10ff011f17cc10": {
+            "id": "65140ab8ec10ff011f17cc10",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65140ab8ec10ff011f17cc10-icon.webp",
+            "name": "What Not To Wear",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Killa 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "65140b55cf2f1c285e606414": {
+            "id": "65140b55cf2f1c285e606414",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65140b55cf2f1c285e606414-icon.webp",
+            "name": "Hammer and Scythe",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Tagilla 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "65140bbec31fcb0e163577b9": {
+            "id": "65140bbec31fcb0e163577b9",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65140bbec31fcb0e163577b9-icon.webp",
+            "name": "King of the Sawmill",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Shturman 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "65140c00b1c08b0feb216d50": {
+            "id": "65140c00b1c08b0feb216d50",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65140c00b1c08b0feb216d50-icon.webp",
+            "name": "This Is a Tarkov Showdown",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Reshala 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "65141032a3dd9b6aa7159ed3": {
+            "id": "65141032a3dd9b6aa7159ed3",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141032a3dd9b6aa7159ed3-icon.webp",
+            "name": "Another Cold Case",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Glukhar 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "651411f1cf2f1c285e606423": {
+            "id": "651411f1cf2f1c285e606423",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-651411f1cf2f1c285e606423-icon.webp",
+            "name": "Who Called the Doctor?",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Sanitar 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "651412b8c31fcb0e163577c5": {
+            "id": "651412b8c31fcb0e163577c5",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-651412b8c31fcb0e163577c5-icon.webp",
+            "name": "Old Dog With Old tricks",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Kaban 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "6514134eec10ff011f17cc26": {
+            "id": "6514134eec10ff011f17cc26",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6514134eec10ff011f17cc26-icon.webp",
+            "name": "I Hear the Voice of Darkness",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Knight 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "651413e9c31fcb0e163577c9": {
+            "id": "651413e9c31fcb0e163577c9",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-651413e9c31fcb0e163577c9-icon.webp",
+            "name": "Now That's a Good Shot",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Zryachiy 15 times while playing as a PMC",
+            "hidden": true
+        },
+        "6514143d59647d2cb3213c93": {
+            "id": "6514143d59647d2cb3213c93",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6514143d59647d2cb3213c93-icon.webp",
+            "name": "Master of ULTRA",
+            "side": "PMC",
+            "rarity": "Legendary",
+            "description": "Neutralize Killa 100 times while playing as a PMC",
+            "hidden": false
+        },
+        "651415feb49e3253755f4b68": {
+            "id": "651415feb49e3253755f4b68",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-651415feb49e3253755f4b68-icon.webp",
+            "name": "Long Live the King!",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize every Boss once while playing as a PMC",
+            "hidden": false
+        },
+        "6514174fb1c08b0feb216d73": {
+            "id": "6514174fb1c08b0feb216d73",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6514174fb1c08b0feb216d73-icon.webp",
+            "name": "Chris's Heir",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Eliminate a PMC operative with a headshot from over 500 meters away while playing as a PMC",
+            "hidden": true
+        },
+        "651417d6ec10ff011f17cc31": {
+            "id": "651417d6ec10ff011f17cc31",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-651417d6ec10ff011f17cc31-icon.webp",
+            "name": "John's Heir",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Eliminate 4 PMC operatives with a headshot while using a pistol in a single raid while playing as a PMC",
+            "hidden": true
+        },
+        "6514184ec31fcb0e163577d2": {
+            "id": "6514184ec31fcb0e163577d2",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6514184ec31fcb0e163577d2-icon.webp",
+            "name": "Killer7",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Eliminate 7 PMC operatives in a single raid while playing as a PMC",
+            "hidden": true
+        },
+        "651419eea3dd9b6aa7159ee5": {
+            "id": "651419eea3dd9b6aa7159ee5",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-651419eea3dd9b6aa7159ee5-icon.webp",
+            "name": "Blind Fury",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Eliminate any enemy while suffering from the Flash effect while playing as a PMC",
+            "hidden": false
+        },
+        "65141a3059647d2cb3213c9e": {
+            "id": "65141a3059647d2cb3213c9e",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141a3059647d2cb3213c9e-icon.webp",
+            "name": "Make a Notch",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Eliminate 30 PMC operatives with a melee weapon while playing as a PMC",
+            "hidden": false
+        },
+        "65141ab70dc723592b0f9482": {
+            "id": "65141ab70dc723592b0f9482",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141ab70dc723592b0f9482-icon.webp",
+            "name": "Drunken Master",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Eliminate a PMC operative with a headshot while under the alcohol effect while playing as a PMC",
+            "hidden": true
+        },
+        "65141b9859647d2cb3213ca2": {
+            "id": "65141b9859647d2cb3213ca2",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141b9859647d2cb3213ca2-icon.webp",
+            "name": "U-SUCC",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Eliminate 50 USEC PMC operatives",
+            "hidden": false
+        },
+        "65141bdfcf2f1c285e606446": {
+            "id": "65141bdfcf2f1c285e606446",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141bdfcf2f1c285e606446-icon.webp",
+            "name": "BEAR With Me",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Eliminate 50 BEAR PMC operatives",
+            "hidden": false
+        },
+        "65141c30ec10ff011f17cc3b": {
+            "id": "65141c30ec10ff011f17cc3b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141c30ec10ff011f17cc3b-icon.webp",
+            "name": "Welcome to Tarkov",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Die in Tarkov for the first time",
+            "hidden": true
+        },
+        "65141c80ec10ff011f17cc3e": {
+            "id": "65141c80ec10ff011f17cc3e",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141c80ec10ff011f17cc3e-icon.webp",
+            "name": "First Time Always Hurts",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Survive a raid without the Run-through status for the first time",
+            "hidden": true
+        },
+        "65141cd2cf2f1c285e606449": {
+            "id": "65141cd2cf2f1c285e606449",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141cd2cf2f1c285e606449-icon.webp",
+            "name": "Ready for Anything",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Survive 10 consecutive raids while playing as a PMC",
+            "hidden": false
+        },
+        "65141dd6303df252af1c72c9": {
+            "id": "65141dd6303df252af1c72c9",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141dd6303df252af1c72c9-icon.webp",
+            "name": "PMC",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Survive 300 raids while playing as a PMC",
+            "hidden": false
+        },
+        "65141e37cf2f1c285e606361": {
+            "id": "65141e37cf2f1c285e606361",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141e37cf2f1c285e606361-icon.webp",
+            "name": "That's What She Said",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Search the office in Factory while playing as a PMC",
+            "hidden": true
+        },
+        "65141eb5c31fcb0e163577dd": {
+            "id": "65141eb5c31fcb0e163577dd",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-65141eb5c31fcb0e163577dd-icon.webp",
+            "name": "Lost",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Locate the crashed plane on Woods while playing as a PMC",
+            "hidden": true
+        },
+        "6514321bec10ff011f17ccac": {
+            "id": "6514321bec10ff011f17ccac",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6514321bec10ff011f17ccac-icon.webp",
+            "name": "Firefly",
+            "side": "PMC",
+            "rarity": "Legendary",
+            "description": "Meet Lightkeeper for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "6527d2e2c656a951ad1528c3": {
+            "id": "6527d2e2c656a951ad1528c3",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6527d2e2c656a951ad1528c3-icon.webp",
+            "name": "Smoke the Peace Pipe",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Big Pipe 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "6527d3aac656a951ad1528ce": {
+            "id": "6527d3aac656a951ad1528ce",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6527d3aac656a951ad1528ce-icon.webp",
+            "name": "The Red Book",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Birdeye 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "6527ee4a647c29201011defe": {
+            "id": "6527ee4a647c29201011defe",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6527ee4a647c29201011defe-icon.webp",
+            "name": "You Are Not My Brother",
+            "side": "Scavs",
+            "rarity": "Common",
+            "description": "Eliminate a Scav while playing as a Scav",
+            "hidden": true
+        },
+        "6529097eccf6aa5f8737b3d0": {
+            "id": "6529097eccf6aa5f8737b3d0",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6529097eccf6aa5f8737b3d0-icon.webp",
+            "name": "Snowball",
+            "side": "PMC",
+            "rarity": "Legendary",
+            "description": "Neutralize every Boss without dying while playing as a PMC",
+            "hidden": false
+        },
+        "655b49bc91aa9e07687ae47c": {
+            "id": "655b49bc91aa9e07687ae47c",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-655b49bc91aa9e07687ae47c-icon.webp",
+            "name": "Justice",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Kollontay for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "655b4a576689c676ce57acb6": {
+            "id": "655b4a576689c676ce57acb6",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-655b4a576689c676ce57acb6-icon.webp",
+            "name": "True Crime",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Kollontay 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "660fe21454670811e304c045": {
+            "id": "660fe21454670811e304c045",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-660fe21454670811e304c045-icon.webp",
+            "name": "Maslenitsa",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "\u0421omplete the Maslenitsa 2024 event task line",
+            "hidden": false
+        },
+        "6634c8886e083a141f4aa3f4": {
+            "id": "6634c8886e083a141f4aa3f4",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6634c8886e083a141f4aa3f4-icon.webp",
+            "name": "Cardinal Richelieu",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Find out who actually controls Tarkov and complete The Tarkov Mystery event task line",
+            "hidden": true
+        },
+        "6634ca69ee506a5c3e61be56": {
+            "id": "6634ca69ee506a5c3e61be56",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6634ca69ee506a5c3e61be56-icon.webp",
+            "name": "INVOLVED IN PEACE",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Pick Peacekeeper's side and complete The Tarkov Mystery event task line",
+            "hidden": true
+        },
+        "6634cae870af846d2868dada": {
+            "id": "6634cae870af846d2868dada",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6634cae870af846d2868dada-icon.webp",
+            "name": "Local Strong Man",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Pick Skier's side and complete The Tarkov Mystery event task line",
+            "hidden": true
+        },
+        "664f1f8768508d74604bf556": {
+            "id": "664f1f8768508d74604bf556",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-664f1f8768508d74604bf556-icon.webp",
+            "name": "The Kappa Path",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Obtain Secure container Kappa",
+            "hidden": false
+        },
+        "664f23e44702fd5db50ee732": {
+            "id": "664f23e44702fd5db50ee732",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-664f23e44702fd5db50ee732-icon.webp",
+            "name": "Jack of All Trades",
+            "side": "All",
+            "rarity": "Rare",
+            "description": "Complete all of Gunsmith series tasks",
+            "hidden": false
+        },
+        "66742c003a67b164a300fcbf": {
+            "id": "66742c003a67b164a300fcbf",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-66742c003a67b164a300fcbf-icon.webp",
+            "name": "A Key to Salvation",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Help Therapist save lives and complete the Key to Salvation event task line",
+            "hidden": false
+        },
+        "668bf47c781d446fdc083711": {
+            "id": "668bf47c781d446fdc083711",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-668bf47c781d446fdc083711-icon.webp",
+            "name": "High Competition",
+            "side": "PMC",
+            "rarity": "Legendary",
+            "description": "Choose your side and complete the Arms Race event task line",
+            "hidden": false
+        },
+        "66b493bc2d8cd3b5e90a3648": {
+            "id": "66b493bc2d8cd3b5e90a3648",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-66b493bc2d8cd3b5e90a3648-icon.webp",
+            "name": "Marathon",
+            "side": "PMC",
+            "rarity": "Legendary",
+            "description": "Visit all locations in one raid as a PMC",
+            "hidden": false
+        },
+        "66c328aca91e7d66fa1b0b7b": {
+            "id": "66c328aca91e7d66fa1b0b7b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-66c328aca91e7d66fa1b0b7b-icon.webp",
+            "name": "Vagabond",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Use the transit from any location",
+            "hidden": false
+        },
+        "66c328de9dc78468f4040f35": {
+            "id": "66c328de9dc78468f4040f35",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-66c328de9dc78468f4040f35-icon.webp",
+            "name": "Time To Clean My Karma",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize Partisan for the first time while playing as a PMC",
+            "hidden": false
+        },
+        "66c32996b4c0c017a3319cc3": {
+            "id": "66c32996b4c0c017a3319cc3",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-66c32996b4c0c017a3319cc3-icon.webp",
+            "name": "Samsara Wheel Spins Again",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize Partisan 15 times while playing as a PMC",
+            "hidden": false
+        },
+        "66e2a7e5919bad697104f4b3": {
+            "id": "66e2a7e5919bad697104f4b3",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-66e2a7e5919bad697104f4b3-icon.webp",
+            "name": "Highway to the Danger Zone",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Complete the Mortar Strike 2024 event task line",
+            "hidden": false
+        },
+        "670feb95a4e71050310cc14b": {
+            "id": "670feb95a4e71050310cc14b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-670feb95a4e71050310cc14b-icon.webp",
+            "name": "Complete Remission",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Cure all the infected and complete the Halloween 2024 event task line",
+            "hidden": false
+        },
+        "670febed5ee0fc738a0965a4": {
+            "id": "670febed5ee0fc738a0965a4",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-670febed5ee0fc738a0965a4-icon.webp",
+            "name": "Fatal Outcome",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Destroy the virus along with all the infected and complete the Halloween 2024 event task line",
+            "hidden": false
+        },
+        "675709bef4e2a2ce0f058f56": {
+            "id": "675709bef4e2a2ce0f058f56",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-675709bef4e2a2ce0f058f56-icon.webp",
+            "name": "All-Wheel Drive",
+            "side": "All",
+            "rarity": "Rare",
+            "description": "Resolve the issue with the BTR driver one way or another",
+            "hidden": false
+        },
+        "675998a894008342eb04e47f": {
+            "id": "675998a894008342eb04e47f",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-675998a894008342eb04e47f-icon.webp",
+            "name": "Khorovod",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Celebrate Christmas and New Year and complete the Khorovod 2024 event task line",
+            "hidden": false
+        },
+        "676091c0f457869a94017a23": {
+            "id": "676091c0f457869a94017a23",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-676091c0f457869a94017a23-icon.webp",
+            "name": "Prestigious",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Earn the Prestige level 1",
+            "hidden": true
+        },
+        "676094451fec2f7426093be6": {
+            "id": "676094451fec2f7426093be6",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-676094451fec2f7426093be6-icon.webp",
+            "name": "More Prestigious",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Earn the Prestige level 2",
+            "hidden": true
+        },
+        "67a0e57117e34930e50075f3": {
+            "id": "67a0e57117e34930e50075f3",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-67a0e57117e34930e50075f3-icon.webp",
+            "name": "In Search of an Exit",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Complete the Labyrinth 2025 event task line",
+            "hidden": false
+        },
+        "67a0e57b972c11a3f50773b2": {
+            "id": "67a0e57b972c11a3f50773b2",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-67a0e57b972c11a3f50773b2-icon.webp",
+            "name": "Dungeon Master",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Complete the Labyrinth 2025 event task line and all side tasks",
+            "hidden": false
+        },
+        "67c838a4c566b0028f0f2d07": {
+            "id": "67c838a4c566b0028f0f2d07",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-67c838a4c566b0028f0f2d07-icon.webp",
+            "name": "All on Red",
+            "side": "All",
+            "rarity": "Rare",
+            "description": "Go all in on the BEAR squad beyond the cordon and complete Skier's Profitable Venture task line",
+            "hidden": false
+        },
+        "67fce0c2f18dc20eae02240b": {
+            "id": "67fce0c2f18dc20eae02240b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-67fce0c2f18dc20eae02240b-icon.webp",
+            "name": "Star Called Sun",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Obliterate a cultist while using the RShG-2 rocket launcher",
+            "hidden": true
+        },
+        "6842c25bd02bc07d70054019": {
+            "id": "6842c25bd02bc07d70054019",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6842c25bd02bc07d70054019-icon.webp",
+            "name": "Keeping Up the Pace",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Earn the Prestige level 3",
+            "hidden": true
+        },
+        "6842c27a38482d35ac0bd847": {
+            "id": "6842c27a38482d35ac0bd847",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6842c27a38482d35ac0bd847-icon.webp",
+            "name": "Higher and Higher",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Earn the Prestige level 4",
+            "hidden": true
+        },
+        "685d3d6b81d993fda109cdb8": {
+            "id": "685d3d6b81d993fda109cdb8",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-685d3d6b81d993fda109cdb8-icon.webp",
+            "name": "One Last Ride",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Experience the Hardcore Wipe",
+            "hidden": false
+        },
+        "685d6539127e4806240f3bcd": {
+            "id": "685d6539127e4806240f3bcd",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-685d6539127e4806240f3bcd-icon.webp",
+            "name": "Through to the End",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Collect the scars of the Hardcore Wipe",
+            "hidden": false
+        },
+        "68936a7a672ffe94a509446b": {
+            "id": "68936a7a672ffe94a509446b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68936a7a672ffe94a509446b-icon.webp",
+            "name": "Targrad Tales",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "He that steals honey, should beware of the sting",
+            "hidden": false
+        },
+        "68d3fe84757f8967ec09099b": {
+            "id": "68d3fe84757f8967ec09099b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68d3fe84757f8967ec09099b-icon.webp",
+            "name": "Five Plus",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Earn the Prestige level 5",
+            "hidden": true
+        },
+        "68d3ff840531ed76e808866c": {
+            "id": "68d3ff840531ed76e808866c",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68d3ff840531ed76e808866c-icon.webp",
+            "name": "No Limit to Perfection",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Earn the Prestige level 6",
+            "hidden": true
+        },
+        "68dfdeb7958a19b62b0ae460": {
+            "id": "68dfdeb7958a19b62b0ae460",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68dfdeb7958a19b62b0ae460-icon.webp",
+            "name": "Going Light",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Final prep before the release!",
+            "hidden": false
+        },
+        "68e8f02ff3a1196d1a05f2cb": {
+            "id": "68e8f02ff3a1196d1a05f2cb",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68e8f02ff3a1196d1a05f2cb-icon.webp",
+            "name": "Survivor",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov no matter the cost",
+            "hidden": false
+        },
+        "68e8f042b8efa2bbeb009d89": {
+            "id": "68e8f042b8efa2bbeb009d89",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68e8f042b8efa2bbeb009d89-icon.webp",
+            "name": "Fallen",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov only to fall in the darkness",
+            "hidden": false
+        },
+        "68e8f04eb841bc8ac305350a": {
+            "id": "68e8f04eb841bc8ac305350a",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68e8f04eb841bc8ac305350a-icon.webp",
+            "name": "Debtor",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov without ever escaping from yourself",
+            "hidden": false
+        },
+        "68e8f0575eb7e5ce5000ba0a": {
+            "id": "68e8f0575eb7e5ce5000ba0a",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68e8f0575eb7e5ce5000ba0a-icon.webp",
+            "name": "Savior",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov to save the humanity",
+            "hidden": false
+        },
+        "68f76335c3f68167b8029c18": {
+            "id": "68f76335c3f68167b8029c18",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68f76335c3f68167b8029c18-icon.webp",
+            "name": "Survivor (PVE ZONE)",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov no matter the cost",
+            "hidden": false
+        },
+        "68f76344bc0e8927900279f0": {
+            "id": "68f76344bc0e8927900279f0",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68f76344bc0e8927900279f0-icon.webp",
+            "name": "Fallen (PVE ZONE)",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov only to fall in the darkness",
+            "hidden": false
+        },
+        "68f76353c152253a5b01a612": {
+            "id": "68f76353c152253a5b01a612",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68f76353c152253a5b01a612-icon.webp",
+            "name": "Debtor (PVE ZONE)",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov without ever escaping from yourself",
+            "hidden": false
+        },
+        "68f7635e006f73031b0336fa": {
+            "id": "68f7635e006f73031b0336fa",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-68f7635e006f73031b0336fa-icon.webp",
+            "name": "Savior (PVE ZONE)",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Escape from Tarkov to save the humanity",
+            "hidden": false
+        },
+        "691212088e10a4e1fb0f48c4": {
+            "id": "691212088e10a4e1fb0f48c4",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691212088e10a4e1fb0f48c4-icon.webp",
+            "name": "Man of His Word",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Complete the task given to you to the end",
+            "hidden": true
+        },
+        "691213563d597b2ef80a21cf": {
+            "id": "691213563d597b2ef80a21cf",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691213563d597b2ef80a21cf-icon.webp",
+            "name": "Just Business",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Double-cross Prapor",
+            "hidden": true
+        },
+        "691213956b60607135006811": {
+            "id": "691213956b60607135006811",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691213956b60607135006811-icon.webp",
+            "name": "Pathfinder",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Fully explore Tarkov and its inhabitants",
+            "hidden": false
+        },
+        "691213c8680e04c5da0571eb": {
+            "id": "691213c8680e04c5da0571eb",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691213c8680e04c5da0571eb-icon.webp",
+            "name": "Inferno",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Learn everything about the Blue Fire",
+            "hidden": false
+        },
+        "691213f0dbcdbbc54402fe00": {
+            "id": "691213f0dbcdbbc54402fe00",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691213f0dbcdbbc54402fe00-icon.webp",
+            "name": "Trail of Breadcrumbs",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Find traces of a mysterious organization in Tarkov",
+            "hidden": false
+        },
+        "6912145e52ddd29bf002d343": {
+            "id": "6912145e52ddd29bf002d343",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6912145e52ddd29bf002d343-icon.webp",
+            "name": "Through Another's Eyes",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Discover what the cultists were really after",
+            "hidden": false
+        },
+        "69121487d2f0e6de2f0561ef": {
+            "id": "69121487d2f0e6de2f0561ef",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-69121487d2f0e6de2f0561ef-icon.webp",
+            "name": "Pay Your Debt",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Learn what happened to Kozlov",
+            "hidden": false
+        },
+        "691214c93d597b2ef80a2206": {
+            "id": "691214c93d597b2ef80a2206",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691214c93d597b2ef80a2206-icon.webp",
+            "name": "Theseus",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Uncover the secret of The Labyrinth",
+            "hidden": false
+        },
+        "691214eafc9b2bc7f3042a57": {
+            "id": "691214eafc9b2bc7f3042a57",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691214eafc9b2bc7f3042a57-icon.webp",
+            "name": "This Is All (Not) Coincidence",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Find out what happened to a certain BEAR squad",
+            "hidden": false
+        },
+        "69121515e329984a340f00b4": {
+            "id": "69121515e329984a340f00b4",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-69121515e329984a340f00b4-icon.webp",
+            "name": "Enough of Your Games!",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Refuse to fall for Mr. Kerman's schemes",
+            "hidden": true
+        },
+        "6912153f761a11e52408fbd2": {
+            "id": "6912153f761a11e52408fbd2",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6912153f761a11e52408fbd2-icon.webp",
+            "name": "Easy Way",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Use the instructions given by TerraGroup. Wonder what could go wrong?",
+            "hidden": true
+        },
+        "6912156f3d597b2ef80a2209": {
+            "id": "6912156f3d597b2ef80a2209",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6912156f3d597b2ef80a2209-icon.webp",
+            "name": "U-Turn",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Agree to the job only to change your mind after",
+            "hidden": true
+        },
+        "6912159adf87c6a94a0b9f34": {
+            "id": "6912159adf87c6a94a0b9f34",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6912159adf87c6a94a0b9f34-icon.webp",
+            "name": "Will It Blow?",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Hand the case with dangerous contents to the wrong people. You clearly had no other choice!",
+            "hidden": true
+        },
+        "691215e8680e04c5da057e57": {
+            "id": "691215e8680e04c5da057e57",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691215e8680e04c5da057e57-icon.webp",
+            "name": "Little Triumphs",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Gather evidence of all of TerraGroup's \"minor\" misdeeds",
+            "hidden": false
+        },
+        "691216216cd39d8e1d09173b": {
+            "id": "691216216cd39d8e1d09173b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-691216216cd39d8e1d09173b-icon.webp",
+            "name": "I Am Speed",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Complete Prapor's tasks within three days",
+            "hidden": true
+        },
+        "6912163e680e04c5da057e5b": {
+            "id": "6912163e680e04c5da057e5b",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6912163e680e04c5da057e5b-icon.webp",
+            "name": "Better Served",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Refuse to sell TerraGroup technology",
+            "hidden": true
+        },
+        "6912168c52ddd29bf002d37a": {
+            "id": "6912168c52ddd29bf002d37a",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6912168c52ddd29bf002d37a-icon.webp",
+            "name": "When the Light Fades",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Free Tarkov from the priests' eyes",
+            "hidden": true
+        },
+        "693a83434cb1cf587c0a63f9": {
+            "id": "693a83434cb1cf587c0a63f9",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-693a83434cb1cf587c0a63f9-icon.webp",
+            "name": "Whiteout",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Celebrate Christmas and New Year and complete the Kolotun 2025 event task line",
+            "hidden": false
+        },
+        "6984ab58ee0ae2c0d5075f33": {
+            "id": "6984ab58ee0ae2c0d5075f33",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6984ab58ee0ae2c0d5075f33-icon.webp",
+            "name": "Duck Hunt",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Complete the Duck Hunt 2026 event task",
+            "hidden": false
+        },
+        "69de1be5d378f8aef8008409": {
+            "id": "69de1be5d378f8aef8008409",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-69de1be5d378f8aef8008409-icon.webp",
+            "name": "Habet, hoc habet!",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Help Skier disrupt the start of the new season in Arena and complete the Casus Belli event task line",
+            "hidden": false
+        },
+        "69de1c2be33584b09a098e93": {
+            "id": "69de1c2be33584b09a098e93",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-69de1c2be33584b09a098e93-icon.webp",
+            "name": "Morituri te salutant",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Help Ref save the start of the new season in Arena and complete the Casus Belli event task line",
+            "hidden": false
+        },
+        "6a0344563743e4b101070b92": {
+            "id": "6a0344563743e4b101070b92",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6a0344563743e4b101070b92-icon.webp",
+            "name": "Cracks in the Ice",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Decrypt the data of The Unheard from the archives aboard the icebreaker \"Boreas\"",
+            "hidden": false
+        },
+        "6a03447fb2e3003f8706a400": {
+            "id": "6a03447fb2e3003f8706a400",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6a03447fb2e3003f8706a400-icon.webp",
+            "name": "Part of the Ship, Part of the Crew",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Learn all the secrets of the icebreaker \"Boreas\"",
+            "hidden": false
+        },
+        "6a04f93d7a6a2b325906bb5c": {
+            "id": "6a04f93d7a6a2b325906bb5c",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6a04f93d7a6a2b325906bb5c-icon.webp",
+            "name": "Awaiting Departure",
+            "side": "All",
+            "rarity": "Legendary",
+            "description": "Complete the Full Speed Ahead event task line",
+            "hidden": false
+        },
+        "6a11d9028fd274eb6207c0bc": {
+            "id": "6a11d9028fd274eb6207c0bc",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6a11d9028fd274eb6207c0bc-icon.webp",
+            "name": "I\u2019m on a Boat",
+            "side": "PMC",
+            "rarity": "Common",
+            "description": "Neutralize 4 members of The Wedge's squad while playing as a PMC",
+            "hidden": false
+        },
+        "6a11d98a1e4337ff1d0a6dbe": {
+            "id": "6a11d98a1e4337ff1d0a6dbe",
+            "imageLink": "F:\\wamp64\\www\\tarkynator\/data\/achievement_icons\/achievement-6a11d98a1e4337ff1d0a6dbe-icon.webp",
+            "name": "Who Dares Wins",
+            "side": "PMC",
+            "rarity": "Rare",
+            "description": "Neutralize 60 members of The Wedge's squad while playing as a PMC",
+            "hidden": false
+        }
+    }
+}

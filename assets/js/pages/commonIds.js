@@ -32,6 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     name
                     nameId
                 }
+                skills {
+                    id
+                    imageLink
+                    name
+                }
             }
         `;
 
@@ -48,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     let currentPageHandbook = 1;
                     let currentPageContainers = 1;
                     let currentPageMaps = 1;
+                    let currentPageSkills = 1;
 
                     const createTableRows = (items, page, isMap = false) => {
                         // Add null check for items
@@ -101,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const handbookCategoriesHTML = createTableRows(data.data.handbookCategories, currentPageHandbook);
                         const lootContainersHTML = createTableRows(data.data.lootContainers, currentPageContainers);
                         const mapsHTML = createTableRows(data.data.maps, currentPageMaps, true);
+                        const skillsHTML = createTableRows(data.data.skills, currentPageSkills);
 
 
                         commonIdContent.innerHTML = `
@@ -224,6 +231,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pagination-controls" id="maps-pagination"></div>
                                 </div>
                             </div>
+                            <div class="skills card scroll-ani scroll-70">
+                                <div class="table-responsive">
+                                    <table class="table caption-top">
+                                        <div class="page-top-title">
+                                            <img src="assets/img/handbook/icon_barter_tools.png" height="25" width="29" />
+                                            <h4>Skills</h4>
+                                        </div>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">ID</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                            ${skillsHTML}
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination-controls" id="skills-pagination"></div>
+                                </div>
+                            </div>
                         `;
 
                         createPaginationControls(data.data.bosses, currentPageBosses, 'bosses-pagination', (newPage) => {
@@ -243,6 +270,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                         createPaginationControls(data.data.maps, currentPageMaps, 'maps-pagination', (newPage) => {
                             currentPageMaps = newPage;
+                        });
+                        createPaginationControls(data.data.skills, currentPageSkills, 'skills-pagination', (newPage) => {
+                            currentPageSkills = newPage;
                         });
                     };
 
