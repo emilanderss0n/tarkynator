@@ -2,6 +2,7 @@ import { fetchData } from '../core/cache.js';
 import { ITEMS_URL } from '../core/localData.js';
 import { withViewTransition } from '../core/viewTransitionManager.js';
 import { enhanceContainerImages } from '../core/imageManager.js';
+import { setPageLoading } from '../core/pageLoading.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const fetchCraftsData = async () => {
-        craftsContent.classList.add('content-loading');
+        setPageLoading(craftsContent, true, { label: 'Loading crafts...' });
 
         const query = `
             query {
@@ -152,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 craftsContent.innerHTML = 'Error fetching crafts data.';
             }, craftsTransitionOptions);
         } finally {
-            craftsContent.classList.remove('content-loading');
+            setPageLoading(craftsContent, false);
         }
     };
 

@@ -4,6 +4,7 @@ import { slideToggle, debounce } from '../core/utils.js';
 import { Popover } from '../components/popover.js';
 import AssortsCreator from '../features/assortsCreator.js';
 import { enhanceContainerImages } from '../core/imageManager.js';
+import { setPageLoading } from '../core/pageLoading.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const assortContainer = document.getElementById('assortContainer');
@@ -56,8 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const iconSrc = `data/grid_images/${filename}`;
         const presetClass = isPreset ? ' preset-icon' : '';
         
-        // Popover logic disabled:
-        return `<img src="${iconSrc}" alt="${name}" class="item-icon${presetClass}" loading="eager" decoding="async" data-managed="true"/>`;
+        return `<img src="${iconSrc}" alt="${name}" class="item-icon${presetClass}" loading="lazy" decoding="async"/>`;
     };
     
     // Utility to format currency
@@ -554,11 +554,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Main render function
     async function renderTraderAssort() {
         const renderToken = ++latestAssortRenderToken;
-        assortContent.classList.add('content-loading');
+        setPageLoading(assortContent, true, { label: 'Loading assorts...' });
 
         const finishLoading = () => {
             if (renderToken === latestAssortRenderToken) {
-                assortContent.classList.remove('content-loading');
+                setPageLoading(assortContent, false);
             }
         };
 
@@ -709,12 +709,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             html += `<div class="card ${cardClass}" data-category="${categoryForFilter}" data-loyalty="${loyaltyLevel}" data-assort-width="${cardWidth}" data-assort-id="${item.id}" data-tpl="${item.tpl}" style="width: ${cardWidth}px; min-height: ${cardHeight}px; --expanded-width: ${expandedWidth}px;">`;
             html += '<div class="card-body">';
-            html += `<div class="assort-image clickable" style="cursor: pointer;">${getItemIcon(item.iconLink, item.name, item.isPreset)}${questLockTag}`;
+            html += `<div class="assort-image image-loading-host clickable" style="cursor: pointer;">${getItemIcon(item.iconLink, item.name, item.isPreset)}${questLockTag}`;
             html += '</div></div></div>';
         });
         html += '</div><div id="assortInfo" class="assort-info-empty"><div class="assort-info-placeholder">Select an item to view details.</div></div>';
         html += '</div>';
         assortContent.innerHTML = html;
+
+        enhanceContainerImages(assortContent, {
+            fallbackSrc: 'assets/img/icon_quest.png',
+            loading: 'lazy',
+        });
 
         // Add click handlers for assort items (only on image and name)
         const assortCards = document.querySelectorAll('.card[data-assort-id]');

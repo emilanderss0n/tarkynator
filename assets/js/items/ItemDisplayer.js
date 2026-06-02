@@ -13,6 +13,7 @@ import {
     checkJsonEditorSimple,
 } from "../components/checkJsonEditor.js";
 import { createItemListElement } from "./itemElementFactory.js";
+import { setPageLoading } from "../core/pageLoading.js";
 
 export class ItemDisplayer {
     constructor(context) {
@@ -623,6 +624,7 @@ function createItemElement(item) {
 
 async function displayItemDetails(instance, itemElement, updateHistory = true) {
     const { itemId, itemTypes, usedInTasks } = itemElement.dataset;
+    const handbookContainer = instance.elements.handbookContent;
 
     if (updateHistory) {
         navigationManager.navigateToItem(itemId, "handbook");
@@ -634,11 +636,20 @@ async function displayItemDetails(instance, itemElement, updateHistory = true) {
     // Update breadcrumb
     instance.context.manager.modules.breadcrumb.updateBreadcrumb(itemTypes, itemElement.textContent);
 
-    // Generate tasks HTML
-    const usedInTasksHTML = await generateUsedInTasksHTML(instance, usedInTasks, itemId);
+    setPageLoading(handbookContainer, true, {
+        label: "Loading handbook item...",
+        minHeight: 300,
+    });
 
-    // Update handbook content
-    await updateHandbookContent(instance, itemElement, usedInTasksHTML);
+    try {
+        // Generate tasks HTML
+        const usedInTasksHTML = await generateUsedInTasksHTML(instance, usedInTasks, itemId);
+
+        // Update handbook content
+        await updateHandbookContent(instance, itemElement, usedInTasksHTML);
+    } finally {
+        setPageLoading(handbookContainer, false);
+    }
 
     // Clear search results
     instance.context.manager.modules.searcher.clearResults();

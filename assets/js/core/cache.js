@@ -22,6 +22,7 @@ const LARGE_DATA_URLS = [
 // In-memory cache for frequently accessed data
 const memoryCache = new Map();
 const MAX_MEMORY_CACHE_SIZE = 50; // Limit memory cache size
+const inFlightRequests = new Map();
 
 function isLargeDataFile(url) {
     return LARGE_DATA_URLS.some(largeUrl => url.includes(largeUrl));
@@ -135,28 +136,41 @@ export async function fetchData(url, options) {
         }
     }
 
-    // Fetch from network
-    try {
-        const response = await fetch(url, options);
-        const data = await response.json();
+    // Deduplicate concurrent network fetches for the same cache key.
+    const inFlight = inFlightRequests.get(cacheKey);
+    if (inFlight) {
+        return inFlight;
+    }
 
-        // Cache the data in appropriate storage
-        if (isLargeFile) {
-            const success = await setInIndexedDB(cacheKey, data);
-            if (!success) {
-                // Fallback to localStorage if IndexedDB fails
+    // Fetch from network
+    const requestPromise = (async () => {
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            // Cache the data in appropriate storage
+            if (isLargeFile) {
+                const success = await setInIndexedDB(cacheKey, data);
+                if (!success) {
+                    // Fallback to localStorage if IndexedDB fails
+                    setInCache(cacheKey, data);
+                }
+            } else {
                 setInCache(cacheKey, data);
             }
-        } else {
-            setInCache(cacheKey, data);
+
+            // Always store in memory cache for immediate subsequent access
+            setInMemoryCache(cacheKey, data);
+
+            return data;
+        } catch (error) {
+            console.error(`Error fetching data from ${url}:`, error);
+            throw error;
+        } finally {
+            inFlightRequests.delete(cacheKey);
         }
+    })();
 
-        // Always store in memory cache for immediate subsequent access
-        setInMemoryCache(cacheKey, data);
-
-        return data;
-    } catch (error) {
-        console.error(`Error fetching data from ${url}:`, error);
-        throw error;
-    }
+    inFlightRequests.set(cacheKey, requestPromise);
+    return requestPromise;
 }

@@ -1,9 +1,11 @@
 import { Notification } from "../components/notifications.js";
 import Tooltip from '../components/tooltip.js';
+import { startHomepageBackgroundPrefetch } from "../core/backgroundPrefetch.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const cards = document.getElementsByClassName("card-bfx");
     new Tooltip();
+    startHomepageBackgroundPrefetch();
 
     document.addEventListener("click", function (event) {
         if (event.target.matches("span.global-id") || event.target.matches("a.global-id")) {

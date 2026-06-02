@@ -1,6 +1,7 @@
 import { fetchGraphQL } from '../core/graphqlClient.js';
 import { withViewTransition } from '../core/viewTransitionManager.js';
 import { enhanceContainerImages } from '../core/imageManager.js';
+import { setPageLoading } from '../core/pageLoading.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const commonIdContent = document.getElementById('commonIdContent');
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const fetchCommonData = () => {
-        commonIdContent.classList.add('content-loading');
+        setPageLoading(commonIdContent, true, { label: 'Loading common IDs...' });
 
         const query = `
             query {
@@ -283,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, commonIdsTransitionOptions);
             })
             .finally(() => {
-                commonIdContent.classList.remove('content-loading');
+                setPageLoading(commonIdContent, false);
             });
     };
 

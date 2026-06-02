@@ -2,6 +2,7 @@
 import { fetchData } from "../core/cache.js";
 import { ITEMS_URL } from "../core/localData.js";
 import { withViewTransition } from "../core/viewTransitionManager.js";
+import { setOverlayLoading } from "../core/pageLoading.js";
 
 export class ItemTemplate {
     constructor(context) {
@@ -15,6 +16,15 @@ export class ItemTemplate {
 
 async function loadTemplate(instance, itemId) {
     if (!itemId) return;
+
+    const templateContent =
+        instance.elements.templateContent ||
+        document.getElementById("templateContent");
+
+    setOverlayLoading(templateContent, true, {
+        label: "Loading template...",
+        spinnerClass: "spinner-border spinner-border-sm",
+    });
 
     try {
         // Fetch template data
@@ -40,6 +50,8 @@ async function loadTemplate(instance, itemId) {
 
         displayUnavailableTemplate();
         disableTemplateNavLink(instance);
+    } finally {
+        setOverlayLoading(templateContent, false);
     }
 }
 

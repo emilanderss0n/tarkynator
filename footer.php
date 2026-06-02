@@ -16,13 +16,22 @@
         <footer>
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-6 copyright">
+                    <div class="col">
+                        Tarkynator use data from Tarkov API and SPT game server files
+                    </div>
+                    <div class="col">
+                        <div class="text-end">
+                            <?php include_once('nav-footer.php'); ?>
+                        </div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col copyright">
                         <div>&copy; <?= date('Y'); ?> - <a href="https://github.com/emilanderss0n/tarkynator" target="_blank"
                                 data-tooltip="Github Repo">Tarkynator</a> - Made by <a href="https://github.com/emilanderss0n"
                                 target="_blank">MoxoPixel</a> / <a href="https://github.com/emilanderss0n" target="_blank">Emil
                                 Andersson</a></div>
                     </div>
-                    <div class="col-md-6 donate">
+                    <div class="col donate">
                         <div class="text-end">
                             <a class="kofi" href="https://ko-fi.com/moxopixel" target="_blank"></a>
                         </div>

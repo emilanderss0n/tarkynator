@@ -252,6 +252,62 @@ a:hover {
     transition: opacity 0.2s ease-in-out;
 }
 
+.container-fluid.page.is-page-loading {
+    min-height: var(--page-loading-min-height, 300px);
+}
+
+.container-fluid.page .page-loading-state {
+    width: 100%;
+    min-height: var(--page-loading-min-height, 300px);
+}
+
+.container-fluid.page .page-loading-state .spinner-border {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-width: 0.24em;
+}
+
+.is-overlay-loading {
+    position: relative;
+}
+
+.is-overlay-loading > .page-loading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 9;
+    min-height: 300px;
+    background: hsl(0deg 0% 0% / 38%);
+    pointer-events: none;
+}
+
+.is-overlay-loading > .page-loading-overlay .spinner-border {
+    width: 2rem;
+    height: 2rem;
+    border-width: 0.22em;
+}
+
+.image-loading-host {
+    position: relative;
+}
+
+.image-loading-host-wrapper {
+    width: fit-content;
+    max-width: 100%;
+}
+
+.image-loading-spinner {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.image-loading-spinner .spinner-border {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-width: 0.18em;
+}
+
 .managed-image {
     opacity: 0;
     transform: scale(0.985);
@@ -261,6 +317,7 @@ a:hover {
 .managed-image.is-loaded {
     opacity: 1;
     transform: scale(1);
+    max-width: 100%;
 }
 
 .strong {
@@ -1300,11 +1357,23 @@ span.global-id.copied::after {
     background-image: url(../img/blue_check.png);
 }
 
+.nav-link {
+    color: var(--main-color);
+
+    &:hover {
+        color: var(--main-color-hover);
+    }
+
+    &.active {
+        color: var(--heading-color);
+    }
+}
+
 .kofi {
-    background: url(../img/kofi_button_red.webp) no-repeat;
+    background: url(../img/kofi3.webp) no-repeat;
     background-size: contain;
-    width: 241px;
-    height: 37.9px;
+    width: 145px;
+    height: 36.5px;
     display: inline-block;
 }
 
@@ -3460,9 +3529,26 @@ ul.inner-list {
     background-position: center;
 }
 
-#questsContent .card-body img {
+#questsContent .card-body .image {
+    display: block;
     width: 100%;
     max-width: 200px;
+    flex-shrink: 0;
+}
+
+#questsContent .card-body .image.image-loading-host.image-loading-active {
+    min-height: 130px;
+}
+
+#questsContent .card-body .image > img {
+    width: 100%;
+    height: auto;
+}
+
+#questsContent .card-body .image.image-loading-host .image-loading-spinner .spinner-border {
+    width: 1.65rem;
+    height: 1.65rem;
+    border-width: 0.22em;
 }
 
 #questsContent .quest-tasks {

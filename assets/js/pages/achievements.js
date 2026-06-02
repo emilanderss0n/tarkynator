@@ -8,6 +8,7 @@ import { fetchGraphQL } from "../core/graphqlClient.js";
 import { debounce, highlightSearchTerms } from "../core/utils.js";
 import { withViewTransition } from "../core/viewTransitionManager.js";
 import { enhanceContainerImages } from "../core/imageManager.js";
+import { setPageLoading } from "../core/pageLoading.js";
 
 let achievementsLocalData = []; // Store local achievements data
 let localAchievementIdSet = new Set();
@@ -228,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const fetchAchievementsData = () => {
         const requestToken = ++latestAchievementsRequestToken;
-        achievementsContent.classList.add("content-loading");
+        setPageLoading(achievementsContent, true, { label: "Loading achievements..." });
 
         const query = `
             query {
@@ -278,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .finally(() => {
                 if (requestToken === latestAchievementsRequestToken) {
-                    achievementsContent.classList.remove("content-loading");
+                    setPageLoading(achievementsContent, false);
                 }
             });
     };

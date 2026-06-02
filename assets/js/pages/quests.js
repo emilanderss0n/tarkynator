@@ -8,6 +8,7 @@ import {
 import { debounce, highlightSearchTerms } from "../core/utils.js";
 import { withViewTransition } from "../core/viewTransitionManager.js";
 import { enhanceContainerImages } from "../core/imageManager.js";
+import { setPageLoading } from "../core/pageLoading.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const questsContainer = document.getElementById("questsContainer");
@@ -413,7 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     const fetchQuestsData = async () => {
         const fetchToken = ++latestFetchToken;
-        questsContent.classList.add("content-loading");
+        setPageLoading(questsContent, true, { label: "Loading quests..." });
 
         try {
             await ensureLocalQuestsLoaded();
@@ -440,7 +441,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } finally {
             if (fetchToken === latestFetchToken) {
-                questsContent.classList.remove("content-loading");
+                setPageLoading(questsContent, false);
             }
         }
     };

@@ -411,6 +411,7 @@ export class ItemManager {
 
             // Container elements
             templateContainer: document.getElementById("templateContainer"),
+            templateContent: document.getElementById("templateContent"),
             handbookContainer: document.getElementById("handbookContainer"),
             browseContainer: document.getElementById("browseContainer"),
             handbookContent: document.getElementById("handbookContent"),
